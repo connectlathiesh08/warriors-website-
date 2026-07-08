@@ -464,6 +464,9 @@ def init_db():
         )
     """)
     
+    # Wipe out any old default auto-generated mock photos from the gallery
+    c.execute("DELETE FROM gallery WHERE google_drive_id LIKE 'assets/%'")
+    
     # Insert default gallery placeholders if empty
     c.execute("SELECT COUNT(*) FROM settings WHERE key='gallery_initialized'")
     if c.fetchone()[0] == 0:
@@ -596,15 +599,9 @@ init_db()
 
 # Clean up Trash older than 30 days
 def cleanup_trash():
-    try:
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        limit_date = (datetime.datetime.now() - datetime.timedelta(days=30)).isoformat()
-        c.execute("DELETE FROM projects WHERE is_deleted = 1 AND deleted_at < ?", (limit_date,))
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        print(f"Error cleaning trash: {e}")
+    # Disabled automatic deletion to prevent any project, event, or finance data from being auto-deleted
+    print("Auto-cleanup skipped: Data is preserved until explicitly deleted by the user.")
+    return
 
 def get_drive_error_message(e):
     try:
@@ -1963,9 +1960,25 @@ def delete_finance(txn_id):
         
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
+    
+    # Fetch invoice_drive_id before deleting the record
+    c.execute("SELECT invoice_drive_id FROM finances WHERE id = ?", (txn_id,))
+    row = c.fetchone()
+    invoice_drive_id = row[0] if row else None
+    
     c.execute("DELETE FROM finances WHERE id = ?", (txn_id,))
     conn.commit()
     conn.close()
+    
+    # Delete the bill/invoice file from Google Drive if it exists
+    if invoice_drive_id and has_google_drive and not invoice_drive_id.startswith("http") and not invoice_drive_id.startswith("assets/") and not invoice_drive_id.startswith("/uploads/"):
+        try:
+            service = get_drive_service()
+            if service:
+                service.files().delete(fileId=invoice_drive_id).execute()
+                print(f"Deleted invoice file {invoice_drive_id} from Google Drive.")
+        except Exception as e:
+            print(f"Error deleting invoice file {invoice_drive_id} from Drive: {e}")
     
     # Sync deletion details update to Google Sheet
     try:
