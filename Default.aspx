@@ -680,7 +680,7 @@ html.lenis body {
     <div class="relative flex h-full w-full items-center justify-between px-10">
       
       <!-- Left Logo Branding -->
-      <a href="Default.aspx" class="relative z-[2] flex h-full shrink-0 items-center transition-transform duration-300 hover:scale-[1.02]">
+      <a href="index.html" class="relative z-[2] flex h-full shrink-0 items-center transition-transform duration-300 hover:scale-[1.02]">
         <!-- Custom Rotaract Logo cogwheel -->
         <svg width="46" height="46" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
           <defs>
@@ -741,23 +741,23 @@ html.lenis body {
 
       <!-- Center Navigation (Apple/Stripe Style) -->
                                     <nav class="main-nav relative z-[2] mx-4 hidden min-w-0 flex-1 items-center justify-center gap-1.5 min-[1440px]:flex">
-        <a href="Default.aspx" data-nav="home" data-label="HOME" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors rounded-full bg-[#8B003A] text-white hover:text-white font-display"></a>
-        <a href="About.aspx" data-nav="about" data-label="ABOUT US" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
+        <a href="index.html" data-nav="home" data-label="HOME" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors rounded-full bg-[#8B003A] text-white hover:text-white font-display"></a>
+        <a href="about.html" data-nav="about" data-label="ABOUT US" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
           <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
         </a>
-        <a href="DistrictCommittee.aspx" data-nav="district-committee" data-label="WARRIORS COUNCIL" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
+        <a href="DistrictCommittee.html" data-nav="district-committee" data-label="WARRIORS COUNCIL" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
           <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
         </a>
-        <a href="Events.aspx" data-nav="events" data-label="EVENTS" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
+        <a href="Events.html" data-nav="events" data-label="EVENTS" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
           <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
         </a>
-        <a href="Calendar.aspx" data-nav="calendar" data-label="CALENDAR" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
+        <a href="calendar.html" data-nav="calendar" data-label="CALENDAR" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
           <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
         </a>
         <a href="Partners.aspx" data-nav="partners" data-label="PARTNERS" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
           <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
         </a>
-        <a href="Blog.aspx" data-nav="blog" data-label="BLOG" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
+        <a href="Blog.html" data-nav="blog" data-label="BLOG" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
           <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
         </a>
       </nav>
@@ -785,9 +785,9 @@ html.lenis body {
     <!-- Mobile Nav menu -->
     <nav class="mobile-nav hidden border-t border-slate-100 bg-[#e0f2fe]/95 backdrop-blur-md px-6 pb-8 pt-5 min-[1440px]:hidden w-full absolute top-[70px] left-0 shadow-lg z-50">
       <ul class="flex flex-col gap-4 font-display font-bold text-slate-700">
-        <li><a href="Default.aspx" data-label="HOME" class="slot-link block w-fit text-[17px] text-[#8B003A]"></a></li>
-        <li><a href="About.aspx" data-label="ABOUT US" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
-        <li><a href="DistrictCommittee.aspx" data-label="WARRIORS COUNCIL" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li><a href="index.html" data-label="HOME" class="slot-link block w-fit text-[17px] text-[#8B003A]"></a></li>
+        <li><a href="about.html" data-label="ABOUT US" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li><a href="DistrictCommittee.html" data-label="WARRIORS COUNCIL" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
         <li><a href="Events.html" data-label="EVENTS" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
         <li></li>
         <li></li>
@@ -872,7 +872,7 @@ html.lenis body {
               </a>
               
               <!-- Secondary: Explore Our Work -->
-              <a href="Projects.aspx" class="flex items-center gap-2 bg-white border border-[#8B003A] text-[#8B003A] px-7 py-4 rounded-[16px] text-[16px] md:text-[18px] font-bold transition-all duration-300 hover:translate-y-[-3px] hover:bg-[#8B003A] hover:text-white hover:shadow-[0_15px_30px_-5px_rgba(139,0,58,0.2)]">
+              <a href="projects.html" class="flex items-center gap-2 bg-white border border-[#8B003A] text-[#8B003A] px-7 py-4 rounded-[16px] text-[16px] md:text-[18px] font-bold transition-all duration-300 hover:translate-y-[-3px] hover:bg-[#8B003A] hover:text-white hover:shadow-[0_15px_30px_-5px_rgba(139,0,58,0.2)]">
                 <span>Explore Our Work</span>
                 <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </a>
@@ -1107,7 +1107,7 @@ html.lenis body {
             Quick Links
           </h4>
           <ul class="grid grid-cols-2 gap-y-2.5 gap-x-4 text-xs font-bold text-slate-600 w-full">
-            <li><a href="Default.aspx" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Home<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="index.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Home<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
             <li><a href="#" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">About Us<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
             <li><a href="#" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Warriors Council<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
             <li><a href="#" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Projects<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>

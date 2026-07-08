@@ -177,7 +177,7 @@
     <div class="relative flex h-full w-full items-center justify-between px-10">
       
       <!-- Left Logo Branding -->
-      <a href="Default.aspx" class="relative z-[2] flex h-full shrink-0 items-center transition-transform duration-300 hover:scale-[1.02]">
+      <a href="index.html" class="relative z-[2] flex h-full shrink-0 items-center transition-transform duration-300 hover:scale-[1.02]">
         <svg width="46" height="46" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
           <defs>
             <path id="tooth" d="M46 12 L48 3 L52 3 L54 12 Z" fill="#8B003A" />

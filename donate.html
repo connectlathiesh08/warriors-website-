@@ -51,7 +51,7 @@
     <div class="relative flex h-full w-full items-center justify-between px-6 lg:px-10 mx-auto max-w-[1400px]">
       
       <!-- Left Logo Branding -->
-      <a href="Default.aspx" class="relative z-[2] flex h-full shrink-0 items-center transition-transform duration-300 hover:scale-[1.02]">
+      <a href="index.html" class="relative z-[2] flex h-full shrink-0 items-center transition-transform duration-300 hover:scale-[1.02]">
         <!-- Custom Rotaract Logo cogwheel -->
         <svg width="46" height="46" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
           <defs>
@@ -596,7 +596,7 @@
             Quick Links
           </h4>
           <ul class="grid grid-cols-2 gap-y-2.5 gap-x-4 text-xs font-bold text-slate-600 w-full">
-            <li><a href="Default.aspx" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Home<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="index.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Home<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
             <li><a href="about.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">About Us<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
             <li><a href="about.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Warriors Council<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
             <li><a href="projects.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Projects<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>

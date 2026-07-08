@@ -238,6 +238,7 @@ function AdminDashboard({ role, onLogout }) {
   const [adminName, setAdminName] = useState(adminRole === 'Secretary' ? 'Secretary Admin' : 'WARRIORS');
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Database states
   const [members, setMembers] = useState([]);
@@ -400,9 +401,13 @@ function AdminDashboard({ role, onLogout }) {
   ];
 
   return html`
-    <div class="flex h-screen bg-slate-50 font-sans overflow-hidden">
+    <div class="flex h-screen bg-slate-50 font-sans overflow-hidden relative">
+      <!-- Backdrop Overlay for Mobile Navigation -->
+      ${mobileMenuOpen && html`
+        <div onClick=${() => setMobileMenuOpen(false)} class="fixed inset-0 bg-slate-900/35 backdrop-blur-xs z-40 lg:hidden"></div>
+      `}
       <!-- SIDEBAR -->
-      <aside class="w-[260px] bg-white border-r border-slate-200/80 flex flex-col shrink-0 z-20">
+      <aside class="fixed inset-y-0 left-0 w-[260px] bg-white border-r border-slate-200/80 flex flex-col shrink-0 z-50 transition-transform duration-300 ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 lg:static lg:flex">
         <!-- Logo -->
         <div class="p-6 border-b border-slate-100 flex items-center gap-3">
           <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
@@ -431,7 +436,7 @@ function AdminDashboard({ role, onLogout }) {
               </div>
               
               <button
-                onClick=${() => { setActiveEditMomId(null); setCurrentTab('secretary_mom_generate'); }}
+                onClick=${() => { setActiveEditMomId(null); setCurrentTab('secretary_mom_generate'); setMobileMenuOpen(false); }}
                 class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                   currentTab === 'secretary_mom_generate'
                     ? 'bg-burgundy-50 text-burgundy-500 shadow-sm font-bold'
@@ -441,7 +446,7 @@ function AdminDashboard({ role, onLogout }) {
                 📝 Generate MoM
               </button>
               <button
-                onClick=${() => { setActiveEditMomId(null); setCurrentTab('secretary_project_report_generate'); }}
+                onClick=${() => { setActiveEditMomId(null); setCurrentTab('secretary_project_report_generate'); setMobileMenuOpen(false); }}
                 class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                   currentTab === 'secretary_project_report_generate'
                     ? 'bg-burgundy-50 text-burgundy-500 shadow-sm font-bold'
@@ -451,7 +456,7 @@ function AdminDashboard({ role, onLogout }) {
                 📊 Project Report
               </button>
               <button
-                onClick=${() => setCurrentTab('secretary_mom_records')}
+                onClick=${() => { setCurrentTab('secretary_mom_records'); setMobileMenuOpen(false); }}
                 class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                   currentTab === 'secretary_mom_records'
                     ? 'bg-burgundy-50 text-burgundy-500 shadow-sm font-bold'
@@ -461,7 +466,7 @@ function AdminDashboard({ role, onLogout }) {
                 📁 MoM Records
               </button>
               <button
-                onClick=${() => setCurrentTab('secretary_action_items')}
+                onClick=${() => { setCurrentTab('secretary_action_items'); setMobileMenuOpen(false); }}
                 class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                   currentTab === 'secretary_action_items'
                     ? 'bg-burgundy-50 text-burgundy-500 shadow-sm font-bold'
@@ -471,7 +476,7 @@ function AdminDashboard({ role, onLogout }) {
                 📋 Action Items
               </button>
               <button
-                onClick=${() => setCurrentTab('secretary_approvals')}
+                onClick=${() => { setCurrentTab('secretary_approvals'); setMobileMenuOpen(false); }}
                 class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                   currentTab === 'secretary_approvals'
                     ? 'bg-burgundy-50 text-burgundy-500 shadow-sm font-bold'
@@ -481,7 +486,7 @@ function AdminDashboard({ role, onLogout }) {
                 ✅ Approvals
               </button>
               <button
-                onClick=${() => setCurrentTab('secretary_admin')}
+                onClick=${() => { setCurrentTab('secretary_admin'); setMobileMenuOpen(false); }}
                 class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                   currentTab === 'secretary_admin'
                     ? 'bg-burgundy-50 text-burgundy-500 shadow-sm font-bold'
@@ -495,7 +500,7 @@ function AdminDashboard({ role, onLogout }) {
             <!-- General admin tabs -->
             ${menuItems.map((item) => html`
               <button
-                onClick=${() => setCurrentTab(item.id)}
+                onClick=${() => { setCurrentTab(item.id); setMobileMenuOpen(false); }}
                 class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 group ${
                   currentTab === item.id
                     ? 'bg-burgundy-50 text-burgundy-500 shadow-sm'
@@ -538,7 +543,7 @@ function AdminDashboard({ role, onLogout }) {
                   <div class="px-4 py-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">Minutes of Meeting</div>
                   
                   <button
-                    onClick=${() => { setActiveEditMomId(null); setCurrentTab('secretary_mom_generate'); }}
+                    onClick=${() => { setActiveEditMomId(null); setCurrentTab('secretary_mom_generate'); setMobileMenuOpen(false); }}
                     class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
                       currentTab === 'secretary_mom_generate'
                         ? 'bg-burgundy-50/50 text-burgundy-600 font-bold'
@@ -548,7 +553,7 @@ function AdminDashboard({ role, onLogout }) {
                     Generate MoM
                   </button>
                   <button
-                    onClick=${() => { setActiveEditMomId(null); setCurrentTab('secretary_project_report_generate'); }}
+                    onClick=${() => { setActiveEditMomId(null); setCurrentTab('secretary_project_report_generate'); setMobileMenuOpen(false); }}
                     class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
                       currentTab === 'secretary_project_report_generate'
                         ? 'bg-burgundy-50/50 text-burgundy-600 font-bold'
@@ -558,7 +563,7 @@ function AdminDashboard({ role, onLogout }) {
                     Project Report
                   </button>
                   <button
-                    onClick=${() => setCurrentTab('secretary_mom_records')}
+                    onClick=${() => { setCurrentTab('secretary_mom_records'); setMobileMenuOpen(false); }}
                     class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
                       currentTab === 'secretary_mom_records'
                         ? 'bg-burgundy-50/50 text-burgundy-600 font-bold'
@@ -568,7 +573,7 @@ function AdminDashboard({ role, onLogout }) {
                     MoM Records
                   </button>
                   <button
-                    onClick=${() => setCurrentTab('secretary_action_items')}
+                    onClick=${() => { setCurrentTab('secretary_action_items'); setMobileMenuOpen(false); }}
                     class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
                       currentTab === 'secretary_action_items'
                         ? 'bg-burgundy-50/50 text-burgundy-600 font-bold'
@@ -578,7 +583,7 @@ function AdminDashboard({ role, onLogout }) {
                     Action Items
                   </button>
                   <button
-                    onClick=${() => setCurrentTab('secretary_approvals')}
+                    onClick=${() => { setCurrentTab('secretary_approvals'); setMobileMenuOpen(false); }}
                     class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
                       currentTab === 'secretary_approvals'
                         ? 'bg-burgundy-50/50 text-burgundy-600 font-bold'
@@ -588,7 +593,7 @@ function AdminDashboard({ role, onLogout }) {
                     Approvals
                   </button>
                   <button
-                    onClick=${() => setCurrentTab('secretary_admin')}
+                    onClick=${() => { setCurrentTab('secretary_admin'); setMobileMenuOpen(false); }}
                     class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150 ${
                       currentTab === 'secretary_admin'
                         ? 'bg-burgundy-50/50 text-burgundy-600 font-bold'
@@ -605,7 +610,7 @@ function AdminDashboard({ role, onLogout }) {
 
         <!-- Sidebar Footer -->
         <div class="p-4 border-t border-slate-100">
-          <button onClick=${handleLogoutClick} class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors">
+          <button onClick=${() => { handleLogoutClick(); setMobileMenuOpen(false); }} class="w-full flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold text-rose-600 hover:bg-rose-50 transition-colors">
             <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></span>
             Logout
           </button>
@@ -615,10 +620,13 @@ function AdminDashboard({ role, onLogout }) {
       <!-- MAIN CONTAINER -->
       <div class="flex-1 flex flex-col overflow-hidden relative">
         <!-- HEADER -->
-        <header class="bg-white border-b border-slate-200/80 h-16 shrink-0 flex items-center justify-between px-8 z-10 relative">
+        <header class="bg-white border-b border-slate-200/80 h-16 shrink-0 flex items-center justify-between px-4 sm:px-8 z-10 relative">
           <!-- Left: Title -->
-          <div class="flex items-center gap-3">
-            <span class="text-xs font-bold bg-burgundy-50 text-burgundy-500 px-2.5 py-1 rounded-md border border-burgundy-100 uppercase tracking-wide">District 3192</span>
+          <div class="flex items-center gap-2 sm:gap-3">
+            <button onClick=${() => setMobileMenuOpen(true)} class="lg:hidden p-1.5 -ml-1 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors mr-1">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" x2="21" y1="12" y2="12"></line><line x1="3" x2="21" y1="6" y2="6"></line><line x1="3" x2="21" y1="18" y2="18"></line></svg>
+            </button>
+            <span class="text-[10px] sm:text-xs font-bold bg-burgundy-50 text-burgundy-500 px-2 sm:px-2.5 py-1 rounded-md border border-burgundy-100 uppercase tracking-wide">District 3192</span>
           </div>
 
           <!-- Right Controls -->
@@ -641,7 +649,7 @@ function AdminDashboard({ role, onLogout }) {
 
               ${showProfileDropdown && html`
                 <div class="absolute right-0 mt-2.5 w-48 bg-white border border-slate-200/80 rounded-xl shadow-dropdown p-1.5 z-50">
-                  <button onClick=${handleLogoutClick} class="w-full text-left px-3.5 py-2.5 text-sm text-rose-600 hover:bg-rose-50 rounded-lg flex items-center gap-2.5 font-semibold">
+                  <button onClick=${() => { handleLogoutClick(); setMobileMenuOpen(false); }} class="w-full text-left px-3.5 py-2.5 text-sm text-rose-600 hover:bg-rose-50 rounded-lg flex items-center gap-2.5 font-semibold">
                     🚪 Sign Out
                   </button>
                 </div>
@@ -651,7 +659,7 @@ function AdminDashboard({ role, onLogout }) {
         </header>
 
         <!-- TAB VIEWER CONTAINER -->
-        <main class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+        <main class="flex-1 overflow-y-auto p-4 sm:p-8 custom-scrollbar">
           ${currentTab === 'dashboard' && html`<${DashboardHome} members=${members} projects=${projects} events=${events} finances=${finances} onTabChange=${setCurrentTab} />`}
           ${currentTab === 'members' && html`<${MemberManagement} members=${members} fetchMembers=${fetchMembers} />`}
           ${currentTab === 'projects' && html`<${ProjectManagement} projects=${projects} setProjects=${setProjects} fetchProjects=${fetchProjects} />`}
@@ -835,13 +843,13 @@ function DashboardHome({ members, projects, events, finances, onTabChange }) {
   return html`
     <div class="space-y-8">
       <!-- Welcome Card -->
-      <div class="bg-gradient-to-r from-burgundy-600 to-burgundy-700 rounded-[20px] p-8 text-white relative shadow-card overflow-hidden">
+      <div class="bg-gradient-to-r from-burgundy-600 to-burgundy-700 rounded-[20px] p-6 sm:p-8 text-white relative shadow-card overflow-hidden">
         <svg class="pointer-events-none absolute right-[-20px] bottom-[-40px] h-[180%] opacity-10" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M200 150 C 150 140, 120 100, 110 50 C 100 0, 110 -50, 120 -100" stroke="white" stroke-width="1.5" />
           <path d="M200 150 C 160 140, 140 100, 130 50 C 120 0, 130 -50, 140 -100" stroke="white" stroke-width="1.5" />
         </svg>
         <div class="relative z-10 max-w-lg">
-          <h2 class="text-3xl font-extrabold font-display leading-tight">${greeting}, Administrator</h2>
+          <h2 class="text-2xl sm:text-3xl font-extrabold font-display leading-tight">${greeting}, Administrator</h2>
           <p class="text-pink-100/95 text-base mt-2 font-medium">"Together We Lead, Together We Serve."</p>
           <div class="inline-flex items-center gap-2 bg-white/15 border border-white/20 px-3.5 py-1.5 rounded-full text-xs font-semibold mt-6 tracking-wide backdrop-blur-xs">
             📅  ${new Date().toLocaleDateString([], { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
