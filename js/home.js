@@ -508,34 +508,48 @@ function initGalleries(projects, gallery) {
   }
   var dome = document.querySelector('.photo-gallery');
   if (dome) {
-    // Force exactly 100 photos for 3D rotating globe visual testing
+    // Reset container heights and classes to support natural grid height
+    dome.style.height = 'auto';
+    dome.className = 'photo-gallery relative mt-8 w-full';
+
     var galleryPhotos = [];
     var sourceList = (gallery && gallery.length) ? gallery : [];
-    if (!sourceList.length) {
-      for (var s = 0; s < 11; s++) {
-        sourceList.push({ src: 'assets/projects/proj-' + s + '.png', alt: 'Moment' });
-      }
-    }
-    for (var k = 0; k < 100; k++) {
-      var item = sourceList[k % sourceList.length];
+    
+    for (var k = 0; k < sourceList.length; k++) {
+      var item = sourceList[k];
       galleryPhotos.push({
         src: item.src || 'assets/projects/proj-0.png',
-        alt: (item.alt || 'Warrior Moment') + ' - Moment ' + (k + 1)
+        alt: item.alt || 'Warrior Moment'
       });
     }
 
-    Promise.resolve(window.initDomeGallery).then(function(initDomeGallery) {
-      var m = { initDomeGallery: initDomeGallery };
-      m.initDomeGallery(dome, {
-        images: galleryPhotos,
-        grayscale: false,
-        overlayBlurColor: '#f5f8fc',
-        onImageClick: function (info) {
-          openLightbox(info.index, galleryPhotos);
-        },
-      });
-    })
-    .catch(function (e) { console.warn('DomeGallery failed to load', e); });
+    if (galleryPhotos.length === 0) {
+      dome.innerHTML = '<div class="text-center py-16 bg-white rounded-2xl border border-dashed border-slate-200 w-full"><p class="text-slate-400 text-sm">No photos in the gallery yet.</p></div>';
+      return;
+    }
+
+    // Expose lightbox helper globally
+    window.triggerGalleryLightbox = function(idx) {
+      if (typeof openLightbox === 'function') {
+        openLightbox(idx, galleryPhotos);
+      } else {
+        console.warn('openLightbox is not defined');
+      }
+    };
+
+    var gridHtml = '<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full">';
+    for (var i = 0; i < galleryPhotos.length; i++) {
+      var photo = galleryPhotos[i];
+      gridHtml += '<div class="relative overflow-hidden rounded-2xl aspect-square bg-slate-100 shadow-sm border border-slate-200/50 group cursor-pointer hover:shadow-md transition-all duration-300" onclick="window.triggerGalleryLightbox(' + i + ')">';
+      gridHtml += '  <img src="' + photo.src + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="' + (photo.alt || 'Gallery Image') + '" />';
+      gridHtml += '  <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">';
+      gridHtml += '    <svg class="w-8 h-8 text-white scale-90 group-hover:scale-100 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"></path></svg>';
+      gridHtml += '  </div>';
+      gridHtml += '</div>';
+    }
+    gridHtml += '</div>';
+    
+    dome.innerHTML = gridHtml;
   }
 }
 
