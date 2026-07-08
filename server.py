@@ -269,12 +269,23 @@ def backup_db_to_google_drive():
             }
             new_file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
             print(f"Successfully backed up projects.db to Google Drive (Created new file ID: {new_file.get('id')}).")
+        import time
+        global LAST_RESTORE_TIME
+        LAST_RESTORE_TIME = time.time()
     except Exception as e:
         print(f"Error backing up database to Google Drive: {e}")
 
-def restore_db_from_google_drive():
+LAST_RESTORE_TIME = 0
+
+def restore_db_from_google_drive(force=False):
+    global LAST_RESTORE_TIME
     if not has_google_drive:
         return
+    import time
+    current_time = time.time()
+    if not force and (current_time - LAST_RESTORE_TIME < 5):
+        return
+        
     try:
         service = get_drive_service()
         if not service:
@@ -302,6 +313,7 @@ def restore_db_from_google_drive():
             with open(DB_PATH, "wb") as f:
                 f.write(fh.read())
             print("Successfully restored projects.db from Google Drive!")
+            LAST_RESTORE_TIME = time.time()
         else:
             print("No projects.db found on Google Drive. Using local database.")
     except Exception as e:
@@ -309,11 +321,10 @@ def restore_db_from_google_drive():
 
 @app.after_request
 def after_request_handler(response):
-    # If a modifying request was successful, trigger background database backup to Google Drive
     if request.method in ('POST', 'PUT', 'DELETE') and 200 <= response.status_code < 300:
         if '/api/' in request.path:
-            import threading
-            threading.Thread(target=backup_db_to_google_drive).start()
+            # Run synchronously to prevent Vercel container freeze from killing the upload
+            backup_db_to_google_drive()
     return response
 
 # Helper to generate Slug from Title
@@ -595,7 +606,14 @@ def init_db():
     conn.commit()
     conn.close()
 
+restore_db_from_google_drive()
 init_db()
+
+@app.before_request
+def before_request_handler():
+    if request.path.startswith('/api/'):
+        if not '/api/project-image/' in request.path:
+            restore_db_from_google_drive()
 
 # Clean up Trash older than 30 days
 def cleanup_trash():
