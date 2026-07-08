@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <script src="js/under-construction.js"></script>
   <script>
   window.onerror = function(message, source, lineno, colno, error) {
     var div = document.createElement('div');
