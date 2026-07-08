@@ -4760,9 +4760,8 @@ function GalleryManagement() {
   const [gallery, setGallery] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [formImage, setFormImage] = useState('');
-  const [formAlt, setFormAlt] = useState('');
-  const [formDate, setFormDate] = useState('');
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [uploadProgress, setUploadProgress] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState('');
 
@@ -4786,47 +4785,104 @@ function GalleryManagement() {
   }, []);
 
   const handleOpenAdd = () => {
-    setFormImage('');
-    setFormAlt('');
-    setFormDate(new Date().toISOString().split('T')[0]);
+    setSelectedImages([]);
+    setUploadProgress('');
     setSubmitError('');
     setShowModal(true);
   };
 
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    
+    setSubmitError('');
+    const newImages = [];
+    let loadedCount = 0;
+    
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          const maxDim = 800;
+          if (width > maxDim || height > maxDim) {
+            if (width > height) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+          }
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, width, height);
+          const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
+          
+          newImages.push({
+            base64: compressedBase64,
+            filename: file.name
+          });
+          
+          loadedCount++;
+          if (loadedCount === files.length) {
+            setSelectedImages(newImages);
+          }
+        };
+        img.src = event.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (!formImage) {
-      setSubmitError('Please select and upload an image file.');
+    if (!selectedImages.length) {
+      setSubmitError('Please select at least one image file.');
       return;
     }
     setIsSubmitting(true);
     setSubmitError('');
-
+    
+    const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
+    
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
-      const res = await fetch(`${apiBase}/api/gallery`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          image: formImage,
-          caption: formAlt,
-          date: formDate
-        })
-      });
-      if (res.ok) {
-        setShowModal(false);
-        fetchGallery();
-      } else {
-        const errData = await res.json();
-        setSubmitError(errData.error || 'Failed to upload photo to server.');
+      for (let i = 0; i < selectedImages.length; i++) {
+        const imgObj = selectedImages[i];
+        setUploadProgress(`Uploading ${i + 1} of ${selectedImages.length}...`);
+        
+        // Remove extension from filename to make caption cleaner
+        const cleanCaption = imgObj.filename.substring(0, imgObj.filename.lastIndexOf('.')) || imgObj.filename;
+        
+        const res = await fetch(`${apiBase}/api/gallery`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            image: imgObj.base64,
+            caption: cleanCaption,
+            date: new Date().toISOString().split('T')[0]
+          })
+        });
+        
+        if (!res.ok) {
+          throw new Error(`Failed to upload ${imgObj.filename}`);
+        }
       }
+      
+      setShowModal(false);
+      fetchGallery();
     } catch (err) {
-      setSubmitError('Connection error: Failed to connect to server.');
+      setSubmitError(err.message || 'Connection error: Failed to connect to server.');
       console.error(err);
     } finally {
       setIsSubmitting(false);
+      setUploadProgress('');
     }
   };
 
@@ -4865,7 +4921,7 @@ function GalleryManagement() {
           <p class="text-sm text-slate-400">Upload and manage photo moments displayed on the 3D rotating dome gallery.</p>
         </div>
         <button onClick=${handleOpenAdd} class="px-4 py-2.5 bg-burgundy-500 text-white rounded-xl text-sm font-bold hover:bg-burgundy-600 shadow-[0_4px_12px_rgba(139,0,58,0.15)] transition-all flex items-center gap-2">
-          ➕ Add Photo
+          ➕ Add Photos
         </button>
       </div>
 
@@ -4896,7 +4952,7 @@ function GalleryManagement() {
 
       ${gallery.length === 0 && html`
         <div class="text-center py-16 bg-white rounded-2xl border border-dashed border-slate-200">
-          <p class="text-slate-400 text-sm">No photos in the cloud yet. Click "Add Photo" to publish your first moment!</p>
+          <p class="text-slate-400 text-sm">No photos in the cloud yet. Click "Add Photos" to publish your first moment!</p>
         </div>
       `}
 
@@ -4911,57 +4967,31 @@ function GalleryManagement() {
             <form onSubmit=${handleFormSubmit} class="p-6 space-y-5">
               ${submitError && html`<div class="p-3 bg-rose-50 text-rose-600 text-xs font-semibold rounded-lg">${submitError}</div>`}
               <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Upload Image File</label>
-                <input type="file" accept="image/*" onChange=${(e) => {
-                  const file = e.target.files[0];
-                  if (!file) return;
-                  const reader = new FileReader();
-                  reader.onload = (event) => {
-                    const img = new Image();
-                    img.onload = () => {
-                      const canvas = document.createElement('canvas');
-                      let width = img.width;
-                      let height = img.height;
-                      const maxDim = 800;
-                      if (width > maxDim || height > maxDim) {
-                        if (width > height) {
-                          height = Math.round((height * maxDim) / width);
-                          width = maxDim;
-                        } else {
-                          width = Math.round((width * maxDim) / height);
-                          height = maxDim;
-                        }
-                      }
-                      canvas.width = width;
-                      canvas.height = height;
-                      const ctx = canvas.getContext('2d');
-                      ctx.drawImage(img, 0, 0, width, height);
-                      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.75);
-                      setFormImage(compressedBase64);
-                    };
-                    img.src = event.target.result;
-                  };
-                  reader.readAsDataURL(file);
-                }} class="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-slate-50/50 text-slate-800 text-sm focus:outline-none focus:border-burgundy-500 focus:bg-white focus:ring-4 focus:ring-burgundy-500/10 transition-all" required />
-                ${formImage && html`
-                  <div class="mt-2 flex items-center gap-2">
-                    <img src=${formImage} class="w-12 h-12 rounded-lg object-cover border border-slate-200" />
-                    <span class="text-xs text-emerald-600 font-semibold">✓ Image selected and compressed</span>
+                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Upload Image Files (Select one or more)</label>
+                <input type="file" accept="image/*" multiple onChange=${handleFileChange} class="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-slate-50/50 text-slate-800 text-sm focus:outline-none focus:border-burgundy-500 focus:bg-white focus:ring-4 focus:ring-burgundy-500/10 transition-all" required disabled=${isSubmitting} />
+                ${selectedImages.length > 0 && html`
+                  <div class="mt-4 border-t border-slate-100 pt-4">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Selected Preview (${selectedImages.length})</label>
+                    <div class="flex flex-wrap gap-2 max-h-40 overflow-y-auto pr-1">
+                      ${selectedImages.map((img) => html`
+                        <div class="relative group w-14 h-14 rounded-lg overflow-hidden border border-slate-200 shadow-sm bg-slate-50">
+                          <img src=${img.base64} class="w-full h-full object-cover" />
+                        </div>
+                      `)}
+                    </div>
                   </div>
                 `}
               </div>
-              <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Caption / Description</label>
-                <input type="text" value=${formAlt} onInput=${(e) => setFormAlt(e.target.value)} class="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-slate-50/50 text-slate-800 text-sm focus:outline-none focus:border-burgundy-500 focus:bg-white focus:ring-4 focus:ring-burgundy-500/10 transition-all" placeholder="e.g. Blood donation volunteer service" required />
-              </div>
-              <div>
-                <label class="block text-sm font-semibold text-slate-700 mb-1.5">Upload Date</label>
-                <input type="date" value=${formDate} onInput=${(e) => setFormDate(e.target.value)} class="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-slate-50/50 text-slate-800 text-sm focus:outline-none focus:border-burgundy-500 focus:bg-white focus:ring-4 focus:ring-burgundy-500/10 transition-all" required />
-              </div>
               <div class="flex justify-end gap-3 pt-3 border-t border-slate-100">
                 <button type="button" onClick=${() => setShowModal(false)} class="px-4 py-2 border border-slate-200 rounded-xl text-slate-600 text-sm font-semibold hover:bg-slate-50 transition-all" disabled=${isSubmitting}>Cancel</button>
-                <button type="submit" class="px-5 py-2 bg-burgundy-500 hover:bg-burgundy-600 text-white rounded-xl text-sm font-bold shadow-[0_4px_12px_rgba(139,0,58,0.15)] transition-all" disabled=${isSubmitting}>
-                  ${isSubmitting ? 'Uploading...' : 'Add Photo'}
+                <button type="submit" class="px-5 py-2 bg-burgundy-500 hover:bg-burgundy-600 text-white rounded-xl text-sm font-bold shadow-[0_4px_12px_rgba(139,0,58,0.15)] transition-all flex items-center gap-1.5" disabled=${isSubmitting}>
+                  ${isSubmitting ? html`
+                    <svg class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>${uploadProgress || 'Uploading...'}</span>
+                  ` : 'Upload Photos'}
                 </button>
               </div>
             </form>

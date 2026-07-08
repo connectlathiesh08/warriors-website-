@@ -898,7 +898,7 @@ function mount() {
           return s.length > 32 ? s.slice(0, 31).replace(/\s+\S*$/, '') + '…' : s;
         };
         var projects = list.map(function (p) { return { image: p.image, text: galleryLabel(p.title), id: p.id || '', year: p.year || '' }; });
-        var gallery = (localGallery && localGallery.length) ? localGallery.map(function(g) { return { src: g.src, alt: g.alt }; }) : list.map(function (p) { return { src: p.image, alt: p.title }; });
+        var gallery = (localGallery && localGallery.length) ? localGallery.map(function(g) { return { src: g.src, alt: g.alt }; }) : [];
         initGalleries(projects, gallery);
       }
 
@@ -950,7 +950,7 @@ function mount() {
           return s.length > 32 ? s.slice(0, 31).replace(/\s+\S*$/, '') + '…' : s;
         };
         var projects = list.map(function (p) { return { image: p.image, text: galleryLabel(p.title), id: '', year: '' }; });
-        var gallery = (localGallery && localGallery.length) ? localGallery.map(function(g) { return { src: g.src, alt: g.alt }; }) : list.map(function (p) { return { src: p.image, alt: p.title }; });
+        var gallery = (localGallery && localGallery.length) ? localGallery.map(function(g) { return { src: g.src, alt: g.alt }; }) : [];
         initGalleries(projects, gallery);
       }
       initHero(fallbackHero, null);

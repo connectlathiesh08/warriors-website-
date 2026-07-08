@@ -175,68 +175,29 @@ else:
 # Thread-safe helper to get Google Drive service
 def get_drive_service():
     global drive_service
+    if drive_service:
+        return drive_service
+        
     import httplib2
     import google_auth_httplib2
     import googleapiclient.http
     from googleapiclient.discovery import build
     
-    if os.path.exists(GOOGLE_TOKEN_PATH):
-        try:
-            from google.oauth2.credentials import Credentials
-            from google.auth.transport.requests import Request
+    try:
+        creds = load_credentials(['https://www.googleapis.com/auth/drive'])
+        if not creds:
+            print("Failed to load credentials for Google Drive.")
+            return None
             
-            with open(GOOGLE_TOKEN_PATH, "r", encoding="utf-8") as tf:
-                token_data = json.load(tf)
-                
-            client_id = None
-            client_secret = None
-            token_uri = "https://oauth2.googleapis.com/token"
+        def build_request(http, *args, **kwargs):
+            new_http = google_auth_httplib2.AuthorizedHttp(creds, http=httplib2.Http())
+            return googleapiclient.http.HttpRequest(new_http, *args, **kwargs)
             
-            if os.path.exists(GOOGLE_OAUTH_SECRETS_PATH):
-                with open(GOOGLE_OAUTH_SECRETS_PATH, "r", encoding="utf-8") as sf:
-                    sf_data = json.load(sf)
-                cfg = sf_data.get("installed", sf_data.get("web", {}))
-                client_id = cfg.get("client_id")
-                client_secret = cfg.get("client_secret")
-                token_uri = cfg.get("token_uri", "https://oauth2.googleapis.com/token")
-                
-            creds = Credentials(
-                token=token_data.get("access_token"),
-                refresh_token=token_data.get("refresh_token"),
-                client_id=client_id,
-                client_secret=client_secret,
-                token_uri=token_uri,
-                scopes=['https://www.googleapis.com/auth/drive']
-            )
-            
-            if creds.expired or not creds.valid:
-                creds.refresh(Request())
-                token_data["access_token"] = creds.token
-                with open(GOOGLE_TOKEN_PATH, "w", encoding="utf-8") as tf:
-                    json.dump(token_data, tf, indent=2)
-            
-            def build_request(http, *args, **kwargs):
-                new_http = google_auth_httplib2.AuthorizedHttp(creds, http=httplib2.Http())
-                return googleapiclient.http.HttpRequest(new_http, *args, **kwargs)
-                
-            return build('drive', 'v3', credentials=creds, requestBuilder=build_request)
-        except Exception as e:
-            print(f"Error building thread-safe drive service (OAuth): {e}")
-            
-    if os.path.exists(GOOGLE_CREDENTIALS_PATH):
-        try:
-            from google.oauth2 import service_account
-            creds = service_account.Credentials.from_service_account_file(GOOGLE_CREDENTIALS_PATH, scopes=['https://www.googleapis.com/auth/drive'])
-            
-            def build_request(http, *args, **kwargs):
-                new_http = google_auth_httplib2.AuthorizedHttp(creds, http=httplib2.Http())
-                return googleapiclient.http.HttpRequest(new_http, *args, **kwargs)
-                
-            return build('drive', 'v3', credentials=creds, requestBuilder=build_request)
-        except Exception as e:
-            print(f"Error building thread-safe drive service (Service Account): {e}")
-            
-    return drive_service
+        drive_service = build('drive', 'v3', credentials=creds, requestBuilder=build_request)
+        return drive_service
+    except Exception as e:
+        print(f"Error building thread-safe drive service: {e}")
+        return None
 
 
 # Database backup and recovery to/from Google Drive
