@@ -1703,6 +1703,7 @@ def get_sheets_service():
 # Helper: get or create Google Sheet in Finance folder
 def get_or_create_finance_sheet():
     conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
     c = conn.cursor()
     c.execute("SELECT value FROM settings WHERE key = 'google_finance_spreadsheet_id'")
     row = c.fetchone()
@@ -1725,11 +1726,11 @@ def get_or_create_finance_sheet():
             res_meta = drive_service.files().get(fileId=spreadsheet_id, fields='parents').execute()
             parents = res_meta.get('parents', [])
             if parents:
-                finance_folder_id = parents[0]
+                sheets_folder_id = parents[0]
                 try:
-                    drive_service.permissions().create(fileId=finance_folder_id, body={'type': 'anyone', 'role': 'writer'}).execute()
+                    drive_service.permissions().create(fileId=sheets_folder_id, body={'type': 'anyone', 'role': 'writer'}).execute()
                 except Exception as pe:
-                    print(f"Error re-setting permission on folder: {pe}")
+                    print(f"Error re-setting permission on Sheets folder: {pe}")
             try:
                 drive_service.permissions().create(fileId=spreadsheet_id, body={'type': 'anyone', 'role': 'writer'}).execute()
             except Exception as pe:
@@ -1753,13 +1754,18 @@ def get_or_create_finance_sheet():
                     'parents': [parent_id]
                 }
                 folder = drive_service.files().create(body=meta, fields='id').execute()
+                try:
+                    drive_service.permissions().create(fileId=folder.get('id'), body={'type': 'anyone', 'role': 'writer'}).execute()
+                except Exception as pe:
+                    print(f"Error setting public folder permissions: {pe}")
                 return folder.get('id')
                 
         try:
             finance_folder_id = _get_or_create_folder("Finance", parent_folder_id)
+            sheets_folder_id = _get_or_create_folder("Sheets", finance_folder_id)
             
-            # Prevent sheet duplication: check if a ledger already exists in the folder
-            q_search = f"name = 'Rotaract Warriors Finance Ledger' and mimeType = 'application/vnd.google-apps.spreadsheet' and '{finance_folder_id}' in parents and trashed = false"
+            # Prevent sheet duplication: check if a ledger already exists in the Sheets folder
+            q_search = f"name = 'Rotaract Warriors Finance Ledger' and mimeType = 'application/vnd.google-apps.spreadsheet' and '{sheets_folder_id}' in parents and trashed = false"
             search_res = drive_service.files().list(q=q_search, fields="files(id)").execute()
             existing_files = search_res.get('files', [])
             
@@ -1770,7 +1776,7 @@ def get_or_create_finance_sheet():
                 body = {
                     'name': 'Rotaract Warriors Finance Ledger',
                     'mimeType': 'application/vnd.google-apps.spreadsheet',
-                    'parents': [finance_folder_id]
+                    'parents': [sheets_folder_id]
                 }
                 file = drive_service.files().create(body=body, fields='id').execute()
                 spreadsheet_id = file.get('id')
@@ -1783,6 +1789,10 @@ def get_or_create_finance_sheet():
                 drive_service.permissions().create(fileId=finance_folder_id, body={'type': 'anyone', 'role': 'writer'}).execute()
             except Exception as pe:
                 print(f"Error setting permission on folder: {pe}")
+            try:
+                drive_service.permissions().create(fileId=sheets_folder_id, body={'type': 'anyone', 'role': 'writer'}).execute()
+            except Exception as pe:
+                print(f"Error setting permission on Sheets folder: {pe}")
             try:
                 drive_service.permissions().create(fileId=spreadsheet_id, body={'type': 'anyone', 'role': 'writer'}).execute()
             except Exception as pe:
@@ -2128,11 +2138,11 @@ def handle_invoice_upload(base64_str):
                 return folder.get('id')
                 
         finance_folder_id = _get_or_create_folder("Finance", parent_folder_id)
-        invoices_folder_id = _get_or_create_folder("Invoices", finance_folder_id)
+        bills_folder_id = _get_or_create_folder("Bills", finance_folder_id)
         
         file_metadata = {
             'name': filename,
-            'parents': [invoices_folder_id]
+            'parents': [bills_folder_id]
         }
         
         import io
