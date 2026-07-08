@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Poppins:wght@100..900&display=swap');
+
+:root {
+  --foreground-rgb: 26, 26, 26;
+  --background-start-rgb: 253, 253, 253;
+  --background-end-rgb: 250, 245, 247;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+    to bottom,
+    rgb(var(--background-start-rgb)),
+    rgb(var(--background-end-rgb))
+  );
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Background Soft Radial Glow */
+.bg-radial-glow {
+  background: radial-gradient(
+    circle,
+    rgba(139, 0, 58, 0.08) 0%,
+    rgba(255, 255, 255, 0) 70%
+  );
+}
+
+/* Decorative Waves Custom Animations */
+@keyframes float-wave-1 {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(-6px) scaleY(1.03); }
+}
+
+@keyframes float-wave-2 {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(-10px) scaleY(0.97); }
+}
+
+.animate-wave-1 {
+  animation: float-wave-1 12s ease-in-out infinite;
+}
+
+.animate-wave-2 {
+  animation: float-wave-2 18s ease-in-out infinite;
+}
+
+/* Custom Skeleton Pulse Loader */
+.skeleton-card {
+  position: relative;
+  overflow: hidden;
+  background-color: #f1f5f9;
+  border-radius: 1rem;
+}
+
+.skeleton-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.4) 20%,
+    rgba(255, 255, 255, 0.6) 60%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer 1.8s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}

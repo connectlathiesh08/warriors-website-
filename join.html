@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join Us | Rotaract Club of Bangalore Warriors</title>
+  <meta name="description" content="Apply to become a member of the Rotaract Club of Bangalore Warriors and kickstart your leadership journey.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Dynamic Header -->
+  <header id="site-header"></header>
+
+  <!-- Background Orbs -->
+  <div class="bg-glow-orb orb-1"></div>
+  <div class="bg-glow-orb orb-2"></div>
+
+  <!-- Main Form Wrapper -->
+  <section class="section" style="padding-top: 8rem;">
+    <div class="container">
+      <div class="glass-panel-elevated form-wrapper" style="border-radius: var(--radius-lg);">
+        
+        <div class="form-header">
+          <span class="section-tagline">Start Your Journey</span>
+          <h1 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem;" class="gradient-text">Membership Application</h1>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">Fill out the form below to apply. Our membership committee will reach out to you within 48 hours.</p>
+        </div>
+
+        <!-- Step Indicator Progress Tracker -->
+        <div class="form-steps">
+          <div class="form-step-item active" id="step-indicator-1">1</div>
+          <div class="form-step-item" id="step-indicator-2">2</div>
+          <div class="form-step-item" id="step-indicator-3">3</div>
+        </div>
+
+        <form id="join-form" novalidate>
+          
+          <!-- STEP 1: Personal Profile -->
+          <div class="form-section-body active" id="form-section-1">
+            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--color-accent);">Step 1: Personal Profile</h3>
+            
+            <div class="form-group">
+              <label class="form-label" for="full-name">Full Name *</label>
+              <input type="text" id="full-name" class="form-control" placeholder="Enter your full name" required>
+            </div>
+            
+            <div class="form-group">
+              <label class="form-label" for="email">Email Address *</label>
+              <input type="email" id="email" class="form-control" placeholder="example@mail.com" required>
+            </div>
+
+            <div class="grid grid-2">
+              <div class="form-group">
+                <label class="form-label" for="phone">Phone Number *</label>
+                <input type="tel" id="phone" class="form-control" placeholder="10-digit mobile number" required pattern="[0-9]{10}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="age">Age *</label>
+                <input type="number" id="age" class="form-control" min="15" max="30" placeholder="e.g. 21" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2: Background Details -->
+          <div class="form-section-body" id="form-section-2">
+            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--color-accent);">Step 2: Background Details</h3>
+            
+            <div class="form-group">
+              <label class="form-label" for="occupation">Current Occupation *</label>
+              <select id="occupation" class="form-control" required>
+                <option value="" disabled selected>Select your current profile</option>
+                <option value="Student">Student (Undergraduate / Postgraduate)</option>
+                <option value="Working Professional">Working Professional</option>
+                <option value="Self-Employed">Self-Employed / Entrepreneur</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="institution">College / Organization Name *</label>
+              <input type="text" id="institution" class="form-control" placeholder="Name of college or workplace" required>
+            </div>
+          </div>
+
+          <!-- STEP 3: Alignment & Interests -->
+          <div class="form-section-body" id="form-section-3">
+            <h3 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--color-accent);">Step 3: Avenues & Motivation</h3>
+            
+            <div class="form-group">
+              <label class="form-label" for="interest">Preferred Avenues of Interest *</label>
+              <select id="interest" class="form-control" required>
+                <option value="" disabled selected>Select an avenue you want to join</option>
+                <option value="Community Service">Community Service (Service projects, blood drives)</option>
+                <option value="Professional Development">Professional Development (Public speaking, workshops)</option>
+                <option value="Club Service">Club Service (Fellowships, newsletter writing)</option>
+                <option value="International Service">International Service (Global exchange, collaborative forums)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="motivation">Why do you want to join Rotaract Bangalore Warriors? *</label>
+              <textarea id="motivation" class="form-control" placeholder="Share a brief note about what motivates you..." required></textarea>
+            </div>
+          </div>
+
+          <!-- Form Actions Nav Buttons -->
+          <div class="form-actions">
+            <button type="button" id="back-btn" class="btn btn-outline" style="display: none;">Back</button>
+            <button type="button" id="next-btn" class="btn btn-primary" style="margin-left: auto;">Next Step</button>
+            <button type="submit" id="submit-btn" class="btn btn-secondary" style="display: none; margin-left: auto;">Submit Application</button>
+          </div>
+
+        </form>
+
+        <!-- Success Message -->
+        <div class="form-success-message" id="success-container">
+          <div class="form-success-icon">✔</div>
+          <h2 style="font-size: 1.75rem; font-weight: 700; margin-bottom: 1rem;">Application Submitted Successfully!</h2>
+          <p style="color: var(--text-muted); max-width: 480px; margin: 0 auto 2.5rem; font-size: 0.95rem;">
+            Thank you for applying to the Rotaract Club of Bangalore Warriors. Your registration has been cataloged. You can check the Admin Portal to verify your entry!
+          </p>
+          <a href="index.html" class="btn btn-primary">Return to Home</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Dynamic Footer -->
+  <footer id="site-footer"></footer>
+
+  <script src="js/main.js"></script>
+  <script src="js/join.js"></script>
+</body>
+</html>

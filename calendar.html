@@ -1,0 +1,2422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>
+  window.onerror = function(message, source, lineno, colno, error) {
+    var div = document.createElement('div');
+    div.style.position = 'fixed';
+    div.style.bottom = '10px';
+    div.style.left = '10px';
+    div.style.right = '10px';
+    div.style.background = 'rgba(255,0,0,0.95)';
+    div.style.color = '#fff';
+    div.style.padding = '15px';
+    div.style.zIndex = '999999';
+    div.style.fontFamily = 'monospace';
+    div.style.fontSize = '12px';
+    div.style.borderRadius = '5px';
+    div.style.whiteSpace = 'pre-wrap';
+    div.innerHTML = '<strong>JS Error overlay:</strong> ' + message + '<br><strong>Source:</strong> ' + source + ':' + lineno + ':' + colno;
+    document.body.appendChild(div);
+    return false;
+  };
+</script><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico" /><link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png" /><link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png" /><link rel="icon" type="image/png" sizes="96x96" href="assets/favicon/favicon-96x96.png" /><link rel="icon" type="image/png" sizes="192x192" href="assets/favicon/android-icon-192x192.png" /><link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-icon-180x180.png" /><title>
+	Rotary District
+</title><link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" /><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;family=Caveat:wght@600;700&amp;family=Dancing+Script:wght@700&amp;display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/tailwind-config.js?v=11"></script>
+  <style>
+/* ==========================================================================
+   Rotary District 3011 — site.css
+   Verbatim custom CSS blocks ported from the React app's src/index.css.
+   Tailwind utilities are supplied separately (Tailwind config + Preflight).
+   Hex values, easings and timings are copied exactly — do NOT paraphrase.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  height: 100%;
+}
+
+/* Body must GROW with content (min-height), not be locked to a fixed 100% height.
+   It is a flex column, so a fixed height makes the browser shrink the children to
+   fit — squashing the fixed-height header/contact strip on inner pages. The home
+   page only escaped this because Lenis sets `html.lenis body { height: auto }`. */
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Poppins', 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  color: #1a2b4a;
+}
+
+/* Light-blue page with a subtle dotted texture (matches the design background) */
+.page-texture {
+  background-color: #eef3fb;
+  background-image: radial-gradient(rgba(22, 66, 155, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Slim custom scrollbar used inside the list cards */
+.slim-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #c7d2e6 transparent;
+}
+.slim-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.slim-scroll::-webkit-scrollbar-track {
+  background: transparent;
+  margin: 6px 0;
+}
+.slim-scroll::-webkit-scrollbar-thumb {
+  background: #c7d2e6;
+  border-radius: 9999px;
+}
+.slim-scroll::-webkit-scrollbar-thumb:hover {
+  background: #a9b7ce;
+}
+
+/* Lenis smooth scrolling (see js/effects/smooth-scroll.js). */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* Header: white logo wedge. The clip-path lives on this white layer (never on
+   the logo content). The blue header shows wherever the wedge is clipped away,
+   so the diagonal is the white->blue transition on the left. */
+/* The wedge bottom edge is fixed to the header height (Site.Master h-[70px] /
+   md:h-20 = 70/80px). If you change the header height, recompute these paths or
+   blue shows through below the white wedge. */
+.logo-curve {
+  clip-path: path('M 0 0 H 180 C 232 18, 225 62, 255 80 L 0 80 Z');
+}
+@media (max-width: 767px) {
+  .logo-curve {
+    clip-path: path('M 0 0 H 150 C 195 16, 190 54, 214 70 L 0 70 Z');
+  }
+}
+
+/* Desktop nav "slot machine" hover: each letter is a 4-deep vertical reel of
+   the same letter. On hover the reel scrolls down through 3 rows and decelerates
+   to rest on an identical copy (so rest/end look seamless), staggered left->right
+   via an inline --d delay so the reels stop one after another — jackpot style. */
+.slot-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+.slot-text {
+  display: inline-flex;
+  align-items: center;
+}
+.slot-col {
+  display: inline-block;
+  height: 1.25em;
+  overflow: hidden;
+  vertical-align: middle;
+}
+.slot-col > .slot-reel {
+  display: block;
+  transform: translateY(0);
+}
+.slot-col > .slot-reel > span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.25em;
+  line-height: 1;
+  white-space: pre;
+}
+.slot-link:hover .slot-reel,
+.slot-link:focus-visible .slot-reel {
+  animation: slot-spin 0.6s cubic-bezier(0.18, 0.7, 0.12, 1) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes slot-spin {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-75%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .slot-link:hover .slot-reel,
+  .slot-link:focus-visible .slot-reel {
+    animation: none;
+  }
+}
+
+/* --- Entrance animations --- */
+
+/* Cards fade + rise in on first paint. Stagger is set via inline
+   animation-delay where the cards are rendered. */
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.card-enter {
+  animation: card-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* List rows fade + rise as they scroll into view inside a card. Scroll-driven
+   where supported (Chrome 115+); elsewhere rows simply render in their final
+   visible state, so content is never hidden. */
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@supports (animation-timeline: view()) {
+  .row-animate {
+    animation: row-in linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 34%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+  .card-enter,
+  .row-animate {
+    animation: none !important;
+  }
+}
+
+/* ===========================================================================
+   DOUBLE STAIRCASE PAGE TRANSITION
+   Eight full-height columns split into two interlocking staircases:
+   even columns = brand blue, enter from the TOP; odd columns = brand gold,
+   enter from the BOTTOM. A left-to-right per-column stagger (set inline via
+   animation-delay) gives the stepped staircase rhythm.
+
+   Timing here MUST match js/effects/staircase.js:
+     COLUMNS=8  SLIDE_MS=380 (--pt-slide)  STAGGER_MS=60 (inline)  HOLD_MS=90
+   Overlay z-index 3000 clears the sticky header (z-1000) and modals (z-2000).
+   =========================================================================== */
+.pt-overlay {
+  --pt-slide: 380ms;
+  --pt-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  overflow: hidden;
+  pointer-events: none;
+}
+.pt-overlay.pt-idle {
+  display: none;
+}
+.pt-col {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  will-change: transform;
+}
+.pt-top {
+  transform: translateY(-100%);
+}
+.pt-bottom {
+  transform: translateY(100%);
+}
+.pt-blue {
+  background: #16429b;
+}
+.pt-gold {
+  background: #f5a623;
+}
+.pt-overlay[data-stage='cover'] .pt-top {
+  animation: pt-cover-top var(--pt-slide) var(--pt-ease) both;
+}
+.pt-overlay[data-stage='cover'] .pt-bottom {
+  animation: pt-cover-bottom var(--pt-slide) var(--pt-ease) both;
+}
+.pt-overlay[data-stage='reveal'] .pt-top {
+  animation: pt-reveal-top var(--pt-slide) var(--pt-ease) both;
+}
+.pt-overlay[data-stage='reveal'] .pt-bottom {
+  animation: pt-reveal-bottom var(--pt-slide) var(--pt-ease) both;
+}
+@keyframes pt-cover-top {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes pt-cover-bottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes pt-reveal-top {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+@keyframes pt-reveal-bottom {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pt-overlay,
+  .pt-overlay.pt-active {
+    display: none !important;
+  }
+  .pt-col {
+    animation: none !important;
+  }
+}
+
+/* CircularGallery (Our Projects) — from React CircularGallery.css */
+.circular-gallery {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  cursor: grab;
+}
+.circular-gallery:active {
+  cursor: grabbing;
+}
+.circular-gallery:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+
+/* Responsive header nav spacing to prevent collision on medium screens */
+@media (min-width: 1440px) and (max-width: 1535px) {
+  .site-header .main-nav {
+    gap: 0.25rem !important;
+  }
+  .site-header .main-nav .slot-link {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    font-size: 12px !important;
+  }
+  .site-header .header-actions {
+    gap: 0.5rem !important;
+  }
+  .site-header .header-actions .slot-link {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    font-size: 12px !important;
+  }
+  .site-header > div {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+}
+
+
+
+/* ==========================================================================
+   Galleries Fallback Layout Styles (when Tailwind CDN is blocked or offline)
+   ========================================================================== */
+
+/* Circular Gallery styling */
+.projects-gallery {
+  overflow: hidden;
+  cursor: grab;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  position: relative;
+  height: 420px;
+}
+@media (max-width: 639px) {
+  .projects-gallery {
+    height: 380px;
+  }
+}
+.cg-track {
+  display: flex;
+  gap: 1.5rem;
+  padding-left: 3rem;
+  padding-right: 3rem;
+  transition: transform 100ms ease-out;
+  height: 100%;
+  align-items: center;
+  width: max-content;
+  will-change: transform;
+}
+.cg-card {
+  width: 240px;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(241, 245, 249, 0.5);
+  padding: 0.625rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: transform 300ms ease-out, box-shadow 300ms ease-out;
+  cursor: default;
+}
+@media (max-width: 639px) {
+  .cg-card {
+    width: 200px;
+  }
+}
+.cg-card:hover {
+  transform: translateY(-0.5rem);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+.cg-img-wrap {
+  width: 100%;
+  height: 180px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background-color: #f8fafc;
+  position: relative;
+}
+@media (max-width: 639px) {
+  .cg-img-wrap {
+    height: 150px;
+  }
+}
+.cg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 500ms;
+}
+.cg-img:hover {
+  transform: scale(1.05);
+}
+.cg-text-wrap {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+.cg-category {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+}
+.cg-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: #0B2B6B;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Dome Gallery styling */
+.photo-gallery {
+  position: relative;
+  width: 100%;
+  height: 650px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+@media (max-width: 639px) {
+  .photo-gallery {
+    height: 550px;
+  }
+}
+.dg-scene {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+.dg-glow {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.4;
+  transition: all 1000ms;
+  width: 70%;
+  height: 70%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(139, 0, 58, 0.15) 50%, transparent 100%);
+  transform: translateZ(-300px);
+}
+.dg-globe {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 100ms;
+  width: 0px;
+  height: 0px;
+  transform-style: preserve-3d;
+}
+.dg-card {
+  position: absolute;
+  width: 110px;
+  height: 150px;
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f1f5f9;
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: all 300ms ease-out;
+  transform-origin: center;
+}
+@media (max-width: 639px) {
+  .dg-card {
+    width: 95px;
+    height: 130px;
+  }
+}
+.dg-img-wrap {
+  width: 100%;
+  height: 85px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: #f8fafc;
+  position: relative;
+}
+@media (max-width: 639px) {
+  .dg-img-wrap {
+    height: 70px;
+  }
+}
+.dg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.dg-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.25rem;
+  user-select: none;
+  pointer-events: none;
+}
+.dg-title {
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #1e293b;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.dg-footer {
+  font-size: 7px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+</style>
+  <style>
+    .site-header {
+      height: 90px;
+      background-color: #e0f2fe;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .site-header.scrolled {
+      height: 75px;
+      background-color: rgba(224, 242, 254, 0.85);
+      backdrop-filter: blur(12px) saturate(190%);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid #bae6fd;
+    }
+    .font-display {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    /* Premium Hero Section Animations */
+    @keyframes hero-text-in {
+      from {
+        opacity: 0;
+        transform: translateY(35px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes hero-img-in {
+      from {
+        opacity: 0;
+        transform: scale(1.08);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    @keyframes stats-card-in {
+      from {
+        opacity: 0;
+        transform: translateY(60px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes float-wave-1 {
+      0%, 100% {
+        transform: translateY(0) scaleY(1);
+      }
+      50% {
+        transform: translateY(-8px) scaleY(1.04);
+      }
+    }
+    @keyframes float-wave-2 {
+      0%, 100% {
+        transform: translateY(0) scaleY(1);
+      }
+      50% {
+        transform: translateY(6px) scaleY(0.96);
+      }
+    }
+    .hero-text-animate {
+      animation: hero-text-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .hero-img-animate {
+      animation: hero-img-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+    }
+    .stats-card-animate {
+      animation: stats-card-in 1.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+      animation-delay: 0.15s;
+    }
+    .wave-float-1 {
+      animation: float-wave-1 9s ease-in-out infinite;
+    }
+    .wave-float-2 {
+      animation: float-wave-2 13s ease-in-out infinite;
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var header = document.querySelector('.site-header');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 30) {
+          header.classList.add('scrolled');
+        } else {
+          header.classList.remove('scrolled');
+        }
+      });
+      // Mobile toggle button handler
+      var toggle = document.querySelector('.mobile-toggle');
+      var mobileNav = document.querySelector('.mobile-nav');
+      if (toggle && mobileNav) {
+        toggle.addEventListener('click', function() {
+          var isOpen = !mobileNav.classList.contains('hidden');
+          mobileNav.classList.toggle('hidden', isOpen);
+          toggle.querySelector('.icon-menu').classList.toggle('hidden', !isOpen);
+          toggle.querySelector('.icon-x').classList.toggle('hidden', isOpen);
+        });
+      }
+    });
+  </script>
+</head>
+<body class="bg-white overflow-x-hidden">
+<header class="site-header sticky top-0 z-[1000] w-full shrink-0 flex items-center border-b border-transparent">
+    <div class="relative flex h-full w-full items-center justify-between px-10">
+      
+      <!-- Left Logo Branding -->
+      <a href="Default.aspx" class="relative z-[2] flex h-full shrink-0 items-center transition-transform duration-300 hover:scale-[1.02]">
+        <!-- Custom Rotaract Logo cogwheel -->
+        <svg width="46" height="46" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+          <defs>
+            <path id="tooth" d="M46 12 L48 3 L52 3 L54 12 Z" fill="#8B003A" />
+            <rect id="spoke" x="48" y="20" width="4" height="12" fill="#8B003A" />
+          </defs>
+          <g>
+            <use href="#tooth" />
+            <use href="#tooth" transform="rotate(15 50 50)" />
+            <use href="#tooth" transform="rotate(30 50 50)" />
+            <use href="#tooth" transform="rotate(45 50 50)" />
+            <use href="#tooth" transform="rotate(60 50 50)" />
+            <use href="#tooth" transform="rotate(75 50 50)" />
+            <use href="#tooth" transform="rotate(90 50 50)" />
+            <use href="#tooth" transform="rotate(105 50 50)" />
+            <use href="#tooth" transform="rotate(120 50 50)" />
+            <use href="#tooth" transform="rotate(135 50 50)" />
+            <use href="#tooth" transform="rotate(150 50 50)" />
+            <use href="#tooth" transform="rotate(165 50 50)" />
+            <use href="#tooth" transform="rotate(180 50 50)" />
+            <use href="#tooth" transform="rotate(195 50 50)" />
+            <use href="#tooth" transform="rotate(210 50 50)" />
+            <use href="#tooth" transform="rotate(225 50 50)" />
+            <use href="#tooth" transform="rotate(240 50 50)" />
+            <use href="#tooth" transform="rotate(255 50 50)" />
+            <use href="#tooth" transform="rotate(270 50 50)" />
+            <use href="#tooth" transform="rotate(285 50 50)" />
+            <use href="#tooth" transform="rotate(300 50 50)" />
+            <use href="#tooth" transform="rotate(315 50 50)" />
+            <use href="#tooth" transform="rotate(330 50 50)" />
+            <use href="#tooth" transform="rotate(345 50 50)" />
+          </g>
+          <circle cx="50" cy="50" r="39" fill="none" stroke="#8B003A" stroke-width="2.5" />
+          <circle cx="50" cy="50" r="33.5" fill="none" stroke="#8B003A" stroke-width="8.5" />
+          <circle cx="50" cy="50" r="33.5" fill="none" stroke="white" stroke-width="6.5" />
+          <circle cx="50" cy="50" r="29" fill="none" stroke="#8B003A" stroke-width="2.5" />
+          <g>
+            <use href="#spoke" />
+            <use href="#spoke" transform="rotate(60 50 50)" />
+            <use href="#spoke" transform="rotate(120 50 50)" />
+            <use href="#spoke" transform="rotate(180 50 50)" />
+            <use href="#spoke" transform="rotate(240 50 50)" />
+            <use href="#spoke" transform="rotate(300 50 50)" />
+          </g>
+          <circle cx="50" cy="50" r="13" fill="#8B003A" />
+          <circle cx="50" cy="50" r="7.5" fill="white" />
+          <circle cx="50" cy="50" r="4.5" fill="#8B003A" />
+          <rect x="48" y="41.5" width="4" height="4.5" fill="#8B003A" />
+        </svg>
+        <div class="text-left font-display ml-3">
+          <h1 class="font-extrabold text-[22px] md:text-[25px] text-[#8B003A] leading-[1.05] tracking-tight">Rotaract</h1>
+          <div class="flex flex-col">
+            <p class="font-semibold text-[13px] md:text-[14px] text-[#8B003A] leading-none tracking-wide uppercase">Bangalore Warriors</p>
+            <p class="font-medium text-[10px] md:text-[11px] text-slate-400 mt-0.5 tracking-wider uppercase">District 3192</p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Center Navigation (Apple/Stripe Style) -->
+                                          <nav class="main-nav relative z-[2] mx-4 hidden min-w-0 flex-1 items-center justify-center gap-1.5 min-[1440px]:flex">
+        <a href="index.html" data-nav="home" data-label="HOME" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
+          <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+        </a>
+        <a href="about.html" data-nav="about" data-label="ABOUT US" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
+          <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+        </a>
+        <a href="DistrictCommittee.aspx" data-nav="district-committee" data-label="WARRIORS COUNCIL" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
+          <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+        </a>
+        <a href="Events.html" data-nav="events" data-label="EVENTS" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
+          <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+        </a>
+        <a href="calendar.html" data-nav="calendar" data-label="CALENDAR" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors rounded-full bg-[#8B003A] text-white hover:text-white font-display"></a>
+        <a href="Partners.html" data-nav="partners" data-label="PARTNERS" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
+          <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+        </a>
+        <a href="Blog.html" data-nav="blog" data-label="BLOG" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
+          <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
+        </a>
+      </nav>
+
+      <!-- Right Action Buttons -->
+      <div class="header-actions relative z-[2] hidden shrink-0 items-center gap-3 min-[1440px]:flex font-display">
+        <a href="admin.html" data-label="ADMIN PORTAL" class="slot-link flex items-center gap-1.5 rounded-full bg-[#8B003A] px-4.5 py-2.5 text-[13.5px] font-bold text-white shadow-sm transition-all duration-300 hover:translate-y-[-2px] hover:shadow-md hover:bg-[#78002E]">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </a>
+        <a href="https://forms.gle/BVdNJdAXn4ujKXt39" target="_blank" rel="noopener" data-label="BECOME A WARRIOR" class="slot-link flex items-center gap-1.5 rounded-full bg-[#F5A623] px-4.5 py-2.5 text-[13.5px] font-bold text-white shadow-sm transition-all duration-300 hover:translate-y-[-2px] hover:shadow-md hover:bg-[#e0951b]">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+        </a>
+        <a href="https://my.rotary.org/en/login" target="_blank" rel="noopener" data-label="RI LOGIN" class="slot-link flex items-center gap-1.5 rounded-full border-2 border-[#8B003A] bg-white px-4.5 py-2 text-[13.5px] font-bold text-[#8B003A] transition-all duration-300 hover:translate-y-[-2px] hover:bg-[#8B003A] hover:text-white">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </a>
+      </div>
+
+      <!-- Mobile menu toggle -->
+      <button type="button" class="mobile-toggle relative z-[2] ml-auto flex h-10 w-10 items-center justify-center rounded-md text-slate-800 hover:bg-slate-100 min-[1440px]:hidden" aria-label="Toggle navigation menu" aria-expanded="false">
+        <svg class="icon-menu h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        <svg class="icon-x hidden h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile Nav menu -->
+    <nav class="mobile-nav hidden border-t border-slate-100 bg-[#e0f2fe]/95 backdrop-blur-md px-6 pb-8 pt-5 min-[1440px]:hidden w-full absolute top-[70px] left-0 shadow-lg z-50">
+            <ul class="flex flex-col gap-4 font-display font-bold text-slate-700">
+        <li><a href="index.html" data-label="HOME" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li><a href="calendar.html" data-label="CALENDAR" class="slot-link block w-fit text-[17px] text-[#8B003A]"></a></li>
+      </ul>
+      <div class="mt-8 flex flex-col gap-3 font-display">
+        <a href="admin.html" data-label="ADMIN PORTAL" class="slot-link flex items-center justify-center gap-1.5 rounded-full bg-[#8B003A] py-3 text-sm font-bold text-white shadow-sm">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </a>
+        <a href="https://forms.gle/BVdNJdAXn4ujKXt39" target="_blank" rel="noopener" data-label="BECOME A WARRIOR" class="slot-link flex items-center justify-center gap-1.5 rounded-full bg-[#F5A623] py-3 text-sm font-bold text-white shadow-sm">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+        </a>
+        <a href="https://my.rotary.org/en/login" target="_blank" rel="noopener" data-label="RI LOGIN" class="slot-link flex items-center justify-center gap-1.5 rounded-full border-2 border-[#8B003A] bg-white py-2.5 text-sm font-bold text-[#8B003A]">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </a>
+      </div>
+    </nav>
+  </header>
+
+<main class="relative z-10 min-h-screen pt-28 pb-16 bg-white font-sans">
+  <div class="max-w-[1400px] mx-auto px-4 lg:px-8">
+    <div class="text-center mb-8">
+      <span class="inline-block px-3 py-1 rounded-full bg-[#8B003A]/10 text-[#8B003A] text-xs font-bold uppercase tracking-wider mb-3">Interactive Schedule</span>
+      <h1 class="text-3xl md:text-4xl font-black text-slate-800 tracking-tight font-display uppercase">Warriors Event Calendar</h1>
+      <p class="text-slate-500 mt-2 max-w-xl mx-auto text-sm">Plan, track, and RSVP to our upcoming community services, fellowships, and club meetings in our official Google Calendar style interface.</p>
+    </div>
+
+    <!-- Google Calendar Layout Container -->
+    <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 flex flex-col lg:flex-row h-auto lg:h-[750px]">
+      
+      <!-- Left Sidebar: Date Picker + My Calendars -->
+      <aside class="w-full lg:w-[280px] bg-slate-50 border-r border-slate-100 p-6 flex flex-col gap-6 select-none shrink-0">
+        
+
+        <!-- Mini Calendar (Date Picker Grid) -->
+        <div class="flex flex-col gap-2">
+          <div class="flex items-center justify-between px-1">
+            <span id="mini-month-year" class="text-sm font-bold text-slate-700"></span>
+            <div class="flex gap-1">
+              <button id="prev-mini-month" class="p-1 hover:bg-slate-200 rounded-lg text-slate-600 transition-colors">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <button id="next-mini-month" class="p-1 hover:bg-slate-200 rounded-lg text-slate-600 transition-colors">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          </div>
+          <div class="grid grid-cols-7 text-center text-[10px] font-bold text-slate-400 mt-1">
+            <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+          </div>
+          <div id="mini-calendar-grid" class="grid grid-cols-7 text-center gap-y-1 mt-1 text-xs font-semibold"></div>
+        </div>
+
+        <hr class="border-slate-200" />
+
+        <!-- Calendar Filter Checkboxes -->
+        <div class="flex flex-col gap-3">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">My Calendars</span>
+          <label class="flex items-center gap-3 cursor-pointer text-sm font-semibold text-slate-600 hover:text-slate-800">
+            <input type="checkbox" id="filter-club" checked class="w-4 h-4 rounded text-rose-600 border-slate-300 focus:ring-rose-500" />
+            <span class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+              Club Projects
+            </span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer text-sm font-semibold text-slate-600 hover:text-slate-800">
+            <input type="checkbox" id="filter-fellowship" checked class="w-4 h-4 rounded text-blue-600 border-slate-300 focus:ring-blue-500" />
+            <span class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+              Fellowship Events
+            </span>
+          </label>
+          <label class="flex items-center gap-3 cursor-pointer text-sm font-semibold text-slate-600 hover:text-slate-800">
+            <input type="checkbox" id="filter-meetings" checked class="w-4 h-4 rounded text-amber-600 border-slate-300 focus:ring-amber-500" />
+            <span class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              Meetings & Seminars
+            </span>
+          </label>
+        </div>
+      </aside>
+
+      <!-- Main Calendar Area -->
+      <section class="flex-1 flex flex-col h-full overflow-hidden">
+        <!-- Main Calendar Header -->
+        <div class="h-16 border-b border-slate-100 px-6 flex items-center justify-between select-none shrink-0 bg-white">
+          <div class="flex items-center gap-4">
+            <button id="today-btn" class="py-1.5 px-4 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-sm transition-all">
+              Today
+            </button>
+            <div class="flex items-center gap-1">
+              <button id="prev-month-btn" class="p-2 hover:bg-slate-100 rounded-full text-slate-600 transition-colors">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <button id="next-month-btn" class="p-2 hover:bg-slate-100 rounded-full text-slate-600 transition-colors">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+            <h2 id="main-month-year" class="text-base md:text-lg font-bold text-slate-800 tracking-tight"></h2>
+          </div>
+          <!-- View selector dropdown (Statically set to Month View for optimal display) -->
+          <div class="flex gap-2">
+            <select id="view-select" disabled class="py-1.5 px-3 border border-slate-200 rounded-xl text-sm font-semibold text-slate-500 bg-slate-50 focus:outline-none">
+              <option value="month">Month View</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Main Month Grid View -->
+        <div id="calendar-grid-container" class="flex-1 overflow-x-auto overflow-y-auto">
+          <div class="min-w-[700px]">
+            <div class="grid grid-cols-7 border-b border-slate-100 text-center text-xs font-bold text-slate-400 py-2.5 shrink-0 bg-slate-50">
+              <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+            </div>
+            <div id="main-calendar-grid" class="grid grid-cols-7 grid-rows-6 h-[560px] text-slate-700 text-xs font-semibold bg-slate-50/20"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+
+
+
+<!-- Event Details Popover Modal -->
+<div id="event-details-modal" class="fixed inset-0 z-[1100] flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 bg-slate-900/40 backdrop-blur-sm">
+  <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full mx-4 border border-slate-100 transform scale-95 transition-transform duration-300">
+    <div class="p-6 flex flex-col gap-4">
+      <div class="flex items-center justify-between">
+        <span id="detail-category-badge" class="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"></span>
+        <button class="close-modal-btn p-1.5 hover:bg-slate-100 rounded-full text-slate-400 transition-colors">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+      <div class="flex flex-col gap-2">
+        <h3 id="detail-title" class="text-sm font-bold text-slate-800"></h3>
+        <div class="flex items-center gap-2 text-xs text-slate-500">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+          <span id="detail-datetime"></span>
+        </div>
+        <div id="detail-location-container" class="flex items-center gap-2 text-xs text-slate-500">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <span id="detail-location"></span>
+        </div>
+      </div>
+      <p id="detail-desc" class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-3 rounded-xl border border-slate-100"></p>
+      <div class="flex gap-2.5 mt-2">
+        <button id="add-to-google-btn" class="flex-1 py-2 border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold rounded-xl text-xs flex items-center justify-center gap-2 transition-colors">
+          Export to Google
+        </button>
+        <button id="delete-event-btn" class="py-2 px-3 border border-rose-100 hover:bg-rose-50 text-rose-600 font-bold rounded-xl text-xs transition-colors">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <!-- Scripts -->
+  <script>
+/* ==========================================================================
+   Rotary District 3011 — API client
+   Talks to the live REST API at rizones4567.org/API (JWT bearer auth).
+   CORS is open on the API, so direct browser fetch works in local preview AND
+   in production (where the site and API share the rizones4567.org origin).
+
+   SECURITY: requests go same-origin through /ApiProxy.ashx, which injects the
+   bearer token server-side (token lives in Web.config appSettings, NEVER in the
+   browser) and briefly caches responses. To talk to the API directly instead
+   (e.g. a quick local test), set proxy:null and put the token back in `token`.
+   ========================================================================== */
+(function (global) {
+  'use strict';
+
+  // The Rotary year runs 1 July – 30 June; its label is "<startYear>-<endYY>"
+  // (e.g. any date on/after 1 Jul 2026 -> "2026-27", before that -> "2025-26").
+  // Deriving the CURRENT year from the calendar — NOT from the backend's isCurrent
+  // flag — is what makes the site roll over to the new year automatically at local
+  // midnight on 1 July, even if the API hasn't flipped the flag yet or a cached
+  // year list is briefly stale. This is the single source of truth for "what year
+  // is it now"; no year value is hardcoded anywhere.
+  function rotaryYearLabelForDate(d) {
+    d = d || new Date();
+    var startYear = d.getMonth() >= 6 ? d.getFullYear() : d.getFullYear() - 1; // getMonth() 6 = July
+    return startYear + '-' + ('0' + ((startYear + 1) % 100)).slice(-2);
+  }
+
+  var config = {
+    base: 'https://rizones4567.org/API',
+    // Same-origin proxy: requests go to `${proxy}?path=<encoded path+query>` and
+    // NO token is sent from the browser (ApiProxy.ashx adds it server-side).
+    proxy: 'https://rid3191.rotaryindia.org/ApiProxy.ashx',
+    token: '',
+
+    // District identity (Rotary District 3191)
+    districtId: 471,
+    districtNumber: '3191',
+    // Reference club used by the public/club/* endpoints (RI President, etc.).
+    refClubId: 34297,
+    // Media base for /Documents/* asset paths (404 without the /API segment).
+    mediaBase: 'https://rizones4567.org/API',
+
+    // Current Rotary year LABEL, computed from today's date (Jul 1 – Jun 30) so it is
+    // never a stale hardcoded year — it self-updates at the 1 July rollover. The
+    // numeric yearId is NOT declared here on purpose: it's a database key that can't be
+    // derived from a date, so resolveTenant() sets config.yearId purely from the live
+    // /api/rotary-years list at boot (every data fetch waits for that via ready()). No
+    // hardcoded year id or label anywhere.
+    yearLabel: rotaryYearLabelForDate(),
+  };
+
+  /* WORKAROUND for a backend path bug: each district's banners and Governor's
+     Monthly Letters physically live under /Documents/WebsiteData/Group{N}/ on
+     rotaryindia.org, but the API returns banner paths as /uploads/banner/* and GML
+     paths as Group{districtId}/* (both 404), and never exposes this group id. These
+     ids are harvested from the districts' existing legacy sites. Remove this map +
+     the *Url() helpers once the API returns correct media paths. */
+  var DISTRICT_GROUPS = {
+    '2981': '31689', '2982': '31157', '3000': '31690', '3011': '31091', '3012': '31092', '3020': '32020',
+    '3030': '31085', '3040': '31370', '3053': '32021', '3055': '34307', '3056': '34308', '3060': '31234',
+    '3070': '31525', '3080': '31709', '3090': '31115', '3100': '31680', '3110': '31116', '3120': '31691',
+    '3131': '31683', '3132': '31552', '3141': '31093', '3142': '31072', '3150': '31138', '3160': '31096',
+    '3170': '31685', '3181': '31303', '3182': '31094', '3191': '34309', '3192': '34310', '3203': '31095',
+    '3204': '33415', '3205': '35015', '3206': '34991', '3211': '31681', '3212': '31687', '3231': '31114',
+    '3233': '31682', '3234': '34732', '3240': '31113', '3250': '31088', '3261': '31684', '3262': '31375',
+    '3291': '31083',
+  };
+  // District header logos ("Rotary Dist NNNN") — the API returns districtLogoPath
+  // null, so these full URLs are harvested from the districts' legacy sites. (The
+  // club RotaryLogoPath is a CLUB-specific logo, not the district's, so it's not used.)
+  var DISTRICT_LOGOS = {
+    '2981': 'https://rotaryindia.org/Documents/WebsiteData/Group31689/LOGO/UpperLogo030520240456492989307PM.png',
+    '2982': 'https://rotaryindia.org/Documents/WebsiteData/Group31157/LOGO/UpperLogo030520240459251122790PM.png',
+    '3000': 'https://rotaryindia.org/Documents/WebsiteData/Group31690/LOGO/UpperLogo030520240510119432851PM.png',
+    '3011': 'https://rotaryindia.org/Documents/WebsiteData/Group31091/LOGO/UpperLogo030520240513523814219PM.png',
+    '3012': 'https://rotaryindia.org/Documents/WebsiteData/Group31092/LOGO/UpperLogo030520240543313348299PM.png',
+    '3020': 'https://rotaryindia.org/Documents/WebsiteData/Group32020/LOGO/UpperLogo030520240600594633488PM.png',
+    '3030': 'https://rotaryindia.org/Documents/WebsiteData/Group31085/LOGO/UpperLogo030520240604037453816PM.png',
+    '3040': 'https://rotaryindia.org/Documents/WebsiteData/Group31370/LOGO/UpperLogo030520240606050896432PM.png',
+    '3053': 'https://rotaryindia.org/Documents/WebsiteData/Group32021/LOGO/UpperLogo030520240610239973244PM.png',
+    '3055': 'https://rotaryindia.org/Documents/WebsiteData/Group34307/LOGO/UpperLogo030520240618480777387PM.png',
+    '3056': 'https://rotaryindia.org/Documents/WebsiteData/Group34308/LOGO/UpperLogo030520240622043284655PM.png',
+    '3060': 'https://rotaryindia.org/Documents/WebsiteData/Group31234/LOGO/UpperLogo030520240625217514940PM.png',
+    '3070': 'https://rotaryindia.org/Documents/WebsiteData/Group31525/LOGO/UpperLogo030520240631027683186PM.png',
+    '3080': 'https://rotaryindia.org/Documents/WebsiteData/Group31709/LOGO/UpperLogo030520240634544099954PM.png',
+    '3090': 'https://rotaryindia.org/Documents/WebsiteData/Group31115/LOGO/UpperLogo030520240635428165404PM.png',
+    '3100': 'https://rotaryindia.org/Documents/WebsiteData/Group31680/LOGO/UpperLogo030520240639333020021PM.png',
+    '3110': 'https://rotaryindia.org/Documents/WebsiteData/Group31116/LOGO/UpperLogo260720241210139305155PM.png',
+    '3120': 'https://rotaryindia.org/Documents/WebsiteData/Group31691/LOGO/UpperLogo030520240644556626029PM.png',
+    '3131': 'https://rotaryindia.org/Documents/WebsiteData/Group31683/LOGO/UpperLogo030520240648121638588PM.png',
+    '3132': 'https://rotaryindia.org/Documents/WebsiteData/Group31552/LOGO/UpperLogo030520240652322274130PM.png',
+    '3141': 'https://rotaryindia.org/Documents/WebsiteData/Group31093/LOGO/UpperLogo030520240653590088347PM.png',
+    '3142': 'https://rotaryindia.org/Documents/WebsiteData/Group31072/LOGO/UpperLogo030520240453020947672PM.png',
+    '3150': 'https://rotaryindia.org/Documents/WebsiteData/Group31138/LOGO/UpperLogo030520240656207597360PM.png',
+    '3160': 'https://rotaryindia.org/Documents/WebsiteData/Group31096/LOGO/UpperLogo030520240657015877292PM.png',
+    '3170': 'https://rotaryindia.org/Documents/WebsiteData/Group31685/LOGO/UpperLogo030520240658014629938PM.png',
+    '3181': 'https://rotaryindia.org/Documents/WebsiteData/Group31303/LOGO/UpperLogo030520240659192917671PM.png',
+    '3182': 'https://rotaryindia.org/Documents/WebsiteData/Group31094/LOGO/UpperLogo030520240659566510230PM.png',
+    '3191': 'https://rotaryindia.org/Documents/WebsiteData/Group34309/LOGO/UpperLogo120920250737240087837AM.png',
+    '3192': 'https://rotaryindia.org/Documents/WebsiteData/Group34310/LOGO/UpperLogo040520240249233531560PM.png',
+    '3203': 'https://rotaryindia.org/Documents/WebsiteData/Group31095/LOGO/UpperLogo040520240300241529011PM.png',
+    '3204': 'https://rotaryindia.org/Documents/WebsiteData/Group33415/LOGO/UpperLogo040520240302356690289PM.png',
+    '3205': 'https://rotaryindia.org/Documents/WebsiteData/Group35015/LOGO/UpperLogo311020250444269586447PM.png',
+    '3206': 'https://rotaryindia.org/Documents/WebsiteData/Group34991/LOGO/UpperLogo020720251211526880902PM.png',
+    '3211': 'https://rotaryindia.org/Documents/WebsiteData/Group31681/LOGO/UpperLogo040520240307411859505PM.png',
+    '3212': 'https://rotaryindia.org/Documents/WebsiteData/Group31687/LOGO/UpperLogo040520240310501394740PM.png',
+    '3231': 'https://rotaryindia.org/Documents/WebsiteData/Group31114/LOGO/UpperLogo040520240319382824578PM.png',
+    '3233': 'https://rotaryindia.org/Documents/WebsiteData/Group31682/LOGO/UpperLogo010720240410598720353PM.png',
+    '3234': 'https://rotaryindia.org/Documents/WebsiteData/Group34732/LOGO/UpperLogo010720240436000464055PM.png',
+    '3240': 'https://rotaryindia.org/Documents/WebsiteData/Group31113/LOGO/UpperLogo040520240322388301016PM.png',
+    '3250': 'https://rotaryindia.org/Documents/WebsiteData/Group31088/LOGO/UpperLogo040520240324316275086PM.png',
+    '3261': 'https://rotaryindia.org/Documents/WebsiteData/Group31684/LOGO/UpperLogo030520240655247125897PM.png',
+    '3262': 'https://rotaryindia.org/Documents/WebsiteData/Group31375/LOGO/UpperLogo030520240650205550877PM.png',
+    '3291': 'https://rotaryindia.org/Documents/WebsiteData/Group31083/LOGO/UpperLogo030520240646093659485PM.png',
+  };
+  function groupOf() { return DISTRICT_GROUPS[String(config.districtNumber)] || ''; }
+  function logoOf() { return DISTRICT_LOGOS[String(config.districtNumber)] || ''; }
+  function baseName(p) { return String(p || '').split(/[\\/]/).pop(); }
+  config.districtLogo = logoOf(); // default district's header logo (updated on tenant resolve)
+
+  function buildUrl(path, params) {
+    var qs = '';
+    if (params) {
+      var parts = [];
+      Object.keys(params).forEach(function (k) {
+        var v = params[k];
+        if (v === undefined || v === null || v === '') return;
+        parts.push(encodeURIComponent(k) + '=' + encodeURIComponent(v));
+      });
+      qs = parts.length ? '?' + parts.join('&') : '';
+    }
+    if (config.proxy) {
+      return config.proxy + '?path=' + encodeURIComponent(path + qs);
+    }
+    return config.base + path + qs;
+  }
+
+  // Low-level fetch — does NOT wait for tenant resolution. Used internally to
+  // bootstrap the district, and by the public `request` once we're ready.
+  function rawRequest(path, params, options) {
+    options = options || {};
+    var headers = { Accept: 'application/json' };
+    if (!config.proxy && config.token) {
+      headers.Authorization = 'Bearer ' + config.token;
+    }
+    return fetch(buildUrl(path, params), {
+      method: options.method || 'GET',
+      headers: headers,
+    }).then(function (res) {
+      if (!res.ok) {
+        var err = new Error('API ' + res.status + ' for ' + path);
+        err.status = res.status;
+        throw err;
+      }
+      var ct = res.headers.get('content-type') || '';
+      return ct.indexOf('application/json') !== -1 ? res.json() : res.text();
+    });
+  }
+
+  /* ----------------------------------------------------------------------
+     MULTI-TENANT RESOLUTION
+     One deployment serves every district. Production: the SUBDOMAIN decides
+     (rid3011.rotaryindia.org → "3011"). For local testing without subdomains,
+     a path segment (/3011/...) or ?district=3011 also works and is remembered
+     across page-to-page navigation (sessionStorage), so you only set it once.
+     Resolution order: subdomain → path segment → ?district= → remembered → default.
+     ---------------------------------------------------------------------- */
+  var DEV_KEY = 'rid-dev-district';
+
+  function numFromSubdomain() {
+    var host = ((global.location && global.location.hostname) || '').split(':')[0];
+    if (!host || /^[0-9.]+$/.test(host)) return null; // ignore bare IPs / empty
+    var m = /(?:^|[^0-9])(\d{3,5})(?:[^0-9]|$)/.exec(host);
+    return m ? m[1] : null;
+  }
+  function numFromPath() {
+    var loc = global.location || {};
+    var segs = ((loc.pathname || '') + '').split('/').filter(Boolean);
+    return segs.length && /^\d{3,5}$/.test(segs[0]) ? segs[0] : null;
+  }
+  function numFromQuery() {
+    var loc = global.location || {};
+    try {
+      var q = new URLSearchParams(loc.search || '');
+      var v = q.get('district') || q.get('d');
+      return v && /^\d{3,5}$/.test(v) ? v : null;
+    } catch (e) {
+      return null;
+    }
+  }
+  function remember(num) {
+    try {
+      global.sessionStorage.setItem(DEV_KEY, num);
+    } catch (e) {}
+  }
+  function recall() {
+    try {
+      return global.sessionStorage.getItem(DEV_KEY);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Returns the district number for this request, or null to use the default.
+  function resolveDistrictNumber() {
+    var sub = numFromSubdomain();
+    if (sub) return sub; // production — never overridden by query/path
+    // Local testing helpers (only when not on a real district subdomain):
+    var dev = numFromPath() || numFromQuery();
+    if (dev) {
+      remember(dev); // persist so further navigation keeps the district
+      return dev;
+    }
+    return recall(); // a district set earlier this session
+  }
+
+  var readyPromise = null;
+  function resolveTenant() {
+    var num = resolveDistrictNumber();
+
+    // 1. district number → numeric districtId (+ confirm it exists).
+    var pId = num
+      ? rawRequest('/api/Districts', { page: 1, pageSize: 500 })
+          .then(function (res) {
+            var items = (res && res.items) || res || [];
+            var row = items.filter(function (d) {
+              return String(d.districtNumber) === String(num);
+            })[0];
+            if (row && row.id) {
+              config.districtNumber = String(num);
+              config.districtId = row.id;
+              config.districtName = 'Rotary District ' + num;
+              // Per-district header logo: prefer the harvested district logo, then
+              // any API-provided logo. app.js swaps it into the header.
+              config.districtLogo = logoOf() || row.districtLogoPath || row.DistrictLogoPath || '';
+            }
+          })
+          .catch(function () {})
+      : Promise.resolve();
+
+    // 2. Rotary years: resolve the CURRENT year, then apply the user's selected
+    //    year for this session (the year dropdown stores a short label like
+    //    "2024-25" in sessionStorage). Data endpoints use config.yearId, so this
+    //    is what actually makes the year filter change the data.
+    var pYear = rawRequest('/api/rotary-years')
+      .then(function (res) {
+        var years = (res && res.items) || res || [];
+        config.years = years;
+        // Determine the CURRENT Rotary year by the CALENDAR (Jul 1 – Jun 30), not by
+        // the backend's isCurrent flag. The flag can lag the 1 July rollover (a job
+        // flips it) and a cached year list can be briefly stale, either of which would
+        // wrongly leave the site on last year on 1 July. The date is authoritative; we
+        // just look up the row whose label matches to get its API id. Fall back to the
+        // isCurrent flag only if no row matches today's label (shouldn't happen once
+        // the new year row exists — it already does).
+        var todayLabel = rotaryYearLabelForDate();
+        var current =
+          years.filter(function (y) { return y.yearLabel === todayLabel; })[0] ||
+          years.filter(function (y) { return y.isCurrent; })[0];
+        if (current) {
+          config.currentYearId = current.id;
+          config.currentYearLabel = current.yearLabel;
+          config.yearId = current.id;       // default = current
+          config.yearLabel = current.yearLabel;
+        }
+        var selected = null;
+        try { selected = global.sessionStorage.getItem('rid-year'); } catch (e) {}
+        if (selected) {
+          var row = years.filter(function (y) { return y.yearLabel === selected; })[0];
+          if (row && row.id) {
+            config.yearId = row.id;
+            config.yearLabel = row.yearLabel;
+          }
+        }
+      })
+      .catch(function () {});
+
+    return Promise.all([pId, pYear]).then(function () {
+      // 3. reference club for this district (RI President is global, but the
+      //    newsletters page defaults to this club). Pick the first club.
+      return rawRequest('/api/mobile/club-finder', {
+        districtNumber: config.districtNumber,
+        page: 1,
+        pageSize: 1,
+      })
+        .then(function (res) {
+          var c = res && res.items && res.items[0];
+          if (c && c.clubId) config.refClubId = c.clubId;
+        })
+        .catch(function () {});
+    });
+  }
+
+  function timeoutPromise(ms, promise) {
+    return new Promise(function (resolve, reject) {
+      var timer = setTimeout(function () {
+        reject(new Error('Timeout after ' + ms + ' ms'));
+      }, ms);
+      promise
+        .then(function (value) {
+          clearTimeout(timer);
+          resolve(value);
+        })
+        .catch(function (err) {
+          clearTimeout(timer);
+          reject(err);
+        });
+    });
+  }
+
+  /** Resolves once the tenant district + current year are known. */
+  function ready() {
+    if (!readyPromise) readyPromise = timeoutPromise(2500, resolveTenant());
+    return readyPromise;
+  }
+
+  // Public request — waits for tenant resolution so config.districtId /
+  // districtNumber / refClubId are correct before any page fetches data.
+  function request(path, params, options) {
+    return ready().then(function () {
+      return rawRequest(path, params, options);
+    });
+  }
+
+  var RotaryAPI = {
+    config: config,
+    get: request,
+    ready: ready,
+
+    // ---- Reference data ----
+    rotaryYears: function () {
+      return request('/api/rotary-years');
+    },
+    currentYear: function () {
+      return request('/api/rotary-years/current');
+    },
+    district: function (id) {
+      return request('/api/Districts/' + (id || config.districtId));
+    },
+
+    // ---- Clubs / Club Finder (public, district-scoped) ----
+    // NOTE: club-finder pageSize caps at 100 server-side; use clubFinderAll to page.
+    clubFinder: function (params) {
+      var p = Object.assign(
+        { districtNumber: config.districtNumber, page: 1, pageSize: 100 },
+        params || {}
+      );
+      return request('/api/mobile/club-finder', p);
+    },
+    clubFinderAll: function (filter) {
+      var acc = [];
+      function page(p) {
+        var params = Object.assign(
+          { districtNumber: config.districtNumber, page: p, pageSize: 100 },
+          filter || {}
+        );
+        return request('/api/mobile/club-finder', params).then(function (res) {
+          var items = (res && res.items) || [];
+          acc = acc.concat(items);
+          var total = (res && res.totalCount) || acc.length;
+          if (acc.length < total && items.length) return page(p + 1);
+          return { items: acc, totalCount: total };
+        });
+      }
+      return page(1);
+    },
+    club: function (clubId) {
+      return request('/api/mobile/club-finder/' + clubId);
+    },
+    // ---- Club board of directors (YEAR-SCOPED, lightweight ~1KB) ----
+    // Office bearers for the SELECTED Rotary year (President, Secretary, Treasurer,
+    // …) so the Club Leadership section changes with the year selector. The
+    // club-finder detail above returns .president/.secretary that are NOT
+    // year-scoped (always the CURRENT year's officers) — using this for leadership
+    // is what makes the club profile reflect the chosen year. Returns a bare array
+    // of { memberName, profilePhotoPath, designationId, designationName, yearLabel }.
+    clubBoard: function (clubId, yearId) {
+      return request('/api/clubs/' + clubId + '/board-of-directors', {
+        yearId: yearId != null ? yearId : config.yearId,
+      });
+    },
+
+    // ---- District committee / governors / directory ----
+    districtDirectory: function (rotaryYear, districtNumber) {
+      return request('/api/district-directory/' + (districtNumber || config.districtNumber), {
+        rotaryYear: rotaryYear || config.yearLabel,
+      });
+    },
+    committeeMembers: function (params) {
+      return request(
+        '/api/districts/' + config.districtId + '/committee/members',
+        Object.assign({ yearId: config.yearId }, params || {})
+      );
+    },
+    // ---- Full district member roster (the public "directory") ----
+    // Server-side paginated + searchable. Powers the District Committee page,
+    // which lists EVERY member of the district (not just committee appointees) —
+    // mirrors the admin panel's /districts/{id}/members listing.
+    districtMembers: function (params) {
+      return request(
+        '/api/districts/' + config.districtId + '/members',
+        Object.assign({ page: 1, pageSize: 24 }, params || {})
+      );
+    },
+    // ---- District committee groups (the "committees" the directory filters by) ----
+    // committeeGroups: the list (id, groupName, memberCount). committeeGroupMembers:
+    // a single committee's members (paginated + searchable). Year-scoped to config.yearId.
+    committeeGroups: function (params) {
+      return request(
+        '/api/districts/' + config.districtId + '/committee/groups',
+        Object.assign({ yearId: config.yearId, page: 1, pageSize: 200 }, params || {})
+      );
+    },
+    committeeGroupMembers: function (groupId, params) {
+      return request(
+        '/api/districts/' + config.districtId + '/committee/groups/' + groupId + '/members',
+        Object.assign({ page: 1, pageSize: 24 }, params || {})
+      );
+    },
+    districtGovernors: function (params) {
+      return request('/api/district-governors', params);
+    },
+
+    // ---- Calendar (birthdays / anniversaries / events) — month-scoped ----
+    districtCalendar: function (month, year, districtId) {
+      return request('/api/mobile/district-calendar/' + (districtId || config.districtId), {
+        month: month,
+        year: year,
+      });
+    },
+
+    // ---- Projects (district-wide avenue-of-service report; moduleKey filters) ----
+    districtProjects: function (params) {
+      return request(
+        '/api/districts/' + config.districtId + '/district-report/avenue-of-service-all-clubs',
+        Object.assign({ yearId: config.yearId }, params || {})
+      );
+    },
+
+    // ---- Newsletters (public, per club; default the reference club) ----
+    // NOT year-scoped (per user decision): list ALL of a club's bulletins across
+    // every Rotary year, so the Newsletters page shows everything regardless of the
+    // header year selector. (Passing yearId would filter on fk_year_id and hide a
+    // club's older years — e.g. Activa Delhi's are all 2023-24 — which is exactly
+    // what the user asked to remove. yearId=0 returns NOTHING for this endpoint, so
+    // we OMIT the param entirely to get all years.)
+    // WORKAROUND for a BACKEND bug: the public feed /api/public/club/{id}/newsletters
+    // drops any row where ExpiryDateTime < NOW(). The club dashboard has NO expiry
+    // field, so newly-added newsletters are stored with ExpiryDateTime == PublishDateTime
+    // and expire the instant they're published → they never reach the public site
+    // (verified: club 2765's 3 July-1 adds return via admin but not via /public). The
+    // admin LIST endpoint has NO expiry gate, filters the year by publish-date RANGE
+    // (so untagged yearId=0 rows still resolve), and resolves file paths identically.
+    // We do NOT pass status=Published: the original public feed showed FUTURE-dated
+    // (scheduled) newsletters too (e.g. Dombivli East's 5-Sep bulletin), and status=
+    // Published would hide them — so we fetch all non-deleted rows to match that intent.
+    // Unwrap {items} to keep the array the page expects. REVERT to /api/public/... once
+    // the create API stops defaulting expiry to the publish time. See known-issues Session 9.
+    clubNewsletters: function (clubId) {
+      return request('/api/clubs/' + (clubId || config.refClubId) + '/newsletters', {
+        pageSize: 200,
+      }).then(function (r) { return (r && r.items) || (Array.isArray(r) ? r : []); });
+    },
+    // District-level newsletters = the Governor's Monthly Letters (GMLs), stored
+    // in the same ebulletin infrastructure under the district's group.
+    // IMPORTANT: GML rows carry NO Rotary year (fk_year_id is 0/empty on every
+    // record, across all districts), so filtering by yearId server-side returns
+    // ZERO. We therefore fetch ALL of them (no yearId) and the Newsletters page
+    // filters by the Rotary year DERIVED from each letter's publishDateTime.
+    // (Club newsletters DO carry a real yearId, so those stay server-filtered.)
+    districtNewsletters: function () {
+      return request('/api/districts/' + config.districtId + '/newsletters', {
+        pageSize: 200,
+      });
+    },
+    // Resolve a banner record path to its REAL working URL via the district's
+    // website group (the API's /uploads/banner/* 404s). '' if the group is unknown.
+    bannerUrl: function (path) {
+      var g = groupOf();
+      return g ? 'https://rotaryindia.org/Documents/WebsiteData/Group' + g + '/BANNERS/' + baseName(path) : '';
+    },
+    // Resolve a GML (district ebulletin) path to its REAL working URL via the group.
+    gmlUrl: function (path) {
+      var g = groupOf();
+      return g ? 'https://rotaryindia.org/Documents/ebulletin/Group' + g + '/' + baseName(path) : '';
+    },
+
+    // ---- RI President (public, no auth needed) ----
+    // Year-specific: the API returns the president for `yearId` (e.g. 2024-25 →
+    // Stephanie Urchick, 2025-26 → Francesco Arezzo). Without it the API defaults
+    // to the current year, which made the card look "stuck" when the year changed.
+    // The RI President is GLOBAL (one record per Rotary year), but the only public
+    // endpoint is club-scoped and returns 404 when the club isn't "serviceable" —
+    // and MANY districts' first club isn't, which left the President stuck on the
+    // hardcoded default (showing the wrong year's president). So: try this district's
+    // club, and on ANY failure retry via a known always-serviceable club (34297) —
+    // the president returned is identical regardless of which club is used.
+    internationalPresident: function (clubId) {
+      var FALLBACK_CLUB = 34297;
+      var primary = clubId || config.refClubId || FALLBACK_CLUB;
+      function fetchFor(cid) {
+        return request('/api/public/club/' + cid + '/international-president', { yearId: config.yearId });
+      }
+      return fetchFor(primary).catch(function () {
+        return String(primary) === String(FALLBACK_CLUB) ? null : fetchFor(FALLBACK_CLUB);
+      });
+    },
+
+    // ---- District Governor (authoritative, public, year-wise) ----
+    // The home page + dignitary page normally read the DG from /committee/members,
+    // but that table is only populated for years a district has filled into its
+    // committee. The AUTHORITATIVE DG is the admin-entered district_governors record,
+    // exposed publicly (no auth) at /api/public/club/{clubId}/district-governor?yearId=.
+    // That endpoint resolves the DISTRICT from the club, so ANY serviceable club in the
+    // district returns THIS district's governor — but the club must have a website
+    // record (else 404), so we try the reference club first and then a few more of the
+    // district's clubs until one resolves. They all resolve to the same governor.
+    // Returns { memberId, memberName, profilePhoto, description, email, mobileNumber,
+    // yearLabel, designation } or null. (Distinct from districtGovernors() above, which
+    // hits the admin-only /api/district-governors and is 403 for the site token.)
+    districtGovernor: function (yearId) {
+      var yr = yearId != null ? yearId : config.yearId;
+      function tryClub(cid) {
+        if (!cid) return Promise.resolve(null);
+        return request('/api/public/club/' + cid + '/district-governor', { yearId: yr })
+          .then(function (d) { return d && d.memberName ? d : null; })
+          .catch(function () { return null; });
+      }
+      return tryClub(config.refClubId).then(function (dg) {
+        if (dg) return dg;
+        // Reference club has no public website → try other district clubs (capped).
+        return request('/api/mobile/club-finder', {
+          districtNumber: config.districtNumber, page: 1, pageSize: 25,
+        })
+          .then(function (res) {
+            var items = (res && res.items) || [];
+            var ids = [];
+            for (var i = 0; i < items.length && ids.length < 10; i++) {
+              if (items[i].clubId && items[i].clubId !== config.refClubId) ids.push(items[i].clubId);
+            }
+            return (function next(i) {
+              if (i >= ids.length) return null;
+              return tryClub(ids[i]).then(function (d) { return d || next(i + 1); });
+            })(0);
+          })
+          .catch(function () { return null; });
+      });
+    },
+
+    // ---- Public projects ----
+    // YEAR-SCOPED: the public-projects endpoint reuses the same numeric id across
+    // Rotary years, so the id parsed from the avenue feed's publicPhotoUrl only
+    // resolves to the SAME project when yearId is supplied. Without it the API
+    // returns a different year's project entirely (wrong club/date/location/photos)
+    // — which is why the detail page and card thumbnails showed unrelated projects.
+    // (Note: the API honours `yearId`, NOT the `year=` param embedded in publicPhotoUrl.)
+    publicProject: function (id, yearId) {
+      return request('/api/public/projects/' + id, { yearId: yearId != null ? yearId : config.yearId });
+    },
+    clubProjectsPublic: function (clubId, params) {
+      return request('/api/public/clubs/' + clubId + '/projects', params);
+    },
+  };
+
+  // The current Rotary year label derived from today's date (Jul 1 – Jun 30).
+  // Lets app.js/home.js show the right year IMMEDIATELY, before the API resolves
+  // (and even if it never does), with no hardcoded fallback year.
+  RotaryAPI.currentRotaryYearLabel = function () { return rotaryYearLabelForDate(); };
+
+  // Resolve the live current Rotary year on boot (non-blocking; updates config).
+  RotaryAPI.resolveCurrentYear = function () {
+    return RotaryAPI.currentYear()
+      .then(function (y) {
+        if (y && y.id) {
+          config.yearId = y.id;
+          config.yearLabel = y.yearLabel;
+        }
+        return y;
+      })
+      .catch(function () {
+        /* keep defaults on failure */
+      });
+  };
+
+  global.RotaryAPI = RotaryAPI;
+})(window);
+
+</script>
+  <script>
+/* ==========================================================================
+   Rotary District 3011 — shared chrome behaviour (vanilla port of TopNav.tsx,
+   YearSelect.tsx, VisitorCount.tsx). No framework. Runs on every page.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var reduceMotion =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ----------------------------------------------------------------------
+     1. Slot-machine nav reels — build the per-letter reel markup from the
+        plain label so the .slot-* CSS hover animation works (TopNav §2.6).
+        Each .slot-link carries data-label="HOME".
+     ---------------------------------------------------------------------- */
+  function buildSlotReels() {
+    document.querySelectorAll('.slot-link[data-label]').forEach(function (link) {
+      if (link.querySelector('.slot-text')) return; // already built
+      var label = link.getAttribute('data-label');
+      var sr = document.createElement('span');
+      sr.className = 'sr-only';
+      sr.textContent = label;
+
+      var text = document.createElement('span');
+      text.className = 'slot-text';
+      text.setAttribute('aria-hidden', 'true');
+      for (var i = 0; i < label.length; i++) {
+        var ch = label[i] === ' ' ? '\u00A0' : label[i];
+        var col = document.createElement('span');
+        col.className = 'slot-col';
+        var reel = document.createElement('span');
+        reel.className = 'slot-reel';
+        reel.style.setProperty('--d', i * 45 + 'ms');
+        for (var k = 0; k < 4; k++) {
+          var s = document.createElement('span');
+          s.textContent = ch;
+          reel.appendChild(s);
+        }
+        col.appendChild(reel);
+        text.appendChild(col);
+      }
+      // Insert reels + sr-only label before any trailing caret svg.
+      var caret = link.querySelector('svg');
+      link.insertBefore(sr, caret || null);
+      link.insertBefore(text, caret || null);
+    });
+  }
+
+  /* ----------------------------------------------------------------------
+     2. Active nav state — match <body data-page> against link data-nav.
+     ---------------------------------------------------------------------- */
+  var DESKTOP_ACTIVE = ['font-bold', 'text-white'];
+  var DESKTOP_IDLE = ['font-bold', 'text-[#8B003A]', 'hover:text-[#8B003A]/80'];
+
+  function navFromUrl() {
+    var file = (location.pathname.split('/').pop() || '').toLowerCase();
+    if (!file || file === 'index.html' || file === 'default.aspx' || file === 'home.aspx') return 'home';
+    if (file.indexOf('about') === 0) return 'about';
+    if (file.indexOf('districtcommittee') === 0 || file.indexOf('director') === 0) return 'district-committee';
+    if (file.indexOf('clubservice') === 0) return 'club-service';
+    if (file.indexOf('clubfinder') === 0 || file.indexOf('club') === 0) return 'club-finder';
+    if (file.indexOf('calendar') === 0) return 'calendar';
+    if (file.indexOf('projects') === 0) return 'club-projects';
+    if (file.indexOf('newsletters') === 0) return 'newsletters';
+    return 'home';
+  }
+
+  // Reveal the (default-hidden) "About Us" nav link only for districts that have
+  // About content configured (/website-data/about). Re-applies active state + the
+  // magic pill once the link appears.
+  function hydrateAboutLink(districtId) {
+    if (!window.RotaryAPI || !RotaryAPI.get) return;
+    RotaryAPI.get('/api/districts/' + (districtId || RotaryAPI.config.districtId) + '/website-data/about')
+      .then(function (rows) {
+        var items = (rows && rows.items) ? rows.items : (Array.isArray(rows) ? rows : []);
+        var has = items.some(function (x) {
+          return (x.isActive === undefined || x.isActive) && (x.content || x.Content);
+        });
+        if (!has) return;
+        document.querySelectorAll('.about-nav-link').forEach(function (el) { el.style.display = ''; });
+        applyActiveState();
+        positionPill();
+      })
+      .catch(function () {});
+  }
+
+  function applyActiveState() {
+    var page = document.body.getAttribute('data-page') || navFromUrl();
+    document.querySelectorAll('.main-nav a.slot-link[data-nav]').forEach(function (a) {
+      var active = a.getAttribute('data-nav') === page;
+      (active ? DESKTOP_ACTIVE : DESKTOP_IDLE).forEach(function (c) {
+        a.classList.toggle(c, true);
+      });
+      // remove the opposite set
+      (active ? DESKTOP_IDLE : DESKTOP_ACTIVE).forEach(function (c) {
+        a.classList.remove(c);
+      });
+      if (active) a.setAttribute('data-active', 'true');
+    });
+    // Mobile plain links active colour.
+    document.querySelectorAll('.mobile-nav a.slot-link[data-nav]').forEach(function (a) {
+      var active = a.getAttribute('data-nav') === page;
+      a.classList.toggle('underline', active);
+      a.classList.toggle('text-[#8B003A]', true);
+    });
+  }
+
+  /* ----------------------------------------------------------------------
+     3. Desktop "magic pill" — slide a pill behind the active nav item.
+     ---------------------------------------------------------------------- */
+  function positionPill() {
+    var nav = document.querySelector('.main-nav');
+    var pill = document.querySelector('.nav-pill');
+    if (!nav || !pill) return;
+    var active = nav.querySelector('a.slot-link[data-active="true"]');
+    if (!active) {
+      pill.style.opacity = '0';
+      return;
+    }
+    pill.style.left = active.offsetLeft + 'px';
+    pill.style.top = active.offsetTop + 'px';
+    pill.style.width = active.offsetWidth + 'px';
+    pill.style.height = active.offsetHeight + 'px';
+    pill.style.opacity = '1';
+  }
+
+  /* ----------------------------------------------------------------------
+     4. Mobile menu toggle + single-open accordion.
+     ---------------------------------------------------------------------- */
+  function wireMobileMenu() {
+    var toggle = document.querySelector('.mobile-toggle');
+    var menu = document.querySelector('.mobile-nav');
+    if (!toggle || !menu) return;
+    var iconMenu = toggle.querySelector('.icon-menu');
+    var iconX = toggle.querySelector('.icon-x');
+
+    function setOpen(open) {
+      menu.classList.toggle('hidden', !open);
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (iconMenu) iconMenu.classList.toggle('hidden', open);
+      if (iconX) iconX.classList.toggle('hidden', !open);
+    }
+    toggle.addEventListener('click', function () {
+      setOpen(menu.classList.contains('hidden'));
+    });
+
+    // Sub-accordion (only one open).
+    menu.querySelectorAll('.mobile-sub-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var sub = btn.nextElementSibling;
+        var caret = btn.querySelector('svg');
+        var isOpen = sub && !sub.classList.contains('hidden');
+        // close all
+        menu.querySelectorAll('.mobile-sub').forEach(function (s) {
+          s.classList.add('hidden');
+        });
+        menu.querySelectorAll('.mobile-sub-toggle svg').forEach(function (c) {
+          c.classList.remove('rotate-180');
+        });
+        if (sub && !isOpen) {
+          sub.classList.remove('hidden');
+          if (caret) caret.classList.add('rotate-180');
+          btn.setAttribute('aria-expanded', 'true');
+        } else if (btn) {
+          btn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+
+    // Any leaf link closes the whole menu.
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () {
+        setOpen(false);
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------------------
+     5. Year select — persist across page loads (localStorage).
+     ---------------------------------------------------------------------- */
+  // Session-scoped so a fresh visit always defaults to the CURRENT Rotary year;
+  // within a session the choice persists across page-to-page navigation.
+  var YEAR_KEY = 'rid-year';
+  function wireYearSelect() {
+    var sel = document.querySelector('.year-select');
+    if (!sel) return;
+    // Changing the year stores the choice (short label, e.g. "2024-25") and
+    // reloads, so every page re-fetches for that year — client.js ready() reads
+    // this and sets config.yearId/yearLabel BEFORE any data is fetched.
+    sel.addEventListener('change', function () {
+      var m = /^(\d{4})-(\d{4})$/.exec(sel.value); // "2024-2025" -> "2024-25"
+      var shortLbl = m ? m[1] + '-' + m[2].slice(2) : sel.value;
+      try {
+        sessionStorage.setItem(YEAR_KEY, shortLbl);
+      } catch (e) {}
+      window.location.reload();
+    });
+  }
+
+  // Immediately point the year dropdown at the TRUE current Rotary year (computed
+  // from today's date) — or the user's remembered choice — before the API resolves.
+  // This removes any flash of last year's label and keeps the selection correct even
+  // if the live year list is slow or unavailable. buildYearOptions() later rebuilds
+  // the full option list from the live API. No hardcoded year is involved.
+  function presetYearSelect() {
+    var sel = document.querySelector('.year-select');
+    if (!sel) return;
+    var pick = null;
+    try { pick = sessionStorage.getItem(YEAR_KEY); } catch (e) {}
+    if (!pick && window.RotaryAPI && RotaryAPI.currentRotaryYearLabel) {
+      pick = RotaryAPI.currentRotaryYearLabel();
+    }
+    if (!pick) return;
+    var has = Array.prototype.some.call(sel.options, function (o) { return o.value === pick; });
+    if (!has) {
+      var opt = document.createElement('option');
+      opt.value = pick;
+      opt.textContent = pick;
+      sel.appendChild(opt);
+    }
+    sel.value = pick;
+  }
+
+  /* ----------------------------------------------------------------------
+     7. Chrome-wide API hydration — the ContactStrip (email/phone) and the
+        YearSelect options live in Site.Master, so hydrate them here for EVERY
+        page. Progressive enhancement: static fallbacks already render.
+     ---------------------------------------------------------------------- */
+  function toLongYear(lbl) {
+    var m = /^(\d{4})-(\d{2})$/.exec(lbl || '');
+    return m ? m[1] + '-' + m[1].slice(0, 2) + m[2] : lbl;
+  }
+  function hydrateChrome() {
+    if (!window.RotaryAPI) return;
+
+    // Multi-tenant: once the subdomain's district is resolved, reflect it in the
+    // page title and any district-name slots (logo image stays the Rotary mark).
+    if (RotaryAPI.ready) {
+      RotaryAPI.ready().then(function () {
+        var cfg = RotaryAPI.config || {};
+        var name = cfg.districtName;
+        if (name) {
+          document.title = name;
+          document.querySelectorAll('.district-name').forEach(function (el) {
+            el.textContent = name;
+          });
+          document.querySelectorAll('[data-district-alt]').forEach(function (el) {
+            el.setAttribute('alt', name);
+          });
+        }
+        // Fill any "District <NNNN>" slots with the resolved district number.
+        if (cfg.districtNumber) {
+          document.querySelectorAll('.district-number').forEach(function (el) {
+            el.textContent = cfg.districtNumber;
+          });
+        }
+        // Swap the neutral Rotary logo for the district's own logo once the
+        // backend provides one (empty for every district today → stays neutral).
+        if (cfg.districtLogo) {
+          var lp = cfg.districtLogo;
+          var url = /^https?:\/\//.test(lp)
+            ? lp
+            : (cfg.mediaBase || '') + (lp.charAt(0) === '/' ? '' : '/') + lp;
+          document.querySelectorAll('[data-district-logo]').forEach(function (el) {
+            el.src = url;
+            if (name) el.alt = name;
+          });
+        }
+        // "About Us" nav link is hidden by default and only revealed for districts
+        // that actually have About content configured.
+        hydrateAboutLink(cfg.districtId);
+      });
+    }
+
+    // Year selector — a fixed window around the CURRENT Rotary year (previous 10
+    // + next 5 = 16 options, newest first). The option that's pre-selected is the
+    // year the data is ACTUALLY showing (config.yearLabel = selected-or-current,
+    // resolved by client.js ready()), so the dropdown and the data never disagree.
+    function buildYearOptions() {
+      var sel = document.querySelector('.year-select');
+      if (!sel) return;
+      var cfg = RotaryAPI.config || {};
+      // Date-derived current Rotary year (Jul 1 – Jun 30) as the ultimate fallback,
+      // so nothing here is ever pinned to a hardcoded/stale year.
+      var curYear = (RotaryAPI.currentRotaryYearLabel && RotaryAPI.currentRotaryYearLabel()) || '';
+      var shown = cfg.yearLabel || cfg.currentYearLabel || curYear; // short form e.g. "2026-27"
+      var m = /^(\d{4})/.exec(cfg.currentYearLabel || cfg.yearLabel || curYear || '');
+      var cur = m ? parseInt(m[1], 10) : new Date().getFullYear();
+      // Build ONLY from the real Rotary years the API actually knows, so the option
+      // VALUE is the exact API label (e.g. "2026-27"). client.js ready() matches that
+      // label directly, so the selected year ALWAYS takes effect — no string-format
+      // drift, and we never offer a year the API can't resolve. Window: current-10 ..
+      // current+1, so the upcoming year is selectable and correctly shows BLANK when it
+      // has no data yet (never the previous year's data).
+      var opts = (cfg.years || [])
+        .filter(function (y) {
+          var mm = /^(\d{4})-\d{2}$/.exec(y.yearLabel || '');
+          if (!mm) return false;
+          var yy = parseInt(mm[1], 10);
+          return yy >= cur - 10 && yy <= cur + 1;
+        })
+        .sort(function (a, b) { return parseInt(b.yearLabel, 10) - parseInt(a.yearLabel, 10); });
+      if (!opts.length) return; // API years unavailable -> keep the static fallback options
+      sel.innerHTML = '';
+      opts.forEach(function (y) {
+        var opt = document.createElement('option');
+        opt.value = y.yearLabel;       // EXACT API label
+        opt.textContent = y.yearLabel;
+        if (y.yearLabel === shown) { opt.selected = true; opt.setAttribute('selected', 'selected'); }
+        sel.appendChild(opt);
+      });
+      sel.value = shown;
+    }
+    if (RotaryAPI.ready) {
+      RotaryAPI.ready().then(buildYearOptions);
+    } else {
+      buildYearOptions();
+    }
+
+    // Contact details are YEAR-SPECIFIC (each Rotary year's DG has their own
+    // email/phone — e.g. 2025-26 vs 2026-27 differ). Wait for the tenant/year to
+    // resolve so config.yearId is the SELECTED year, request that year, and fall
+    // back to the current year's contact only if the selected year has none.
+    RotaryAPI.ready()
+      .then(function () {
+        var cfg = RotaryAPI.config;
+        function fetchContact(yearId) {
+          return RotaryAPI.get('/api/districts/' + cfg.districtId + '/website-data/contact-details', { yearId: yearId })
+            .then(function (rows) { return (rows && rows[0]) || null; });
+        }
+        // No year-fallback: show ONLY the selected year's contact (blank if that
+        // year has none), so a future/empty year never displays the previous
+        // year's DG email/phone.
+        return fetchContact(cfg.yearId);
+      })
+      .then(function (c) {
+        var em = document.querySelector('.contact-email');
+        var emt = document.querySelector('.contact-email-text');
+        var ph = document.querySelector('.contact-phone');
+        var pht = document.querySelector('.contact-phone-text');
+        var email = c && c.email, phone = c && c.phone;
+        // Hide a chip entirely when that detail isn't configured for the
+        // district/year (e.g. demo districts like 5656) rather than showing an
+        // empty icon-only chip.
+        if (em) { em.classList.toggle('hidden', !email); if (email) { em.href = 'mailto:' + email; if (emt) emt.textContent = email; } }
+        if (ph) { ph.classList.toggle('hidden', !phone); if (phone) { ph.href = 'tel:' + phone; if (pht) pht.textContent = phone; } }
+      })
+      .catch(function () {});
+
+    hydrateSocialLinks();
+  }
+
+  /* Footer social media links — live from the district's social-links endpoint
+     (the API returns [{ platform, linkUrl, isActive }]). Renders one icon row
+     per active platform; hides the list entirely if none are configured. */
+  var SOCIAL_ICONS = {
+    facebook: '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>',
+    twitter: '<path d="M4 4l11.5 16h4.5l-11.5 -16z"/><path d="M4 20l6.5 -7.5"/><path d="M13.5 11l6.5 -7"/>',
+    instagram: '<rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>',
+    linkedin: '<path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/>',
+    youtube: '<path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><polygon points="10 15 15 12 10 9"/>',
+    website: '<circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+  };
+  function socialLabel(platform) {
+    var p = String(platform || '').toLowerCase();
+    if (p === 'twitter') return 'Twitter / X';
+    return p.charAt(0).toUpperCase() + p.slice(1);
+  }
+  function hydrateSocialLinks() {
+    var list = document.querySelector('[data-footer-social]');
+    if (!list) return;
+    RotaryAPI.get('/api/districts/' + RotaryAPI.config.districtId + '/website-data/social-links')
+      .then(function (rows) {
+        var links = (rows || []).filter(function (r) {
+          return (r.isActive === undefined || r.isActive) && (r.linkUrl || r.url);
+        });
+        if (!links.length) {
+          list.innerHTML = '';
+          return;
+        }
+        list.innerHTML = links
+          .map(function (r) {
+            var platform = String(r.platform || '').toLowerCase();
+            var url = r.linkUrl || r.url;
+            var paths = SOCIAL_ICONS[platform] || SOCIAL_ICONS.website;
+            var fillRule = platform === 'instagram' ? 'fill="none"' : 'fill="none"';
+            return (
+              '<li><a href="' + url + '" target="_blank" rel="noopener noreferrer" ' +
+              'class="flex items-center gap-2.5 text-sm text-white/85 transition-colors hover:text-white">' +
+              '<svg class="h-4 w-4" viewBox="0 0 24 24" ' + fillRule + ' stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+              paths + '</svg>' + socialLabel(platform) + '</a></li>'
+            );
+          })
+          .join('');
+      })
+      .catch(function () {
+        list.innerHTML = '';
+      });
+  }
+
+  /* ---------------------------------------------------------------------- */
+  function init() {
+    // Local environment compatibility: rewrite .aspx links to .html for local testing
+    if (window.location.protocol === 'file:' || 
+        window.location.hostname === 'localhost' || 
+        window.location.hostname === '127.0.0.1') {
+      document.querySelectorAll('a[href]').forEach(function (a) {
+        var href = a.getAttribute('href');
+        if (href) {
+          if (href.toLowerCase() === 'default.aspx') {
+            a.setAttribute('href', 'index.html');
+          } else if (href.toLowerCase().endsWith('.aspx')) {
+            a.setAttribute('href', href.replace(/\.aspx$/i, '.html'));
+          }
+        }
+      });
+    }
+
+    buildSlotReels();
+    applyActiveState();
+    wireMobileMenu();
+    wireYearSelect();
+    presetYearSelect();
+    hydrateChrome();
+    // Pill needs layout + fonts settled.
+    positionPill();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(positionPill);
+    }
+    window.addEventListener('resize', positionPill);
+    window.addEventListener('load', positionPill);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+
+</script>
+  <script>
+// Google Calendar Format Logic for Rotaract Club of Bangalore Warriors (Linked to Admin Dashboard)
+document.addEventListener('DOMContentLoaded', function () {
+  
+  function getRelativeDate(offsetDays) {
+    var d = new Date();
+    d.setDate(d.getDate() + offsetDays);
+    var y = d.getFullYear();
+    var m = String(d.getMonth() + 1).padStart(2, '0');
+    var r = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + r;
+  }
+
+  // Initialize warriors_events in localStorage if not exists (sync with admin database)
+  if (!localStorage.getItem('warriors_events')) {
+    var defaultEvents = [
+      { id: 'EVT-201', name: 'Installation Ceremony', date: getRelativeDate(-2), venue: 'Ritz Carlton Ballroom', registrations: 150, budget: 45000, status: 'Completed', attendance: 92 },
+      { id: 'EVT-202', name: 'Core Committee Meeting', date: getRelativeDate(2), venue: 'Club House', registrations: 15, budget: 500, status: 'Upcoming', attendance: 0 },
+      { id: 'EVT-203', name: 'Speaker Session on Leadership', date: getRelativeDate(5), venue: 'Zoom Meeting', registrations: 85, budget: 2000, status: 'Upcoming', attendance: 0 },
+      { id: 'EVT-204', name: 'Community Blood Donation Drive', date: getRelativeDate(8), venue: 'Rotary Hall, Bangalore', registrations: 120, budget: 6000, status: 'Upcoming', attendance: 0 }
+    ];
+    localStorage.setItem('warriors_events', JSON.stringify(defaultEvents));
+  }
+
+  // Load from localStorage and map to display format
+  var events = [];
+  function loadAndMapEvents() {
+    var apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+    
+    return fetch(apiBase + '/api/events')
+      .then(function(res) {
+        if (!res.ok) throw new Error('API response error');
+        return res.json();
+      })
+      .then(function(raw) {
+        events = raw.map(function(e) {
+          return {
+            id: e.id,
+            title: e.name || 'Untitled Event',
+            category: e.category || 'meeting',
+            date: e.date || '',
+            time: e.time || '18:00',
+            location: e.venue || 'TBD',
+            desc: e.description || ('Status: ' + (e.status || 'Upcoming') + '. Budget: Rs. ' + (e.budget || 0) + '. Registrations: ' + (e.registrations || 0) + '.')
+          };
+        });
+      })
+      .catch(function(err) {
+        console.error('Failed to fetch events from backend, loading from localStorage:', err);
+        try {
+          var saved = localStorage.getItem('warriors_events');
+          if (saved) {
+            var raw = JSON.parse(saved);
+            events = raw.map(function(e) {
+              return {
+                id: e.id || ('EVT-' + Math.random()),
+                title: e.name || 'Untitled Event',
+                category: e.category || 'meeting',
+                date: e.date || '',
+                time: '18:00',
+                location: e.venue || 'TBD',
+                desc: 'Status: ' + (e.status || 'Upcoming') + '. Budget: Rs. ' + (e.budget || 0) + '. Registrations: ' + (e.registrations || 0) + '.'
+              };
+            });
+          }
+        } catch (storageErr) {
+          console.error('Local storage read failed:', storageErr);
+          events = [];
+        }
+      });
+  }
+
+  // 2. Navigation State
+  var currentDate = new Date(); // Date displayed in main calendar
+  var miniCalendarDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  var selectedEvent = null;
+
+  // DOM Elements
+  var miniMonthYear = document.getElementById('mini-month-year');
+  var miniGrid = document.getElementById('mini-calendar-grid');
+  var prevMiniBtn = document.getElementById('prev-mini-month');
+  var nextMiniBtn = document.getElementById('next-mini-month');
+
+  var mainMonthYear = document.getElementById('main-month-year');
+  var mainGrid = document.getElementById('main-calendar-grid');
+  var prevMonthBtn = document.getElementById('prev-month-btn');
+  var nextMonthBtn = document.getElementById('next-month-btn');
+  var todayBtn = document.getElementById('today-btn');
+
+  var filterClub = document.getElementById('filter-club');
+  var filterFellowship = document.getElementById('filter-fellowship');
+  var filterMeetings = document.getElementById('filter-meetings');
+
+  var detailsModal = document.getElementById('event-details-modal');
+  var detailBadge = document.getElementById('detail-category-badge');
+  var detailTitle = document.getElementById('detail-title');
+  var detailDateTime = document.getElementById('detail-datetime');
+  var detailLocationContainer = document.getElementById('detail-location-container');
+  var detailLocation = document.getElementById('detail-location');
+  var detailDesc = document.getElementById('detail-desc');
+  var deleteBtn = document.getElementById('delete-event-btn');
+  var addToGoogleBtn = document.getElementById('add-to-google-btn');
+  var closeBtns = document.querySelectorAll('.close-modal-btn');
+
+  // Month names
+  var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+  // 3. Render Helpers
+  function renderAll() {
+    loadAndMapEvents().then(function() {
+      renderMiniCalendar();
+      renderMainCalendar();
+    });
+  }
+
+  // Mini Side Calendar
+  function renderMiniCalendar() {
+    var year = miniCalendarDate.getFullYear();
+    var month = miniCalendarDate.getMonth();
+    miniMonthYear.textContent = monthNames[month] + ' ' + year;
+
+    miniGrid.innerHTML = '';
+    var firstDay = new Date(year, month, 1).getDay();
+    var daysInMonth = new Date(year, month + 1, 0).getDate();
+    var prevDaysInMonth = new Date(year, month, 0).getDate();
+
+    // Padding from prev month
+    for (var i = firstDay - 1; i >= 0; i--) {
+      var day = prevDaysInMonth - i;
+      var el = document.createElement('div');
+      el.className = 'text-slate-300 py-1.5 cursor-pointer hover:bg-slate-100 rounded-full transition-colors';
+      el.textContent = day;
+      (function(y, m, d) {
+        el.addEventListener('click', function() {
+          currentDate = new Date(y, m, d);
+          miniCalendarDate = new Date(y, m, 1);
+          renderAll();
+        });
+      })(year, month - 1, day);
+      miniGrid.appendChild(el);
+    }
+
+    // Days of current month
+    var today = new Date();
+    for (var day = 1; day <= daysInMonth; day++) {
+      var el = document.createElement('div');
+      var isCurrent = day === currentDate.getDate() && month === currentDate.getMonth() && year === currentDate.getFullYear();
+      var isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+      
+      var classes = 'py-1.5 cursor-pointer rounded-full transition-colors';
+      if (isCurrent) {
+        classes += ' bg-[#8B003A] text-white font-bold';
+      } else if (isToday) {
+        classes += ' border border-[#8B003A] text-[#8B003A] font-bold';
+      } else {
+        classes += ' text-slate-700 hover:bg-slate-100';
+      }
+      
+      el.className = classes;
+      el.textContent = day;
+      (function(y, m, d) {
+        el.addEventListener('click', function() {
+          currentDate = new Date(y, m, d);
+          renderAll();
+        });
+      })(year, month, day);
+      miniGrid.appendChild(el);
+    }
+
+    // Padding for next month
+    var totalCells = firstDay + daysInMonth;
+    var nextPadding = 42 - totalCells; // 6 rows grid
+    for (var day = 1; day <= nextPadding; day++) {
+      var el = document.createElement('div');
+      el.className = 'text-slate-300 py-1.5 cursor-pointer hover:bg-slate-100 rounded-full transition-colors';
+      el.textContent = day;
+      (function(y, m, d) {
+        el.addEventListener('click', function() {
+          currentDate = new Date(y, m, d);
+          miniCalendarDate = new Date(y, m, 1);
+          renderAll();
+        });
+      })(year, month + 1, day);
+      miniGrid.appendChild(el);
+    }
+  }
+
+  // Filter conditions
+  function isEventVisible(evt) {
+    if (evt.category === 'club' && !filterClub.checked) return false;
+    if (evt.category === 'fellowship' && !filterFellowship.checked) return false;
+    if (evt.category === 'meeting' && !filterMeetings.checked) return false;
+    return true;
+  }
+
+  // Main Google Calendar view
+  function renderMainCalendar() {
+    var year = currentDate.getFullYear();
+    var month = currentDate.getMonth();
+    mainMonthYear.textContent = monthNames[month] + ' ' + year;
+
+    mainGrid.innerHTML = '';
+    
+    // Config month grid
+    var firstDay = new Date(year, month, 1).getDay();
+    var daysInMonth = new Date(year, month + 1, 0).getDate();
+    var prevDaysInMonth = new Date(year, month, 0).getDate();
+
+    // 1. Previous Month Padding days
+    for (var i = firstDay - 1; i >= 0; i--) {
+      var day = prevDaysInMonth - i;
+      var dateStr = formatDateStr(year, month - 1, day);
+      var dayCell = createDayCell(day, false, dateStr);
+      mainGrid.appendChild(dayCell);
+    }
+
+    // 2. Current Month days
+    var today = new Date();
+    for (var day = 1; day <= daysInMonth; day++) {
+      var dateStr = formatDateStr(year, month, day);
+      var isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+      var dayCell = createDayCell(day, true, dateStr, isToday);
+      mainGrid.appendChild(dayCell);
+    }
+
+    // 3. Next Month Padding days
+    var totalCells = firstDay + daysInMonth;
+    var nextPadding = 42 - totalCells;
+    for (var day = 1; day <= nextPadding; day++) {
+      var dateStr = formatDateStr(year, month + 1, day);
+      var dayCell = createDayCell(day, false, dateStr);
+      mainGrid.appendChild(dayCell);
+    }
+  }
+
+  function formatDateStr(y, m, d) {
+    var dateObj = new Date(y, m, d);
+    var rY = dateObj.getFullYear();
+    var rM = String(dateObj.getMonth() + 1).padStart(2, '0');
+    var rD = String(dateObj.getDate()).padStart(2, '0');
+    return rY + '-' + rM + '-' + rD;
+  }
+
+  function createDayCell(dayNum, isCurrentMonth, dateStr, isToday) {
+    var cell = document.createElement('div');
+    cell.className = 'border-r border-b border-slate-100 p-2 min-h-[90px] flex flex-col justify-between transition-all hover:bg-slate-50/50 relative';
+    
+    // Day number label
+    var labelContainer = document.createElement('div');
+    labelContainer.className = 'flex justify-end';
+    
+    var label = document.createElement('span');
+    var isCurrentDay = dateStr === formatDateStr(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    
+    if (isToday) {
+      label.className = 'w-6 h-6 rounded-full flex items-center justify-center bg-[#8B003A] text-white font-bold text-xs shadow-sm';
+    } else if (isCurrentDay) {
+      label.className = 'w-6 h-6 rounded-full flex items-center justify-center border border-[#8B003A] text-[#8B003A] font-bold text-xs';
+    } else {
+      label.className = isCurrentMonth ? 'text-slate-800 text-xs font-semibold' : 'text-slate-300 text-xs';
+    }
+    label.textContent = dayNum;
+    labelContainer.appendChild(label);
+    cell.appendChild(labelContainer);
+
+    // Event container
+    var list = document.createElement('div');
+    list.className = 'flex flex-col gap-1 mt-1 overflow-hidden max-h-[70px] select-none';
+    
+    // Find matching events
+    var dayEvents = events.filter(function (e) { return e.date === dateStr && isEventVisible(e); });
+    
+    dayEvents.forEach(function (evt) {
+      var badge = document.createElement('div');
+      var colorClasses = '';
+      if (evt.category === 'club') {
+        colorClasses = 'bg-rose-50 border-l-2 border-rose-500 text-rose-700';
+      } else if (evt.category === 'fellowship') {
+        colorClasses = 'bg-blue-50 border-l-2 border-blue-500 text-blue-700';
+      } else {
+        colorClasses = 'bg-amber-50 border-l-2 border-amber-500 text-amber-700';
+      }
+      badge.className = colorClasses + ' px-1.5 py-0.5 rounded text-[10px] font-bold truncate tracking-tight cursor-pointer transition-all hover:brightness-95';
+      badge.textContent = evt.time + ' ' + evt.title;
+      
+      badge.addEventListener('click', function (e) {
+        e.stopPropagation();
+        openEventDetails(evt);
+      });
+      list.appendChild(badge);
+    });
+    
+    cell.appendChild(list);
+    return cell;
+  }
+
+  // 4. Modal and popover details
+  function openEventDetails(evt) {
+    selectedEvent = evt;
+    
+    detailTitle.textContent = evt.title;
+    detailDateTime.textContent = evt.date + ' at ' + evt.time;
+    if (evt.location) {
+      detailLocation.textContent = evt.location;
+      detailLocationContainer.style.display = 'flex';
+    } else {
+      detailLocationContainer.style.display = 'none';
+    }
+    detailDesc.textContent = evt.desc || 'No description provided.';
+
+    // Set badge style
+    if (evt.category === 'club') {
+      detailBadge.textContent = 'Club Project';
+      detailBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-rose-100 text-rose-700';
+    } else if (evt.category === 'fellowship') {
+      detailBadge.textContent = 'Fellowship Event';
+      detailBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-blue-100 text-blue-700';
+    } else {
+      detailBadge.textContent = 'Meeting / Seminar';
+      detailBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-700';
+    }
+
+    detailsModal.classList.remove('opacity-0', 'pointer-events-none');
+    detailsModal.querySelector('.bg-white').classList.remove('scale-95');
+    detailsModal.querySelector('.bg-white').classList.add('scale-100');
+  }
+
+  function closeAllModals() {
+    if (detailsModal) {
+      detailsModal.classList.add('opacity-0', 'pointer-events-none');
+      var card = detailsModal.querySelector('.bg-white');
+      if (card) {
+        card.classList.remove('scale-100');
+        card.classList.add('scale-95');
+      }
+    }
+    selectedEvent = null;
+  }
+
+  closeBtns.forEach(function (btn) {
+    btn.addEventListener('click', closeAllModals);
+  });
+
+  if (detailsModal) {
+    detailsModal.addEventListener('click', function (e) {
+      if (e.target === detailsModal) {
+        closeAllModals();
+      }
+    });
+  }
+
+  // Handle Delete Event (Sync back to localStorage)
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', function () {
+      if (selectedEvent) {
+        try {
+          var saved = localStorage.getItem('warriors_events');
+          if (saved) {
+            var raw = JSON.parse(saved);
+            raw = raw.filter(function (e) { return e.id !== selectedEvent.id; });
+            localStorage.setItem('warriors_events', JSON.stringify(raw));
+          }
+        } catch (e) {
+          console.error(e);
+        }
+        closeAllModals();
+        renderAll();
+      }
+    });
+  }
+
+  // Google Calendar integration exports
+  if (addToGoogleBtn) {
+    addToGoogleBtn.addEventListener('click', function () {
+      if (selectedEvent) {
+        var title = encodeURIComponent(selectedEvent.title);
+        var desc = encodeURIComponent(selectedEvent.desc || '');
+        var loc = encodeURIComponent(selectedEvent.location || '');
+        
+        var d = selectedEvent.date.replace(/-/g, '');
+        var t = selectedEvent.time.replace(/:/g, '') + '00';
+        var dates = d + 'T' + t + '/' + d + 'T' + t;
+        
+        var url = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + title + '&dates=' + dates + '&details=' + desc + '&location=' + loc;
+        window.open(url, '_blank');
+      }
+    });
+  }
+
+  // 5. Navigation Control Buttons
+  prevMiniBtn.addEventListener('click', function () {
+    miniCalendarDate.setMonth(miniCalendarDate.getMonth() - 1);
+    renderMiniCalendar();
+  });
+
+  nextMiniBtn.addEventListener('click', function () {
+    miniCalendarDate.setMonth(miniCalendarDate.getMonth() + 1);
+    renderMiniCalendar();
+  });
+
+  prevMonthBtn.addEventListener('click', function () {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    miniCalendarDate.setMonth(miniCalendarDate.getMonth() - 1);
+    renderAll();
+  });
+
+  nextMonthBtn.addEventListener('click', function () {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    miniCalendarDate.setMonth(miniCalendarDate.getMonth() + 1);
+    renderAll();
+  });
+
+  todayBtn.addEventListener('click', function () {
+    currentDate = new Date();
+    miniCalendarDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    renderAll();
+  });
+
+  // Checkboxes trigger redraw on click
+  [filterClub, filterFellowship, filterMeetings].forEach(function (chk) {
+    chk.addEventListener('change', renderAll);
+  });
+
+  // Listen for storage change events (in case admin page changes events in another tab!)
+  window.addEventListener('storage', function (e) {
+    if (e.key === 'warriors_events') {
+      renderAll();
+    }
+  });
+
+  // Initial render boot
+  renderAll();
+});
+
+</script>
+</body>
+</html>

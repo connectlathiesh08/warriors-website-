@@ -1,0 +1,41 @@
+# Google API Credentials & Tokens (To prevent secret detection blocks)
+*credentials.json
+*-credentials.json
+google*.json
+*token*.json
+credentials/
+tokens/
+
+# SQLite databases & Local user uploads
+*.db
+*.sqlite
+*.sqlite3
+uploads/
+**/uploads/
+
+# Large Backup folders (prevents commit bloat)
+.backups/
+**/.backups/
+
+# Next.js / Node.js build folders
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+dist/
+build/
+out/
+
+# Python caches and virtual environments
+__pycache__/
+**/__pycache__/
+*.pyc
+.env
+.env.*
+.venv/
+venv/
+env/
+/bin/
+/lib/
+/share/
+/include/
