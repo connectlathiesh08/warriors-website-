@@ -510,29 +510,27 @@ html.lenis body {
 }
 .dg-card {
   position: absolute;
-  width: 110px;
-  height: 150px;
-  background-color: #ffffff;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  border: 1px solid #f1f5f9;
-  padding: 0.25rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  width: 140px;
+  height: 105px;
+  background-color: transparent;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: none;
+  padding: 0px;
   cursor: pointer;
   transition: all 300ms ease-out;
   transform-origin: center;
+  overflow: hidden;
 }
 @media (max-width: 639px) {
   .dg-card {
-    width: 95px;
-    height: 130px;
+    width: 100px;
+    height: 75px;
   }
 }
 .dg-img-wrap {
   width: 100%;
-  height: 85px;
+  height: 100%;
   border-radius: 0.5rem;
   overflow: hidden;
   background-color: #f8fafc;
@@ -540,7 +538,7 @@ html.lenis body {
 }
 @media (max-width: 639px) {
   .dg-img-wrap {
-    height: 70px;
+    height: 100%;
   }
 }
 .dg-img {
@@ -2999,10 +2997,6 @@ window.initDomeGallery = function initDomeGallery(container, options) {
     card.innerHTML = `
       <div class="dg-img-wrap">
         <img src="${img.src}" alt="${img.alt || 'Photo'}" class="dg-img" loading="lazy" />
-      </div>
-      <div class="dg-content">
-        <h4 class="dg-title">${img.alt || 'Warrior Moment'}</h4>
-        <span class="dg-footer">Warriors Gallery</span>
       </div>
     `;
 
