@@ -313,7 +313,7 @@ function AdminDashboard({ role, onLogout }) {
 
   const fetchMembers = async () => {
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const res = await fetch(apiBase + '/api/members');
       if (res.ok) {
         const data = await res.json();
@@ -327,7 +327,7 @@ function AdminDashboard({ role, onLogout }) {
   const fetchProjects = async () => {
     try {
       console.log('DEBUG apiBase eval:', window.location.protocol, window.location.hostname, window.location.port, '->', (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : 'empty');
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const res = await fetch(apiBase + '/api/projects');
       if (res.ok) {
         const data = await res.json();
@@ -340,7 +340,7 @@ function AdminDashboard({ role, onLogout }) {
 
   const fetchEvents = async () => {
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const res = await fetch(apiBase + '/api/events');
       if (res.ok) {
         const data = await res.json();
@@ -353,7 +353,7 @@ function AdminDashboard({ role, onLogout }) {
 
   const fetchSettings = async () => {
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const res = await fetch(apiBase + '/api/settings');
       if (res.ok) {
         const data = await res.json();
@@ -368,7 +368,7 @@ function AdminDashboard({ role, onLogout }) {
 
   const fetchFinances = async () => {
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const res = await fetch(apiBase + '/api/finances');
       if (res.ok) {
         const data = await res.json();
@@ -1070,7 +1070,7 @@ function MemberManagement({ members, fetchMembers }) {
   const handleDelete = async (id) => {
     if (confirm('Are you sure you want to remove this member?')) {
       try {
-        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
         const res = await fetch(`${apiBase}/api/members/${id}`, {
           method: 'DELETE'
         });
@@ -1099,7 +1099,7 @@ function MemberManagement({ members, fetchMembers }) {
     };
 
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       if (isEditing) {
         // Edit mode (PUT)
         const res = await fetch(`${apiBase}/api/members/${editId}`, {
@@ -1135,7 +1135,7 @@ function MemberManagement({ members, fetchMembers }) {
   const handleSyncSheet = async () => {
     setIsSyncing(true);
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const res = await fetch(`${apiBase}/api/members/sync`, {
         method: 'POST'
       });
@@ -1264,7 +1264,7 @@ function MemberManagement({ members, fetchMembers }) {
         });
         
         if (importedMembers.length > 0) {
-          const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+          const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
           const existingIds = new Set(members.map(m => m.id));
           const filteredImported = importedMembers.filter(m => !existingIds.has(m.id));
           
@@ -1525,7 +1525,7 @@ function ProjectManagement({ projects, setProjects, fetchProjects }) {
 
   const loadFilteredProjects = async () => {
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       let url = apiBase + '/api/projects?sort=' + sortBy;
       if (statusFilter === 'Trash') {
         url += '&trash=true';
@@ -1555,7 +1555,7 @@ function ProjectManagement({ projects, setProjects, fetchProjects }) {
     
     const autosaveTimer = setInterval(async () => {
       try {
-        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
         const formData = new FormData();
         formData.append('title', formName);
         formData.append('avenue', formCategory);
@@ -1624,7 +1624,7 @@ function ProjectManagement({ projects, setProjects, fetchProjects }) {
     const newPublish = proj.status !== 'Published';
     const newStatus = newPublish ? 'Published' : 'Draft';
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const formData = new FormData();
       formData.append('status', newStatus);
       const res = await fetch(apiBase + '/api/projects/' + pId, {
@@ -1642,7 +1642,7 @@ function ProjectManagement({ projects, setProjects, fetchProjects }) {
 
   const handleRestore = async (pId) => {
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const res = await fetch(apiBase + '/api/projects/' + pId + '/restore', {
         method: 'POST'
       });
@@ -1658,7 +1658,7 @@ function ProjectManagement({ projects, setProjects, fetchProjects }) {
   const handleDeletePermanent = async (pId) => {
     if (confirm('Are you sure you want to PERMANENTLY delete this project? This cannot be undone.')) {
       try {
-        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
         const res = await fetch(apiBase + '/api/projects/' + pId, {
           method: 'DELETE'
         });
@@ -1675,7 +1675,7 @@ function ProjectManagement({ projects, setProjects, fetchProjects }) {
   const handleDelete = async (id) => {
     if (confirm('Are you sure you want to delete this project? It will be moved to the Trash Bin.')) {
       try {
-        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
         const res = await fetch(apiBase + '/api/projects/' + id, {
           method: 'DELETE'
         });
@@ -1767,7 +1767,7 @@ function ProjectManagement({ projects, setProjects, fetchProjects }) {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const formData = new FormData();
       formData.append('title', formName);
       formData.append('avenue', formCategory);
@@ -2097,7 +2097,7 @@ function EventsModule({ events, fetchEvents }) {
     setSubmitError('');
     
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       
       const payload = {
         name: formName,
@@ -2140,7 +2140,7 @@ function EventsModule({ events, fetchEvents }) {
   const handleDelete = async (id) => {
     if (confirm('Are you sure you want to cancel this event?')) {
       try {
-        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
         const res = await fetch(`${apiBase}/api/events/${id}`, {
           method: 'DELETE'
         });
@@ -2431,7 +2431,7 @@ function FinanceDashboard({ finances, fetchFinances }) {
     setSubmitError('');
     
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       
       const payload = {
         desc,
@@ -2492,7 +2492,7 @@ function FinanceDashboard({ finances, fetchFinances }) {
       }
       
       try {
-        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
         const url = `${apiBase}/api/finances/${id}?reason=${encodeURIComponent(reason.trim())}&deleted_by=${encodeURIComponent(adminNameInput.trim())}`;
         const res = await fetch(url, {
           method: 'DELETE'
@@ -3035,7 +3035,7 @@ function SecretaryAdminPanel({ adminName, setAdminName, googleCalendarId, fetchS
     setMsg('');
     
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       
       const res = await fetch(`${apiBase}/api/settings`, {
         method: 'POST',
@@ -3172,7 +3172,7 @@ function MinutesOfMeetingGenerator({ members = [], momId = null, clearEditMomId 
     if (momId) {
       const fetchMomDetails = async () => {
         try {
-          const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+          const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
           const res = await fetch(`${apiBase}/api/moms/${momId}`);
           if (res.ok) {
             const data = await res.json();
@@ -3384,7 +3384,7 @@ function MinutesOfMeetingGenerator({ members = [], momId = null, clearEditMomId 
     };
 
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const method = momId ? 'PUT' : 'POST';
       const endpoint = momId ? `${apiBase}/api/moms/${momId}` : `${apiBase}/api/moms`;
       
@@ -4327,7 +4327,7 @@ function MoMRecords({ onEdit, onTabChange }) {
 
   const fetchRecords = async () => {
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const res = await fetch(`${apiBase}/api/moms`);
       if (res.ok) {
         const data = await res.json();
@@ -4347,7 +4347,7 @@ function MoMRecords({ onEdit, onTabChange }) {
   const handleDelete = async (id) => {
     if (confirm('Are you sure you want to delete this Minutes of Meeting record from the cloud?')) {
       try {
-        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
         const res = await fetch(`${apiBase}/api/moms/${id}`, {
           method: 'DELETE'
         });
@@ -4519,7 +4519,7 @@ function ActionItemsTracker({ members = [] }) {
 
   const fetchActionItems = async () => {
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const res = await fetch(`${apiBase}/api/moms`);
       if (res.ok) {
         const data = await res.json();
@@ -4554,7 +4554,7 @@ function ActionItemsTracker({ members = [] }) {
   const handleToggleStatus = async (item) => {
     const nextStatus = item.status === 'Completed' ? 'Pending' : 'Completed';
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const res = await fetch(`${apiBase}/api/moms/${item.mom_id}/action-items`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -4644,7 +4644,7 @@ function ApprovalsPanel({ onEdit }) {
 
   const fetchSubmittedMoms = async () => {
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const res = await fetch(`${apiBase}/api/moms`);
       if (res.ok) {
         const data = await res.json();
@@ -4665,7 +4665,7 @@ function ApprovalsPanel({ onEdit }) {
   const handleApprove = async (id) => {
     try {
       // Fetch current details
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const getRes = await fetch(`${apiBase}/api/moms/${id}`);
       if (!getRes.ok) return;
       const mom = await getRes.json();
@@ -4762,7 +4762,7 @@ function GalleryManagement() {
 
   const fetchGallery = async () => {
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const res = await fetch(`${apiBase}/api/gallery`);
       if (res.ok) {
         const data = await res.json();
@@ -4797,7 +4797,7 @@ function GalleryManagement() {
     setSubmitError('');
 
     try {
-      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+      const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
       const res = await fetch(`${apiBase}/api/gallery`, {
         method: 'POST',
         headers: {
@@ -4827,7 +4827,7 @@ function GalleryManagement() {
   const handleDelete = async (id) => {
     if (confirm('Are you sure you want to delete this photo from the cloud? This will also delete it from your Google Drive folder.')) {
       try {
-        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+        const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
         const res = await fetch(`${apiBase}/api/gallery/${id}`, {
           method: 'DELETE'
         });
@@ -4866,7 +4866,7 @@ function GalleryManagement() {
       <!-- Gallery Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         ${gallery.map((img) => {
-          const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+          const apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
           const imageSrc = (img.src.startsWith('/') && !img.src.startsWith('/uploads')) ? `${apiBase}${img.src}` : img.src;
           return html`
             <div class="bg-white rounded-2xl border border-slate-200/60 overflow-hidden shadow-premium hover:shadow-card transition-all group flex flex-col justify-between">

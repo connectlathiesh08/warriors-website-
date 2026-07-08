@@ -27,8 +27,14 @@ from flask_cors import CORS
 app = Flask(__name__, static_folder=None)
 CORS(app)
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "projects.db")
-UPLOADS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
+# Detect if running in Vercel or read-only filesystem
+is_vercel = os.environ.get("VERCEL") or os.environ.get("NOW_REGION") or not os.access(os.path.dirname(os.path.abspath(__file__)) if os.path.dirname(os.path.abspath(__file__)) else ".", os.W_OK)
+if is_vercel:
+    DB_PATH = "/tmp/projects.db"
+    UPLOADS_DIR = "/tmp/uploads"
+else:
+    DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "projects.db")
+    UPLOADS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "uploads")
 os.makedirs(UPLOADS_DIR, exist_ok=True)
 
 # Google Drive client requirements (optional, fallback to local uploads)
@@ -39,30 +45,26 @@ has_google_drive = False
 drive_service = None
 drive_initialization_error = None
 
-if os.path.exists(GOOGLE_TOKEN_PATH) or os.path.exists(GOOGLE_CREDENTIALS_PATH):
-    try:
-        install_and_import("google-api-python-client", "googleapiclient")
-        install_and_import("google-auth-httplib2", "google_auth_httplib2")
-        install_and_import("google-auth-oauthlib", "google_auth_oauthlib")
-        from googleapiclient.discovery import build
-        from googleapiclient.http import MediaFileUpload
-        
-        SCOPES = ['https://www.googleapis.com/auth/drive']
-        
-        if os.path.exists(GOOGLE_TOKEN_PATH):
-            from google.oauth2.credentials import Credentials
-            from google.auth.transport.requests import Request
-            
-            with open(GOOGLE_TOKEN_PATH, "r", encoding="utf-8") as tf:
-                token_data = json.load(tf)
-                
+
+def load_credentials(scopes):
+    from google.auth.transport.requests import Request
+    import json
+    
+    # 1. Try environment variables first
+    google_token_env = os.environ.get("GOOGLE_TOKEN_JSON")
+    google_creds_env = os.environ.get("GOOGLE_CREDENTIALS_JSON")
+    
+    if google_token_env:
+        from google.oauth2.credentials import Credentials
+        try:
+            token_data = json.loads(google_token_env)
             client_id = None
             client_secret = None
             token_uri = "https://oauth2.googleapis.com/token"
             
-            if os.path.exists(GOOGLE_OAUTH_SECRETS_PATH):
-                with open(GOOGLE_OAUTH_SECRETS_PATH, "r", encoding="utf-8") as sf:
-                    sf_data = json.load(sf)
+            google_oauth_env = os.environ.get("GOOGLE_OAUTH_SECRETS_JSON")
+            if google_oauth_env:
+                sf_data = json.loads(google_oauth_env)
                 cfg = sf_data.get("installed", sf_data.get("web", {}))
                 client_id = cfg.get("client_id")
                 client_secret = cfg.get("client_secret")
@@ -74,30 +76,100 @@ if os.path.exists(GOOGLE_TOKEN_PATH) or os.path.exists(GOOGLE_CREDENTIALS_PATH):
                 client_id=client_id,
                 client_secret=client_secret,
                 token_uri=token_uri,
-                scopes=SCOPES
+                scopes=scopes
             )
+            if creds.expired or not creds.valid:
+                creds.refresh(Request())
+                token_data["access_token"] = creds.token
+                os.environ["GOOGLE_TOKEN_JSON"] = json.dumps(token_data)
+                if os.path.exists(GOOGLE_TOKEN_PATH):
+                    try:
+                        with open(GOOGLE_TOKEN_PATH, "w", encoding="utf-8") as tf:
+                            json.dump(token_data, tf, indent=2)
+                    except:
+                        pass
+            return creds
+        except Exception as ex:
+            print(f"Error loading credentials from GOOGLE_TOKEN_JSON env: {ex}")
             
-            # Auto-refresh if expired
+    if google_creds_env:
+        from google.oauth2 import service_account
+        try:
+            creds_data = json.loads(google_creds_env)
+            return service_account.Credentials.from_service_account_info(creds_data, scopes=scopes)
+        except Exception as ex:
+            print(f"Error loading credentials from GOOGLE_CREDENTIALS_JSON env: {ex}")
+        
+    # 2. Fall back to local files
+    if os.path.exists(GOOGLE_TOKEN_PATH):
+        from google.oauth2.credentials import Credentials
+        try:
+            with open(GOOGLE_TOKEN_PATH, "r", encoding="utf-8") as tf:
+                token_data = json.load(tf)
+            client_id = None
+            client_secret = None
+            token_uri = "https://oauth2.googleapis.com/token"
+            if os.path.exists(GOOGLE_OAUTH_SECRETS_PATH):
+                with open(GOOGLE_OAUTH_SECRETS_PATH, "r", encoding="utf-8") as sf:
+                    sf_data = json.load(sf)
+                cfg = sf_data.get("installed", sf_data.get("web", {}))
+                client_id = cfg.get("client_id")
+                client_secret = cfg.get("client_secret")
+                token_uri = cfg.get("token_uri", "https://oauth2.googleapis.com/token")
+            creds = Credentials(
+                token=token_data.get("access_token"),
+                refresh_token=token_data.get("refresh_token"),
+                client_id=client_id,
+                client_secret=client_secret,
+                token_uri=token_uri,
+                scopes=scopes
+            )
             if creds.expired or not creds.valid:
                 creds.refresh(Request())
                 token_data["access_token"] = creds.token
                 with open(GOOGLE_TOKEN_PATH, "w", encoding="utf-8") as tf:
                     json.dump(token_data, tf, indent=2)
-                    
+            return creds
+        except Exception as ex:
+            print(f"Error loading credentials from google-token.json file: {ex}")
+
+    if os.path.exists(GOOGLE_CREDENTIALS_PATH):
+        from google.oauth2 import service_account
+        try:
+            return service_account.Credentials.from_service_account_file(GOOGLE_CREDENTIALS_PATH, scopes=scopes)
+        except Exception as ex:
+            print(f"Error loading credentials from google-credentials.json file: {ex}")
+        
+    return None
+
+
+has_creds = (
+    os.path.exists(GOOGLE_TOKEN_PATH) or 
+    os.path.exists(GOOGLE_CREDENTIALS_PATH) or
+    os.environ.get("GOOGLE_TOKEN_JSON") or
+    os.environ.get("GOOGLE_CREDENTIALS_JSON")
+)
+if has_creds:
+    try:
+        install_and_import("google-api-python-client", "googleapiclient")
+        install_and_import("google-auth-httplib2", "google_auth_httplib2")
+        install_and_import("google-auth-oauthlib", "google_auth_oauthlib")
+        from googleapiclient.discovery import build
+        from googleapiclient.http import MediaFileUpload
+        
+        SCOPES = ['https://www.googleapis.com/auth/drive']
+        creds = load_credentials(SCOPES)
+        if creds:
             drive_service = build('drive', 'v3', credentials=creds)
             has_google_drive = True
-            print("Google Drive API Client successfully initialized using OAuth 2.0 User Token.")
+            print("Google Drive API Client successfully initialized.")
         else:
-            from google.oauth2 import service_account
-            creds = service_account.Credentials.from_service_account_file(GOOGLE_CREDENTIALS_PATH, scopes=SCOPES)
-            drive_service = build('drive', 'v3', credentials=creds)
-            has_google_drive = True
-            print("Google Drive API Client successfully initialized using Service Account.")
+            raise Exception("Failed to resolve credentials from files or environment variables.")
     except Exception as e:
         drive_initialization_error = f"Failed to initialize Google Drive client: {e}"
         print(f"Warning: {drive_initialization_error}. Falling back to local disk storage.")
 else:
-    drive_initialization_error = "Google Drive API credentials file ('google-token.json' or 'google-credentials.json') is missing in the project root."
+    drive_initialization_error = "Google Drive API credentials file or environment variables are missing."
     print(f"Warning: {drive_initialization_error}. Falling back to local disk storage.")
 
 # Thread-safe helper to get Google Drive service
@@ -165,6 +237,84 @@ def get_drive_service():
             print(f"Error building thread-safe drive service (Service Account): {e}")
             
     return drive_service
+
+
+# Database backup and recovery to/from Google Drive
+def backup_db_to_google_drive():
+    if not has_google_drive:
+        return
+    try:
+        service = get_drive_service()
+        if not service:
+            return
+            
+        parent_folder_id = "1T8hbhitiCOH0E5ZzC2vzCkMrcDQtSbKo"
+        
+        # Search for existing projects.db
+        q = f"name = 'projects.db' and '{parent_folder_id}' in parents and trashed = false"
+        res = service.files().list(q=q, fields="files(id)").execute()
+        files = res.get('files', [])
+        
+        from googleapiclient.http import MediaFileUpload
+        media = MediaFileUpload(DB_PATH, mimetype='application/x-sqlite3', resumable=True)
+        
+        if files:
+            file_id = files[0]['id']
+            service.files().update(fileId=file_id, media_body=media).execute()
+            print(f"Successfully backed up projects.db to Google Drive (Updated file ID: {file_id}).")
+        else:
+            file_metadata = {
+                'name': 'projects.db',
+                'parents': [parent_folder_id]
+            }
+            new_file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+            print(f"Successfully backed up projects.db to Google Drive (Created new file ID: {new_file.get('id')}).")
+    except Exception as e:
+        print(f"Error backing up database to Google Drive: {e}")
+
+def restore_db_from_google_drive():
+    if not has_google_drive:
+        return
+    try:
+        service = get_drive_service()
+        if not service:
+            return
+            
+        parent_folder_id = "1T8hbhitiCOH0E5ZzC2vzCkMrcDQtSbKo"
+        q = f"name = 'projects.db' and '{parent_folder_id}' in parents and trashed = false"
+        res = service.files().list(q=q, fields="files(id)").execute()
+        files = res.get('files', [])
+        
+        if files:
+            file_id = files[0]['id']
+            print(f"Found projects.db on Google Drive (ID: {file_id}). Downloading...")
+            
+            import io
+            from googleapiclient.http import MediaIoBaseDownload
+            request = service.files().get_media(fileId=file_id)
+            fh = io.BytesIO()
+            downloader = MediaIoBaseDownload(fh, request)
+            done = False
+            while not done:
+                _, done = downloader.next_chunk()
+                
+            fh.seek(0)
+            with open(DB_PATH, "wb") as f:
+                f.write(fh.read())
+            print("Successfully restored projects.db from Google Drive!")
+        else:
+            print("No projects.db found on Google Drive. Using local database.")
+    except Exception as e:
+        print(f"Error restoring database from Google Drive: {e}")
+
+@app.after_request
+def after_request_handler(response):
+    # If a modifying request was successful, trigger background database backup to Google Drive
+    if request.method in ('POST', 'PUT', 'DELETE') and 200 <= response.status_code < 300:
+        if '/api/' in request.path:
+            import threading
+            threading.Thread(target=backup_db_to_google_drive).start()
+    return response
 
 # Helper to generate Slug from Title
 def generate_slug(title, id_val):
@@ -483,84 +633,94 @@ def handle_file_upload(file_obj, project_name, subfolder):
     filename = file_obj.filename
     safe_filename = "".join([c for c in filename if c.isalpha() or c.isdigit() or c in (' ', '.', '_', '-')]).rstrip()
     
-    # Require Google Drive
-    if not has_google_drive:
-        error_msg = drive_initialization_error or "Google Drive client is not initialized."
-        raise Exception(f"Google Drive API not enabled: {error_msg}")
-        
-    service = get_drive_service()
-    if not service:
-        raise Exception("Google Drive API not enabled: Failed to build Drive service client.")
-        
-    parent_folder_id = "1T8hbhitiCOH0E5ZzC2vzCkMrcDQtSbKo"
-    temp_path = os.path.join(UPLOADS_DIR, f"temp_{int(datetime.datetime.now().timestamp())}_{safe_filename}")
-    
-    try:
-        file_obj.save(temp_path)
-        
-        def get_or_create_drive_folder(name, parent_id):
-            q = f"name = '{name}' and mimeType = 'application/vnd.google-apps.folder' and '{parent_id}' in parents and trashed = false"
-            results = service.files().list(q=q, fields="files(id)").execute()
-            files = results.get('files', [])
-            if files:
-                return files[0]['id']
-            else:
-                file_metadata = {
-                    'name': name,
-                    'mimeType': 'application/vnd.google-apps.folder',
-                    'parents': [parent_id]
-                }
-                folder = service.files().create(body=file_metadata, fields='id').execute()
-                return folder.get('id')
-                
-        projects_id = get_or_create_drive_folder("Projects", parent_folder_id)
-        proj_name_id = get_or_create_drive_folder(project_name, projects_id)
-        subfolder_id = get_or_create_drive_folder(subfolder, proj_name_id)
-        
-        file_metadata = {
-            'name': safe_filename,
-            'parents': [subfolder_id]
-        }
-        mime_type = file_obj.content_type
-        if not mime_type:
-            import mimetypes
-            mime_type, _ = mimetypes.guess_type(safe_filename)
-        if not mime_type:
-            mime_type = 'application/octet-stream'
-            
-        media = MediaFileUpload(temp_path, mimetype=mime_type, resumable=True)
-        uploaded_file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-        
-        file_id = uploaded_file.get('id')
-        
+    # 1. Try Google Drive if enabled
+    if has_google_drive:
         try:
-            service.permissions().create(
-                fileId=file_id,
-                body={'type': 'anyone', 'role': 'reader'}
-            ).execute()
-        except Exception as pe:
-            print(f"Warning setting file permissions: {pe}")
+            service = get_drive_service()
+            if service:
+                parent_folder_id = "1T8hbhitiCOH0E5ZzC2vzCkMrcDQtSbKo"
+                temp_path = os.path.join(UPLOADS_DIR, f"temp_{int(datetime.datetime.now().timestamp())}_{safe_filename}")
+                os.makedirs(UPLOADS_DIR, exist_ok=True)
+                file_obj.save(temp_path)
+                
+                def get_or_create_drive_folder(name, parent_id):
+                    q = f"name = '{name}' and mimeType = 'application/vnd.google-apps.folder' and '{parent_id}' in parents and trashed = false"
+                    results = service.files().list(q=q, fields="files(id)").execute()
+                    files = results.get('files', [])
+                    if files:
+                        return files[0]['id']
+                    else:
+                        file_metadata = {
+                            'name': name,
+                            'mimeType': 'application/vnd.google-apps.folder',
+                            'parents': [parent_id]
+                        }
+                        folder = service.files().create(body=file_metadata, fields='id').execute()
+                        return folder.get('id')
+                        
+                projects_id = get_or_create_drive_folder("Projects", parent_folder_id)
+                proj_name_id = get_or_create_drive_folder(project_name, projects_id)
+                subfolder_id = get_or_create_drive_folder(subfolder, proj_name_id)
+                
+                file_metadata = {
+                    'name': safe_filename,
+                    'parents': [subfolder_id]
+                }
+                mime_type = file_obj.content_type
+                if not mime_type:
+                    import mimetypes
+                    mime_type, _ = mimetypes.guess_type(safe_filename)
+                if not mime_type:
+                    mime_type = 'application/octet-stream'
+                    
+                media = MediaFileUpload(temp_path, mimetype=mime_type, resumable=True)
+                uploaded_file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+                
+                file_id = uploaded_file.get('id')
+                
+                try:
+                    service.permissions().create(
+                        fileId=file_id,
+                        body={'type': 'anyone', 'role': 'reader'}
+                    ).execute()
+                except Exception as pe:
+                    print(f"Warning setting file permissions: {pe}")
+                    
+                view_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+                upload_time = datetime.datetime.now().isoformat()
+                
+                # Delete temp file
+                if os.path.exists(temp_path):
+                    try:
+                        os.remove(temp_path)
+                    except:
+                        pass
+                        
+                return {
+                    'drive_file_id': file_id,
+                    'public_url': view_url,
+                    'filename': safe_filename,
+                    'mime_type': mime_type,
+                    'uploaded_at': upload_time
+                }
+        except Exception as e:
+            print(f"Google Drive upload failed, falling back to local storage: {e}")
             
-        view_url = f"https://drive.google.com/uc?export=download&id={file_id}"
-        upload_time = datetime.datetime.now().isoformat()
-        
-        return {
-            'drive_file_id': file_id,
-            'public_url': view_url,
-            'filename': safe_filename,
-            'mime_type': mime_type,
-            'uploaded_at': upload_time
-        }
-    except Exception as e:
-        error_msg = get_drive_error_message(e)
-        print(f"Google Drive upload error: {error_msg}")
-        raise Exception(error_msg)
-    finally:
-        if os.path.exists(temp_path):
-            try:
-                os.remove(temp_path)
-            except:
-                pass
+    # 2. Local fallback storage
+    local_filename = f"{int(datetime.datetime.now().timestamp())}_{safe_filename}"
+    local_path = os.path.join(UPLOADS_DIR, local_filename)
+    os.makedirs(UPLOADS_DIR, exist_ok=True)
+    file_obj.save(local_path)
+    
+    view_url = f"/uploads/{local_filename}"
+    upload_time = datetime.datetime.now().isoformat()
+    return {
+        'drive_file_id': None,
+        'public_url': view_url,
+        'filename': safe_filename,
+        'mime_type': file_obj.content_type or 'application/octet-stream',
+        'uploaded_at': upload_time
+    }
 
 def handle_base64_upload(base64_str, project_name, subfolder):
     if not base64_str or not base64_str.startswith("data:image/"):
@@ -579,78 +739,94 @@ def handle_base64_upload(base64_str, project_name, subfolder):
             
         data = base64.b64decode(encoded)
         filename = f"cover_{int(datetime.datetime.now().timestamp())}.{file_extension}"
+        os.makedirs(UPLOADS_DIR, exist_ok=True)
         temp_path = os.path.join(UPLOADS_DIR, f"temp_{filename}")
         with open(temp_path, "wb") as f:
             f.write(data)
             
-        if not has_google_drive:
-            error_msg = drive_initialization_error or "Google Drive client is not initialized."
-            raise Exception(f"Google Drive API not enabled: {error_msg}")
-            
-        service = get_drive_service()
-        if not service:
-            raise Exception("Google Drive API not enabled: Failed to build Drive service client.")
-            
-        parent_folder_id = "1T8hbhitiCOH0E5ZzC2vzCkMrcDQtSbKo"
-        
-        try:
-            def get_or_create_drive_folder(name, parent_id):
-                q = f"name = '{name}' and mimeType = 'application/vnd.google-apps.folder' and '{parent_id}' in parents and trashed = false"
-                results = service.files().list(q=q, fields="files(id)").execute()
-                files = results.get('files', [])
-                if files:
-                    return files[0]['id']
-                else:
-                    file_metadata = {
-                        'name': name,
-                        'mimeType': 'application/vnd.google-apps.folder',
-                        'parents': [parent_id]
-                    }
-                    folder = service.files().create(body=file_metadata, fields='id').execute()
-                    return folder.get('id')
-            
-            projects_id = get_or_create_drive_folder("Projects", parent_folder_id)
-            proj_name_id = get_or_create_drive_folder(project_name, projects_id)
-            subfolder_id = get_or_create_drive_folder(subfolder, proj_name_id)
-            
-            file_metadata = {
-                'name': filename,
-                'parents': [subfolder_id]
-            }
-            media = MediaFileUpload(temp_path, mimetype=mime_type, resumable=True)
-            uploaded_file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-            
-            file_id = uploaded_file.get('id')
-            
+        # 1. Try Google Drive if enabled
+        if has_google_drive:
             try:
-                service.permissions().create(fileId=file_id, body={'type': 'anyone', 'role': 'reader'}).execute()
-            except:
-                pass
+                service = get_drive_service()
+                if service:
+                    parent_folder_id = "1T8hbhitiCOH0E5ZzC2vzCkMrcDQtSbKo"
+                    
+                    def get_or_create_drive_folder(name, parent_id):
+                        q = f"name = '{name}' and mimeType = 'application/vnd.google-apps.folder' and '{parent_id}' in parents and trashed = false"
+                        results = service.files().list(q=q, fields="files(id)").execute()
+                        files = results.get('files', [])
+                        if files:
+                            return files[0]['id']
+                        else:
+                            file_metadata = {
+                                'name': name,
+                                'mimeType': 'application/vnd.google-apps.folder',
+                                'parents': [parent_id]
+                            }
+                            folder = service.files().create(body=file_metadata, fields='id').execute()
+                            return folder.get('id')
+                            
+                    projects_id = get_or_create_drive_folder("Projects", parent_folder_id)
+                    proj_name_id = get_or_create_drive_folder(project_name, projects_id)
+                    subfolder_id = get_or_create_drive_folder(subfolder, proj_name_id)
+                    
+                    file_metadata = {
+                        'name': filename,
+                        'parents': [subfolder_id]
+                    }
+                    media = MediaFileUpload(temp_path, mimetype=mime_type, resumable=True)
+                    uploaded_file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+                    
+                    file_id = uploaded_file.get('id')
+                    
+                    try:
+                        service.permissions().create(
+                            fileId=file_id,
+                            body={'type': 'anyone', 'role': 'reader'}
+                        ).execute()
+                    except Exception as pe:
+                        print(f"Warning setting file permissions: {pe}")
+                        
+                    view_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+                    upload_time = datetime.datetime.now().isoformat()
+                    
+                    if os.path.exists(temp_path):
+                        try:
+                            os.remove(temp_path)
+                        except:
+                            pass
+                            
+                    return {
+                        'drive_file_id': file_id,
+                        'public_url': view_url,
+                        'filename': filename,
+                        'mime_type': mime_type,
+                        'uploaded_at': upload_time
+                    }
+            except Exception as e:
+                print(f"Google Drive upload failed for base64 cover, falling back to local: {e}")
                 
-            view_url = f"https://drive.google.com/uc?export=download&id={file_id}"
-            upload_time = datetime.datetime.now().isoformat()
-            
-            return {
-                'drive_file_id': file_id,
-                'public_url': view_url,
-                'filename': filename,
-                'mime_type': mime_type,
-                'uploaded_at': upload_time
-            }
-        except Exception as e:
-            error_msg = get_drive_error_message(e)
-            print(f"Google Drive base64 upload error: {error_msg}")
-            raise Exception(error_msg)
-        finally:
-            if os.path.exists(temp_path):
-                try:
-                    os.remove(temp_path)
-                except:
-                    pass
+        # 2. Local fallback storage
+        local_filename = filename
+        local_path = os.path.join(UPLOADS_DIR, local_filename)
+        if os.path.exists(temp_path):
+            os.rename(temp_path, local_path)
+        else:
+            with open(local_path, "wb") as f:
+                f.write(data)
+                
+        view_url = f"/uploads/{local_filename}"
+        upload_time = datetime.datetime.now().isoformat()
+        return {
+            'drive_file_id': None,
+            'public_url': view_url,
+            'filename': filename,
+            'mime_type': mime_type,
+            'uploaded_at': upload_time
+        }
     except Exception as e:
-        if "Google Drive API not enabled" in str(e) or "Google Drive upload failed" in str(e) or "Folder not found" in str(e) or "Permission denied" in str(e):
-            raise e
-        raise Exception(f"File validation / decode failed: {e}")
+        print(f"Error handling base64 upload: {e}")
+        return None
 
 # Serve uploads folder static files
 @app.route('/uploads/<path:filename>')
@@ -1500,48 +1676,12 @@ def save_settings():
 def get_sheets_service():
     import httplib2
     try:
-        if os.path.exists(GOOGLE_TOKEN_PATH):
-            from google.oauth2.credentials import Credentials
-            from google.auth.transport.requests import Request
-            
-            with open(GOOGLE_TOKEN_PATH, "r", encoding="utf-8") as tf:
-                token_data = json.load(tf)
-                
-            client_id = None
-            client_secret = None
-            token_uri = "https://oauth2.googleapis.com/token"
-            
-            if os.path.exists(GOOGLE_OAUTH_SECRETS_PATH):
-                with open(GOOGLE_OAUTH_SECRETS_PATH, "r", encoding="utf-8") as sf:
-                    sf_data = json.load(sf)
-                cfg = sf_data.get("installed", sf_data.get("web", {}))
-                client_id = cfg.get("client_id")
-                client_secret = cfg.get("client_secret")
-                token_uri = cfg.get("token_uri", "https://oauth2.googleapis.com/token")
-                
-            creds = Credentials(
-                token=token_data.get("access_token"),
-                refresh_token=token_data.get("refresh_token"),
-                client_id=client_id,
-                client_secret=client_secret,
-                token_uri=token_uri,
-                scopes=['https://www.googleapis.com/auth/drive']
-            )
-            
-            # Auto-refresh if expired
-            if creds.expired or not creds.valid:
-                creds.refresh(Request())
-                token_data["access_token"] = creds.token
-                with open(GOOGLE_TOKEN_PATH, "w", encoding="utf-8") as tf:
-                    json.dump(token_data, tf, indent=2)
-        else:
-            creds = service_account.Credentials.from_service_account_file(
-                GOOGLE_CREDENTIALS_PATH,
-                scopes=['https://www.googleapis.com/auth/drive']
-            )
-        
+        creds = load_credentials(['https://www.googleapis.com/auth/drive'])
+        if not creds:
+            raise Exception("No credentials available.")
         import google_auth_httplib2
         new_http = google_auth_httplib2.AuthorizedHttp(creds, http=httplib2.Http())
+        from googleapiclient.discovery import build
         return build('sheets', 'v4', http=new_http)
     except Exception as e:
         print(f"Error building sheets service: {e}")
@@ -2475,7 +2615,27 @@ def create_mom():
     
     president_name = data.get('president_name', 'Rtr. Rishabh Guptha')
     secretary_name = data.get('secretary_name', 'Rtr. Lathiesh Kumar')
-    money_involved = json.dumps(data.get('money_involved', {"has_money": False, "amount": 0, "description": "", "type": "Expense"}))
+    
+    money_involved_data = data.get('money_involved', {"has_money": False, "amount": 0, "description": "", "type": "Expense"})
+    if isinstance(money_involved_data, dict):
+        pictures = money_involved_data.get("pictures", [])
+        if pictures:
+            new_pictures = []
+            for idx, pic in enumerate(pictures):
+                if pic and isinstance(pic, str) and pic.startswith("data:image/"):
+                    try:
+                        res = handle_base64_upload(pic, f"MoM-{number or 'Document'}", "Pictures")
+                        if res:
+                            new_pictures.append(res['public_url'])
+                        else:
+                            new_pictures.append(pic)
+                    except Exception as ex:
+                        print(f"Error uploading MoM picture: {ex}")
+                        new_pictures.append(pic)
+                else:
+                    new_pictures.append(pic)
+            money_involved_data["pictures"] = new_pictures
+    money_involved = json.dumps(money_involved_data)
     
     # Upload PDF if base64 provided
     pdf_base64 = data.get('pdf_base64', '')
@@ -2530,7 +2690,27 @@ def update_mom(mom_id):
     
     president_name = data.get('president_name', 'Rtr. Rishabh Guptha')
     secretary_name = data.get('secretary_name', 'Rtr. Lathiesh Kumar')
-    money_involved = json.dumps(data.get('money_involved', {"has_money": False, "amount": 0, "description": "", "type": "Expense"}))
+    
+    money_involved_data = data.get('money_involved', {"has_money": False, "amount": 0, "description": "", "type": "Expense"})
+    if isinstance(money_involved_data, dict):
+        pictures = money_involved_data.get("pictures", [])
+        if pictures:
+            new_pictures = []
+            for idx, pic in enumerate(pictures):
+                if pic and isinstance(pic, str) and pic.startswith("data:image/"):
+                    try:
+                        res = handle_base64_upload(pic, f"MoM-{number or 'Document'}", "Pictures")
+                        if res:
+                            new_pictures.append(res['public_url'])
+                        else:
+                            new_pictures.append(pic)
+                    except Exception as ex:
+                        print(f"Error uploading MoM picture: {ex}")
+                        new_pictures.append(pic)
+                else:
+                    new_pictures.append(pic)
+            money_involved_data["pictures"] = new_pictures
+    money_involved = json.dumps(money_involved_data)
     
     # Upload PDF if base64 provided
     pdf_base64 = data.get('pdf_base64', '')

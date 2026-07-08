@@ -1,5 +1,17 @@
 // Google Calendar Format Logic for Rotaract Club of Bangalore Warriors (Linked to Admin Dashboard)
 document.addEventListener('DOMContentLoaded', function () {
+  var hostname = window.location.hostname;
+  var isLocal = hostname === 'localhost' || 
+                hostname === '127.0.0.1' || 
+                hostname.startsWith('192.168.') || 
+                hostname.startsWith('10.') || 
+                hostname.startsWith('172.') || 
+                window.location.protocol === 'file:';
+                
+  var apiBase = (isLocal && window.location.port !== '5000') 
+    ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + hostname + ':5000') 
+    : '';
+
   
   function getRelativeDate(offsetDays) {
     var d = new Date();
@@ -23,38 +35,63 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Load from localStorage and map to display format
   var events = [];
-  function loadAndMapEvents() {
-    try {
-      var saved = localStorage.getItem('warriors_events');
-      if (saved) {
-        var raw = JSON.parse(saved);
-        events = raw.map(function(e) {
-          // Infer category based on name for color coding
-          var cat = 'meeting';
-          var nameLower = (e.name || '').toLowerCase();
-          if (nameLower.indexOf('meet') !== -1 || nameLower.indexOf('fellowship') !== -1 || nameLower.indexOf('dinner') !== -1 || nameLower.indexOf('social') !== -1) {
-            cat = 'fellowship';
-          } else if (nameLower.indexOf('camp') !== -1 || nameLower.indexOf('drive') !== -1 || nameLower.indexOf('plant') !== -1 || nameLower.indexOf('project') !== -1 || nameLower.indexOf('annapurna') !== -1 || nameLower.indexOf('donation') !== -1) {
-            cat = 'club';
-          } else {
-            cat = 'meeting';
-          }
-          
-          return {
-            id: e.id || ('EVT-' + Math.random()),
-            title: e.name || 'Untitled Event',
-            category: cat,
-            date: e.date || '',
-            time: '18:00', // Default display time
-            location: e.venue || 'TBD',
-            desc: 'Status: ' + (e.status || 'Upcoming') + '. Budget: Rs. ' + (e.budget || 0) + '. Registrations: ' + (e.registrations || 0) + '.'
-          };
-        });
+  var isFetching = false;
+  
+  function parseAndMapRawEvents(raw) {
+    return raw.map(function(e) {
+      var cat = 'meeting';
+      var nameLower = (e.name || '').toLowerCase();
+      if (nameLower.indexOf('meet') !== -1 || nameLower.indexOf('fellowship') !== -1 || nameLower.indexOf('dinner') !== -1 || nameLower.indexOf('social') !== -1) {
+        cat = 'fellowship';
+      } else if (nameLower.indexOf('camp') !== -1 || nameLower.indexOf('drive') !== -1 || nameLower.indexOf('plant') !== -1 || nameLower.indexOf('project') !== -1 || nameLower.indexOf('annapurna') !== -1 || nameLower.indexOf('donation') !== -1) {
+        cat = 'club';
+      } else {
+        cat = 'meeting';
       }
-    } catch (e) {
-      console.error('Failed to load events from localStorage:', e);
-      events = [];
-    }
+      
+      return {
+        id: e.id || ('EVT-' + Math.random()),
+        title: e.name || 'Untitled Event',
+        category: cat,
+        date: e.date || '',
+        time: '18:00',
+        location: e.venue || 'TBD',
+        desc: 'Status: ' + (e.status || 'Upcoming') + '. Budget: Rs. ' + (e.budget || 0) + '. Registrations: ' + (e.registrations || 0) + '.'
+      };
+    });
+  }
+
+  function loadAndMapEvents() {
+    if (isFetching) return;
+    isFetching = true;
+    
+    fetch(apiBase + '/api/events')
+      .then(function(res) { 
+        if (!res.ok) throw new Error("API error status " + res.status);
+        return res.json(); 
+      })
+      .then(function(raw) {
+        events = parseAndMapRawEvents(raw || []);
+        isFetching = false;
+        // Re-render display if elements exist
+        if (document.getElementById('mini-calendar-grid')) {
+          renderMiniCalendar();
+          renderMainCalendar();
+        }
+      })
+      .catch(function(err) {
+        console.warn("Failed to load calendar events from REST API, falling back to localStorage:", err);
+        isFetching = false;
+        try {
+          var saved = localStorage.getItem('warriors_events');
+          if (saved) {
+            events = parseAndMapRawEvents(JSON.parse(saved));
+          }
+        } catch (e) {
+          console.error('Failed to load events from localStorage:', e);
+          events = [];
+        }
+      });
   }
 
   // Load initial events
