@@ -614,17 +614,7 @@ html.lenis body {
           header.classList.remove('scrolled');
         }
       });
-      // Mobile toggle button handler
-      var toggle = document.querySelector('.mobile-toggle');
-      var mobileNav = document.querySelector('.mobile-nav');
-      if (toggle && mobileNav) {
-        toggle.addEventListener('click', function() {
-          var isOpen = !mobileNav.classList.contains('hidden');
-          mobileNav.classList.toggle('hidden', isOpen);
-          toggle.querySelector('.icon-menu').classList.toggle('hidden', !isOpen);
-          toggle.querySelector('.icon-x').classList.toggle('hidden', isOpen);
-        });
-      }
+
     });
   </script>
 </head>

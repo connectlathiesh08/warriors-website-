@@ -669,17 +669,6 @@ html.lenis body {
           header.classList.remove('scrolled');
         }
       });
-      // Mobile toggle button handler
-      var toggle = document.querySelector('.mobile-toggle');
-      var mobileNav = document.querySelector('.mobile-nav');
-      if (toggle && mobileNav) {
-        toggle.addEventListener('click', function() {
-          var isOpen = !mobileNav.classList.contains('hidden');
-          mobileNav.classList.toggle('hidden', isOpen);
-          toggle.querySelector('.icon-menu').classList.toggle('hidden', !isOpen);
-          toggle.querySelector('.icon-x').classList.toggle('hidden', isOpen);
-        });
-      }
     });
   </script>
 </head>
@@ -792,9 +781,16 @@ html.lenis body {
 
     <!-- Mobile Nav menu -->
     <nav class="mobile-nav hidden border-t border-slate-100 bg-[#e0f2fe]/95 backdrop-blur-md px-6 pb-8 pt-5 min-[1440px]:hidden w-full absolute top-[70px] left-0 shadow-lg z-50">
-            <ul class="flex flex-col gap-4 font-display font-bold text-slate-700">
-        <li><a href="index.html" data-label="HOME" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
-        <li><a href="calendar.html" data-label="CALENDAR" class="slot-link block w-fit text-[17px] text-[#8B003A]"></a></li>
+      <ul class="flex flex-col gap-4 font-display font-bold text-slate-700">
+        <li><a href="index.html" data-nav="home" data-label="HOME" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li><a href="about.html" data-nav="about" data-label="ABOUT US" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li><a href="DistrictCommittee.aspx" data-nav="district-committee" data-label="WARRIORS COUNCIL" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li><a href="Events.html" data-nav="events" data-label="EVENTS" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li></li>
+        <li></li>
+        <li><a href="Partners.html" data-nav="partners" data-label="PARTNERS" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li><a href="Blog.html" data-nav="blog" data-label="BLOG" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li></li>
       </ul>
       <div class="mt-8 flex flex-col gap-3 font-display">
         <a href="admin.html" data-label="ADMIN PORTAL" class="slot-link flex items-center justify-center gap-1.5 rounded-full bg-[#8B003A] py-3 text-sm font-bold text-white shadow-sm">

@@ -614,17 +614,6 @@ html.lenis body {
           header.classList.remove('scrolled');
         }
       });
-      // Mobile toggle button handler
-      var toggle = document.querySelector('.mobile-toggle');
-      var mobileNav = document.querySelector('.mobile-nav');
-      if (toggle && mobileNav) {
-        toggle.addEventListener('click', function() {
-          var isOpen = !mobileNav.classList.contains('hidden');
-          mobileNav.classList.toggle('hidden', isOpen);
-          toggle.querySelector('.icon-menu').classList.toggle('hidden', !isOpen);
-          toggle.querySelector('.icon-x').classList.toggle('hidden', isOpen);
-        });
-      }
     });
   </script>
 </head>
@@ -730,9 +719,27 @@ html.lenis body {
     <!-- Mobile Nav menu -->
     <nav class="mobile-nav hidden border-t border-slate-100 bg-[#e0f2fe]/95 backdrop-blur-md px-6 pb-8 pt-5 min-[1440px]:hidden w-full absolute top-[70px] left-0 shadow-lg z-50">
       <ul class="flex flex-col gap-4 font-display font-bold text-slate-700">
-        <li><a href="index.html" data-label="HOME" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
-        <li><a href="about.html" data-label="ABOUT US" class="slot-link block w-fit text-[17px] text-[#8B003A]"></a></li>
+        <li><a href="index.html" data-nav="home" data-label="HOME" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li><a href="about.html" data-nav="about" data-label="ABOUT US" class="slot-link block w-fit text-[17px] text-[#8B003A]"></a></li>
+        <li><a href="DistrictCommittee.aspx" data-nav="district-committee" data-label="WARRIORS COUNCIL" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li><a href="Events.html" data-nav="events" data-label="EVENTS" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li></li>
+        <li></li>
+        <li><a href="Partners.html" data-nav="partners" data-label="PARTNERS" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li><a href="Blog.html" data-nav="blog" data-label="BLOG" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
+        <li></li>
       </ul>
+      <div class="mt-8 flex flex-col gap-3 font-display">
+        <a href="admin.html" data-label="ADMIN PORTAL" class="slot-link flex items-center justify-center gap-1.5 rounded-full bg-[#8B003A] py-3 text-sm font-bold text-white shadow-sm">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </a>
+        <a href="https://forms.gle/BVdNJdAXn4ujKXt39" target="_blank" rel="noopener" data-label="BECOME A WARRIOR" class="slot-link flex items-center justify-center gap-1.5 rounded-full bg-[#F5A623] py-3 text-sm font-bold text-white shadow-sm">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+        </a>
+        <a href="https://my.rotary.org/en/login" target="_blank" rel="noopener" data-label="RI LOGIN" class="slot-link flex items-center justify-center gap-1.5 rounded-full border-2 border-[#8B003A] bg-white py-2.5 text-sm font-bold text-[#8B003A]">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </a>
+      </div>
     </nav>
   </header>
 
