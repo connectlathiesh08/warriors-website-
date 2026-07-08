@@ -947,150 +947,108 @@ html.lenis body {
 
 
 <footer class="relative bg-gradient-to-br from-[#f0f9ff] via-[#e6f4fe] to-[#d0ecfc] text-slate-700 border-t border-[#8B003A]/10 overflow-hidden select-none font-sans mt-auto">
+
+    <!-- Decorative ambient background glows -->
     <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#8B003A]/5 rounded-full blur-[120px] pointer-events-none"></div>
     <div class="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none"></div>
     
+    <!-- Dotted World Map overlay pattern -->
+    <div class="absolute inset-0 opacity-[0.04] pointer-events-none mix-blend-overlay" style="background-image: radial-gradient(#8B003A 1.5px, transparent 1.5px); background-size: 24px 24px;"></div>
+
     <div class="relative mx-auto max-w-[1400px] px-6 py-10 md:py-14 z-10">
       <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-8 items-start">
         
-        <!-- Column 1 -->
-        <div class="flex flex-col items-start gap-4 col-span-2 sm:col-span-1">
+        <!-- Column 1: Club Branding (Logo, slogan, and description hidden on mobile view) -->
+        <div class="flex flex-col items-center sm:items-start gap-4 col-span-2 sm:col-span-1">
           <div class="flex items-center gap-3">
-            <svg width="46" height="46" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0">
+            <!-- Custom High-Fidelity Rotaract Logo cogwheel -->
+            <svg width="46" height="46" class="hidden sm:block" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
               <defs>
-                <path id="tooth-footer-rx" d="M46 12 L48 3 L52 3 L54 12 Z" fill="#8B003A" />
-                <rect id="spoke-footer-rx" x="48" y="20" width="4" height="12" fill="#8B003A" />
+                <path id="tooth-footer" d="M46 12 L48 3 L52 3 L54 12 Z" fill="#8B003A" />
+                <rect id="spoke-footer" x="48" y="20" width="4" height="12" fill="#8B003A" />
               </defs>
               <g>
-                <use href="#tooth-footer-rx" />
-                <use href="#tooth-footer-rx" transform="rotate(15 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(30 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(45 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(60 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(75 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(90 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(105 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(120 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(135 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(150 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(165 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(180 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(195 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(210 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(225 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(240 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(255 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(270 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(285 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(300 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(315 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(330 50 50)" />
-                <use href="#tooth-footer-rx" transform="rotate(345 50 50)" />
+                <use href="#tooth-footer" />
+                <use href="#tooth-footer" transform="rotate(15 50 50)" />
+                <use href="#tooth-footer" transform="rotate(30 50 50)" />
+                <use href="#tooth-footer" transform="rotate(45 50 50)" />
+                <use href="#tooth-footer" transform="rotate(60 50 50)" />
+                <use href="#tooth-footer" transform="rotate(75 50 50)" />
+                <use href="#tooth-footer" transform="rotate(90 50 50)" />
+                <use href="#tooth-footer" transform="rotate(105 50 50)" />
+                <use href="#tooth-footer" transform="rotate(120 50 50)" />
+                <use href="#tooth-footer" transform="rotate(135 50 50)" />
+                <use href="#tooth-footer" transform="rotate(150 50 50)" />
+                <use href="#tooth-footer" transform="rotate(165 50 50)" />
+                <use href="#tooth-footer" transform="rotate(180 50 50)" />
+                <use href="#tooth-footer" transform="rotate(195 50 50)" />
+                <use href="#tooth-footer" transform="rotate(210 50 50)" />
+                <use href="#tooth-footer" transform="rotate(225 50 50)" />
+                <use href="#tooth-footer" transform="rotate(240 50 50)" />
+                <use href="#tooth-footer" transform="rotate(255 50 50)" />
+                <use href="#tooth-footer" transform="rotate(270 50 50)" />
+                <use href="#tooth-footer" transform="rotate(285 50 50)" />
+                <use href="#tooth-footer" transform="rotate(300 50 50)" />
+                <use href="#tooth-footer" transform="rotate(315 50 50)" />
+                <use href="#tooth-footer" transform="rotate(330 50 50)" />
+                <use href="#tooth-footer" transform="rotate(345 50 50)" />
               </g>
               <circle cx="50" cy="50" r="39" fill="none" stroke="#8B003A" stroke-width="2.5" />
               <circle cx="50" cy="50" r="33.5" fill="none" stroke="#8B003A" stroke-width="8.5" />
               <circle cx="50" cy="50" r="33.5" fill="none" stroke="white" stroke-width="6.5" />
               <circle cx="50" cy="50" r="29" fill="none" stroke="#8B003A" stroke-width="2.5" />
               <g>
-                <use href="#spoke-footer-rx" />
-                <use href="#spoke-footer-rx" transform="rotate(60 50 50)" />
-                <use href="#spoke-footer-rx" transform="rotate(120 50 50)" />
-                <use href="#spoke-footer-rx" transform="rotate(180 50 50)" />
-                <use href="#spoke-footer-rx" transform="rotate(240 50 50)" />
-                <use href="#spoke-footer-rx" transform="rotate(300 50 50)" />
+                <use href="#spoke-footer" />
+                <use href="#spoke-footer" transform="rotate(60 50 50)" />
+                <use href="#spoke-footer" transform="rotate(120 50 50)" />
+                <use href="#spoke-footer" transform="rotate(180 50 50)" />
+                <use href="#spoke-footer" transform="rotate(240 50 50)" />
+                <use href="#spoke-footer" transform="rotate(300 50 50)" />
               </g>
               <circle cx="50" cy="50" r="13" fill="#8B003A" />
               <circle cx="50" cy="50" r="7.5" fill="white" />
               <circle cx="50" cy="50" r="4.5" fill="#8B003A" />
               <rect x="48" y="41.5" width="4" height="4.5" fill="#8B003A" />
             </svg>
-            <div class="text-left font-display">
-              <h3 class="text-base font-extrabold tracking-wide text-slate-800 leading-none">Rotaract</h3>
-              <p class="text-[10px] font-black text-slate-650 tracking-wider uppercase mt-1">Bangalore Warriors</p>
-              <p class="text-[9px] font-bold text-[#8B003A] mt-0.5">RID 3192</p>
+            <div class="text-center sm:text-left font-display">
+              <h3 class="text-lg font-extrabold text-[#8B003A] leading-none tracking-tight text-center sm:text-left">Rotaract</h3>
+              <p class="text-[10px] font-black text-slate-655 tracking-wider uppercase mt-1 text-center sm:text-left">Bangalore Warriors</p>
+              <p class="text-[9px] font-bold text-[#8B003A] mt-0.5 text-center sm:text-left">RID 3192</p>
             </div>
           </div>
-          <p class="text-xs text-slate-600 font-semibold leading-relaxed">
+          <p class="hidden sm:block text-xs text-slate-600 font-semibold leading-relaxed mt-2 text-center sm:text-left">
             We are a family of young changemakers, creating impact through service, leadership and fellowship.
           </p>
-          <span class="font-script text-2xl text-amber-600 tracking-wide mt-1 block" style="font-family: 'Dancing Script', cursive">
+          <span class="hidden sm:block text-2xl text-amber-600 tracking-wide mt-1 text-center sm:text-left" style="font-family: 'Dancing Script', cursive;">
             Service Above Self
           </span>
         </div>
 
-        <!-- Column 2 -->
+        <!-- Column 2: Quick Links (Hidden on mobile) -->
         <div class="hidden sm:flex flex-col items-start gap-4 w-full">
-          <h4 class="text-xs font-black tracking-widest text-[#8B003A] uppercase border-l-2 border-[#8B003A] pl-3">Quick Links</h4>
+          <h4 class="text-xs font-black tracking-widest text-[#8B003A] uppercase border-l-2 border-[#8B003A] pl-3">
+            Quick Links
+          </h4>
           <ul class="grid grid-cols-2 gap-y-2.5 gap-x-4 text-xs font-bold text-slate-600 w-full">
-            <li>
-              <a href="index.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">
-                Home
-                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
-              </a>
-            </li>
-            <li>
-              <a href="about.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">
-                About Us
-                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
-              </a>
-            </li>
-            <li>
-              <a href="DistrictCommittee.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">
-                Warriors Council
-                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
-              </a>
-            </li>
-            <li>
-              <a href="projects.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">
-                Projects
-                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
-              </a>
-            </li>
-            <li>
-              <a href="Events.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">
-                Events
-                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
-              </a>
-            </li>
-            <li>
-              <a href="Gallery.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">
-                Gallery
-                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
-              </a>
-            </li>
-            <li>
-              <a href="Contact.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">
-                Contact Us
-                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
-              </a>
-            </li>
-            <li>
-              <a href="https://forms.gle/BVdNJdAXn4ujKXt39" target="_blank" rel="noopener" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">
-                Become a Warrior
-                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
-              </a>
-            </li>
-            <li>
-              <a href="admin.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">
-                Admin Portal
-                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
-              </a>
-            </li>
-            <li>
-              <a href="https://my.rotary.org/en/login" target="_blank" rel="noopener" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">
-                RI Login
-                <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
-              </a>
-            </li>
+            <li><a href="index.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Home<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="about.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">About Us<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="DistrictCommittee.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Warriors Council<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="projects.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Projects<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="Events.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Events<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="Gallery.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Gallery<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="Contact.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Contact Us<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="https://forms.gle/BVdNJdAXn4ujKXt39" target="_blank" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Become a Warrior<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="admin.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Admin Portal<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="https://my.rotary.org/en/login" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">RI Login<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
           </ul>
         </div>
 
-        <!-- Column 3 -->
-        <div class="col-span-2 sm:col-span-1">
-          <h4 class="text-xs font-black tracking-widest text-[#8B003A] uppercase border-l-2 border-[#8B003A] pl-3">
+        <!-- Column 3: Connect With Us (Centered on mobile) -->
+        <div class="flex flex-col items-center sm:items-start gap-4 w-full col-span-2 sm:col-span-1">
+          <h4 class="text-xs font-black tracking-widest text-[#8B003A] uppercase border-l-2 border-transparent sm:border-l-2 sm:border-[#8B003A] pl-0 sm:pl-3 text-center sm:text-left">
             Connect With Us
           </h4>
-          <ul class="flex flex-row flex-wrap gap-2.5 w-full">
+          <ul class="flex flex-row flex-wrap justify-center sm:justify-start gap-2.5 w-full">
             <li>
               <a href="https://www.instagram.com/racb_warriors/?hl=en" target="_blank" rel="noopener" class="h-9 w-9 rounded-full border border-[#8B003A]/10 bg-white/40 flex items-center justify-center transition-all duration-300 hover:text-[#E1306C] hover:bg-[#E1306C]/10 hover:scale-110 shadow-sm group" title="Instagram">
                 <svg class="h-5 w-5 shrink-0 fill-current text-slate-500 group-hover:text-current" viewBox="0 0 24 24">
@@ -1129,10 +1087,10 @@ html.lenis body {
           </ul>
         </div>
 
-        <!-- Column 4 -->
-        <div class="col-span-2 sm:col-span-1">
-          <h4 class="text-xs font-black tracking-widest text-[#8B003A] uppercase border-l-2 border-[#8B003A] pl-3">Contact Us</h4>
-          <div class="grid grid-cols-2 md:flex md:flex-col gap-x-4 gap-y-3.5 text-xs font-semibold text-slate-500 leading-relaxed w-full">
+        <!-- Column 4: Contact Us (Horizontal 2x2 grid centered on mobile) -->
+        <div class="flex flex-col items-center sm:items-start gap-4 w-full col-span-2 sm:col-span-1">
+          <h4 class="text-xs font-black tracking-widest text-[#8B003A] uppercase border-l-2 border-transparent sm:border-l-2 sm:border-[#8B003A] pl-0 sm:pl-3 text-center sm:text-left">Contact Us</h4>
+          <div class="grid grid-cols-2 md:flex md:flex-col gap-x-4 gap-y-3.5 text-xs font-semibold text-slate-500 leading-relaxed w-full text-center sm:text-left">
             <div>
               <span class="text-[10px] font-black text-slate-400 uppercase block mb-0.5">Email</span>
               <a href="mailto:racwarriors2023@gmail.com" class="text-slate-700 hover:text-[#8B003A] transition break-all">
@@ -1155,12 +1113,28 @@ html.lenis body {
             </div>
           </div>
         </div>
-        </div>
 
-        <!-- Column 5 -->
-        <div class="hidden sm:flex flex-col items-start lg:items-end justify-center w-full relative min-h-[100px] lg:min-h-[160px]">
+        <!-- Column 5: Large Decorative Artwork (Hidden on mobile) -->
+        <div class="hidden sm:flex flex-col items-start lg:items-end justify-center w-full text-left lg:text-right relative min-h-[100px] lg:min-h-[160px] overflow-hidden">
+          <!-- Transparent background rotating wheel -->
+          <svg class="absolute pointer-events-none opacity-[0.02] text-[#8B003A] -right-12 -bottom-12 w-48 h-48 animate-spin" style="animation: spin 60s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="12" cy="12" r="6"></circle>
+            <path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path>
+          </svg>
+
+          <!-- People holding hands outline SVG -->
+          <svg class="hidden sm:block h-9 w-auto text-[#8B003A]/10 mb-4 self-start lg:self-end" viewBox="0 0 120 40" fill="currentColor">
+            <path d="M15,10 C17.2,10 19,8.2 19,6 C19,3.8 17.2,2 15,2 C12.8,2 11,3.8 11,6 C11,8.2 12.8,10 15,10 Z M15,12 C10,12 8,16 8,24 L8,38 L12,38 L12,28 L14,28 L14,38 L18,38 L18,28 L20,28 L20,38 L24,38 L24,24 C24,16 22,12 15,12 Z"></path>
+            <path d="M45,10 C47.2,10 49,8.2 49,6 C49,3.8 47.2,2 45,2 C42.8,2 41,3.8 41,6 C41,8.2 42.8,10 45,10 Z M45,12 C40,12 38,16 38,24 L38,38 L42,38 L42,28 L44,28 L44,38 L48,38 L48,28 L50,28 L50,38 L54,38 L54,24 C54,16 52,12 45,12 Z"></path>
+            <path d="M75,10 C77.2,10 79,8.2 79,6 C79,3.8 77.2,2 75,2 C72.8,2 71,3.8 71,6 C71,8.2 72.8,10 75,10 Z M75,12 C70,12 68,16 68,24 L68,38 L72,38 L72,28 L74,28 L74,38 L78,38 L78,28 L80,28 L80,38 L84,38 L84,24 C84,16 82,12 75,12 Z"></path>
+            <path d="M105,10 C107.2,10 109,8.2 109,6 C109,3.8 107.2,2 105,2 C102.8,2 101,3.8 101,6 C101,8.2 102.8,10 105,10 Z M105,12 C100,12 98,16 98,24 L98,38 L102,38 L102,28 L104,28 L104,38 L108,38 L108,28 L110,28 L110,38 L114,38 L114,24 C114,16 112,12 105,12 Z"></path>
+            <rect x="23" y="16" width="16" height="4"></rect>
+            <rect x="53" y="16" width="16" height="4"></rect>
+            <rect x="83" y="16" width="16" height="4"></rect>
+          </svg>
+          
           <p class="text-sm font-medium text-slate-500">Together, we</p>
-          <h3 class="text-4xl font-extrabold text-amber-500 tracking-wide mt-1 animate-pulse" style="font-family: 'Dancing Script', cursive;">
+          <h3 class="text-4xl font-extrabold text-amber-500 tracking-wide mt-1 animate-pulse" style="font-family: 'Dancing Script', cursive; animation-duration: 4s;">
             Create Change
           </h3>
         </div>
@@ -1168,19 +1142,17 @@ html.lenis body {
       </div>
     </div>
 
-    <!-- Bottom Copyright Strip -->
+    <!-- Bottom Copyright Bar - slightly darker light blue strip -->
     <div class="relative border-t border-[#8B003A]/10 bg-[#bae6fd] py-6 z-10 font-sans text-xs">
-      <div class="mx-auto max-w-[1400px] px-6 text-center text-slate-700 font-semibold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5">
-        <span>© Copy Right 2026 All Rights Reserved.</span>
-        <div class="flex items-center gap-1">
-          <span>❤️ Designed & Managed by</span>
-          <a href="#" class="text-[#8B003A] font-black tracking-wide relative group py-0.5" data-portfolio-trigger>
-            N LATHIESH
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
-          </a>
-        </div>
+      <div class="mx-auto max-w-[1400px] px-6 text-center text-slate-700 font-semibold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 animate-fade-in">
+        <span>© Copy Right 2026 All Rights Reserved. ❤️ Designed & Managed by</span>
+        <a href="#" class="text-[#8B003A] font-black tracking-wide relative group py-0.5" data-portfolio-trigger>
+          N LATHIESH
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
+        </a>
       </div>
     </div>
+
   </footer>
 
   <!-- Scripts -->

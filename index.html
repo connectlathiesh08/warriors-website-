@@ -837,49 +837,48 @@ html.lenis body {
   <main class="flex-1 bg-[#f5f8fc]" data-page="home">
 
     <!-- ---- Section 1: HERO (Phase 2 Premium Static Hero Banner) ---- -->
-    <section class="relative bg-gradient-to-b from-[#FFFDFB] via-[#FFFDFB] to-white pt-24 pb-40 overflow-hidden min-h-[750px] lg:min-h-[800px] flex items-center">
+    <section class="relative bg-gradient-to-b from-[#FFFDFB] via-[#FFFDFB] to-white pt-16 pb-20 sm:pt-24 sm:pb-40 overflow-hidden min-h-[350px] sm:min-h-[500px] lg:min-h-[800px] flex items-center">
       <!-- Soft maroon abstract background decorations -->
       <div class="pointer-events-none absolute -left-64 -top-64 h-[600px] w-[600px] rounded-full bg-[#8B003A]/5 blur-[120px]"></div>
       <div class="pointer-events-none absolute -right-64 top-32 h-[500px] w-[500px] rounded-full bg-[#F5A623]/5 blur-[100px]"></div>
       
-      <div class="mx-auto max-w-[1400px] w-full px-5 sm:px-8 relative z-[2]">
-        <div class="grid gap-12 lg:grid-cols-12 items-center">
+        <div class="grid grid-cols-12 items-center gap-3 sm:gap-12">
           
-          <!-- Left Column (4/12 width = ~33%) -->
-          <div class="flex flex-col text-left hero-text-animate lg:col-span-4 order-2 lg:order-1">
+          <!-- Left Column (Text: 5/12 width on mobile, 4/12 on large screens) -->
+          <div class="flex flex-col text-left hero-text-animate col-span-5 lg:col-span-4">
             <!-- Small uppercase heading -->
-            <span class="text-[#8B003A] tracking-[0.25em] font-extrabold text-[11px] md:text-[13px] uppercase mb-4 block font-display">
+            <span class="text-[#8B003A] tracking-[0.15em] sm:tracking-[0.25em] font-extrabold text-[7px] sm:text-[11px] md:text-[13px] uppercase mb-1.5 sm:mb-4 block font-display leading-tight">
               ROTARACT BANGALORE WARRIORS
             </span>
             
             <!-- Main Heading -->
-            <h1 class="font-extrabold text-[36px] sm:text-[48px] md:text-[72px] lg:text-[80px] text-[#1A1A1A] leading-[1.08] tracking-tight mb-6 font-display" style="font-weight: 800;">
-              Service Above <br class="hidden md:inline" /><span class="text-[#8B003A]">Self</span>
+            <h1 class="font-extrabold text-[18px] sm:text-[48px] md:text-[72px] lg:text-[80px] text-[#1A1A1A] leading-[1.1] tracking-tight mb-2 sm:mb-6 font-display" style="font-weight: 800;">
+              Service Above <br class="hidden sm:inline" /><span class="text-[#8B003A]">Self</span>
             </h1>
             
             <!-- Short description -->
-            <p class="text-[#555555] text-[16px] md:text-[20px] lg:text-[22px] leading-relaxed max-w-[520px] mb-8 font-medium">
+            <p class="text-[#555555] text-[9px] sm:text-[16px] md:text-[20px] lg:text-[22px] leading-normal sm:leading-relaxed max-w-[520px] mb-3 sm:mb-8 font-medium">
               We are a family of young changemakers, thriving to create impact, inspire lives and build a better tomorrow.
             </p>
             
-            <!-- CTA Buttons -->
-            <div class="flex flex-wrap items-center gap-4 font-display">
+            <!-- CTA Buttons (Stacked on mobile, row on desktop) -->
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 font-display">
               <!-- Primary: Become a Warrior -->
-              <a href="https://forms.gle/BVdNJdAXn4ujKXt39" target="_blank" rel="noopener" class="flex items-center gap-2 bg-[#8B003A] text-white px-5 py-3.5 md:px-7 md:py-4 rounded-[14px] md:rounded-[16px] text-[15px] md:text-[18px] font-bold shadow-[0_10px_25px_-5px_rgba(139,0,58,0.3)] transition-all duration-300 hover:translate-y-[-3px] hover:shadow-[0_15px_30px_-5px_rgba(139,0,58,0.4)] hover:bg-[#78002E]">
+              <a href="https://forms.gle/BVdNJdAXn4ujKXt39" target="_blank" rel="noopener" class="flex items-center justify-center gap-1 bg-[#8B003A] text-white px-1.5 py-1 sm:px-7 sm:py-4 rounded-[4px] sm:rounded-[16px] text-[7px] sm:text-[16px] md:text-[18px] font-bold shadow-[0_5px_15px_-3px_rgba(139,0,58,0.3)] transition-all duration-300 hover:translate-y-[-3px] hover:shadow-[0_15px_30px_-5px_rgba(139,0,58,0.4)] hover:bg-[#78002E]">
                 <span>Become a Warrior</span>
-                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <svg class="h-2 w-2 sm:h-5 sm:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </a>
               
               <!-- Secondary: Explore Our Work -->
-              <a href="projects.html" class="flex items-center gap-2 bg-white border border-[#8B003A] text-[#8B003A] px-5 py-3.5 md:px-7 md:py-4 rounded-[14px] md:rounded-[16px] text-[15px] md:text-[18px] font-bold transition-all duration-300 hover:translate-y-[-3px] hover:bg-[#8B003A] hover:text-white hover:shadow-[0_15px_30px_-5px_rgba(139,0,58,0.2)]">
+              <a href="projects.html" class="flex items-center justify-center gap-1 bg-white border border-[#8B003A] text-[#8B003A] px-1.5 py-1 sm:px-7 sm:py-4 rounded-[4px] sm:rounded-[16px] text-[7px] sm:text-[16px] md:text-[18px] font-bold transition-all duration-300 hover:translate-y-[-3px] hover:bg-[#8B003A] hover:text-white hover:shadow-[0_15px_30px_-5px_rgba(139,0,58,0.2)]">
                 <span>Explore Our Work</span>
-                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+                <svg class="h-2 w-2 sm:h-5 sm:w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" x2="19" y1="12" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </a>
             </div>
           </div>
           
-          <!-- Right Column (8/12 width = ~67%, making the picture dominate!) -->
-          <div class="relative hero-img-animate lg:col-span-8 w-full order-1 lg:order-2">
+          <!-- Right Column (Image: 7/12 width on mobile, 8/12 on large screens) -->
+          <div class="relative hero-img-animate col-span-7 lg:col-span-8 w-full">
             <!-- Background Radial Glow behind image -->
             <div class="pointer-events-none absolute inset-0 bg-radial-gradient from-[#8B003A]/10 to-transparent blur-3xl rounded-full scale-75 -z-10"></div>
             
@@ -975,7 +974,7 @@ html.lenis body {
               <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
             </div>
             <div>
-              <div class="text-[20px] md:text-[22px] font-black text-[#1A1A1A] leading-tight">₹45,000+</div>
+              <div class="text-[20px] md:text-[22px] font-black text-[#1A1A1A] leading-tight">₹4,50,000+</div>
               <div class="text-[12px] text-slate-500 font-semibold leading-tight">Amount Spent for Good</div>
             </div>
           </div>
@@ -1024,6 +1023,7 @@ html.lenis body {
 
   <!-- ================================ FOOTER ================================ -->
   <footer class="relative overflow-hidden text-slate-700 bg-gradient-to-br from-[#f0f9ff] via-[#e6f4fe] to-[#d0ecfc] border-t border-[#8B003A]/10 font-sans">
+
     <!-- Decorative ambient background glows -->
     <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#8B003A]/5 rounded-full blur-[120px] pointer-events-none"></div>
     <div class="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-[140px] pointer-events-none"></div>
@@ -1034,11 +1034,11 @@ html.lenis body {
     <div class="relative mx-auto max-w-[1400px] px-6 py-10 md:py-14 z-10">
       <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-8 items-start">
         
-        <!-- Column 1: Club Branding -->
-        <div class="flex flex-col items-start gap-4 col-span-2 sm:col-span-1">
+        <!-- Column 1: Club Branding (Logo, slogan, and description hidden on mobile view) -->
+        <div class="flex flex-col items-center sm:items-start gap-4 col-span-2 sm:col-span-1">
           <div class="flex items-center gap-3">
             <!-- Custom High-Fidelity Rotaract Logo cogwheel -->
-            <svg width="46" height="46" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+            <svg width="46" height="46" class="hidden sm:block" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
               <defs>
                 <path id="tooth-footer" d="M46 12 L48 3 L52 3 L54 12 Z" fill="#8B003A" />
                 <rect id="spoke-footer" x="48" y="20" width="4" height="12" fill="#8B003A" />
@@ -1086,45 +1086,45 @@ html.lenis body {
               <circle cx="50" cy="50" r="4.5" fill="#8B003A" />
               <rect x="48" y="41.5" width="4" height="4.5" fill="#8B003A" />
             </svg>
-            <div class="text-left font-display">
-              <h3 class="text-lg font-extrabold text-[#8B003A] leading-none tracking-tight">Rotaract</h3>
-              <p class="text-[10px] font-black text-slate-650 tracking-wider uppercase mt-1">Bangalore Warriors</p>
-              <p class="text-[9px] font-bold text-[#8B003A] mt-0.5">RID 3192</p>
+            <div class="text-center sm:text-left font-display">
+              <h3 class="text-lg font-extrabold text-[#8B003A] leading-none tracking-tight text-center sm:text-left">Rotaract</h3>
+              <p class="text-[10px] font-black text-slate-655 tracking-wider uppercase mt-1 text-center sm:text-left">Bangalore Warriors</p>
+              <p class="text-[9px] font-bold text-[#8B003A] mt-0.5 text-center sm:text-left">RID 3192</p>
             </div>
           </div>
-          <p class="text-xs text-slate-600 font-semibold leading-relaxed mt-2">
+          <p class="hidden sm:block text-xs text-slate-600 font-semibold leading-relaxed mt-2 text-center sm:text-left">
             We are a family of young changemakers, creating impact through service, leadership and fellowship.
           </p>
-          <span class="text-2xl text-amber-600 tracking-wide mt-1 block" style="font-family: 'Dancing Script', cursive;">
+          <span class="hidden sm:block text-2xl text-amber-600 tracking-wide mt-1 text-center sm:text-left" style="font-family: 'Dancing Script', cursive;">
             Service Above Self
           </span>
         </div>
 
-        <!-- Column 2: Quick Links -->
+        <!-- Column 2: Quick Links (Hidden on mobile) -->
         <div class="hidden sm:flex flex-col items-start gap-4 w-full">
           <h4 class="text-xs font-black tracking-widest text-[#8B003A] uppercase border-l-2 border-[#8B003A] pl-3">
             Quick Links
           </h4>
           <ul class="grid grid-cols-2 gap-y-2.5 gap-x-4 text-xs font-bold text-slate-600 w-full">
             <li><a href="index.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Home<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
-            <li><a href="#" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">About Us<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
-            <li><a href="#" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Warriors Council<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
-            <li><a href="#" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Projects<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
-            <li><a href="#" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Events<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
-            <li><a href="#" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Gallery<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
-            <li><a href="#" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Contact Us<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
-            <li><a href="#" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Become a Warrior<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="about.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">About Us<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="DistrictCommittee.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Warriors Council<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="projects.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Projects<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="Events.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Events<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="Gallery.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Gallery<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="Contact.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Contact Us<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
+            <li><a href="https://forms.gle/BVdNJdAXn4ujKXt39" target="_blank" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Become a Warrior<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
             <li><a href="admin.html" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">Admin Portal<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
             <li><a href="https://my.rotary.org/en/login" class="hover:text-[#8B003A] transition-colors duration-200 relative group py-0.5 inline-block">RI Login<span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span></a></li>
           </ul>
         </div>
 
-        <!-- Column 3: Connect With Us -->
-        <div class="col-span-2 sm:col-span-1">
-          <h4 class="text-xs font-black tracking-widest text-[#8B003A] uppercase border-l-2 border-[#8B003A] pl-3">
+        <!-- Column 3: Connect With Us (Centered on mobile) -->
+        <div class="flex flex-col items-center sm:items-start gap-4 w-full col-span-2 sm:col-span-1">
+          <h4 class="text-xs font-black tracking-widest text-[#8B003A] uppercase border-l-2 border-transparent sm:border-l-2 sm:border-[#8B003A] pl-0 sm:pl-3 text-center sm:text-left">
             Connect With Us
           </h4>
-          <ul class="flex flex-row flex-wrap gap-2.5 w-full">
+          <ul class="flex flex-row flex-wrap justify-center sm:justify-start gap-2.5 w-full">
             <li>
               <a href="https://www.instagram.com/racb_warriors/?hl=en" target="_blank" rel="noopener" class="h-9 w-9 rounded-full border border-[#8B003A]/10 bg-white/40 flex items-center justify-center transition-all duration-300 hover:text-[#E1306C] hover:bg-[#E1306C]/10 hover:scale-110 shadow-sm group" title="Instagram">
                 <svg class="h-5 w-5 shrink-0 fill-current text-slate-500 group-hover:text-current" viewBox="0 0 24 24">
@@ -1163,10 +1163,10 @@ html.lenis body {
           </ul>
         </div>
 
-        <!-- Column 4: Contact Us -->
-        <div class="col-span-2 sm:col-span-1">
-          <h4 class="text-xs font-black tracking-widest text-[#8B003A] uppercase border-l-2 border-[#8B003A] pl-3">Contact Us</h4>
-          <div class="grid grid-cols-2 md:flex md:flex-col gap-x-4 gap-y-3.5 text-xs font-semibold text-slate-500 leading-relaxed w-full">
+        <!-- Column 4: Contact Us (Horizontal 2x2 grid centered on mobile) -->
+        <div class="flex flex-col items-center sm:items-start gap-4 w-full col-span-2 sm:col-span-1">
+          <h4 class="text-xs font-black tracking-widest text-[#8B003A] uppercase border-l-2 border-transparent sm:border-l-2 sm:border-[#8B003A] pl-0 sm:pl-3 text-center sm:text-left">Contact Us</h4>
+          <div class="grid grid-cols-2 md:flex md:flex-col gap-x-4 gap-y-3.5 text-xs font-semibold text-slate-500 leading-relaxed w-full text-center sm:text-left">
             <div>
               <span class="text-[10px] font-black text-slate-400 uppercase block mb-0.5">Email</span>
               <a href="mailto:racwarriors2023@gmail.com" class="text-slate-700 hover:text-[#8B003A] transition break-all">
@@ -1189,9 +1189,8 @@ html.lenis body {
             </div>
           </div>
         </div>
-        </div>
 
-        <!-- Column 5: Large Decorative Artwork -->
+        <!-- Column 5: Large Decorative Artwork (Hidden on mobile) -->
         <div class="hidden sm:flex flex-col items-start lg:items-end justify-center w-full text-left lg:text-right relative min-h-[100px] lg:min-h-[160px] overflow-hidden">
           <!-- Transparent background rotating wheel -->
           <svg class="absolute pointer-events-none opacity-[0.02] text-[#8B003A] -right-12 -bottom-12 w-48 h-48 animate-spin" style="animation: spin 60s linear infinite;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -1216,22 +1215,20 @@ html.lenis body {
           </h3>
         </div>
 
-    </div>
-  </div>
-
-  <!-- Bottom Copyright Bar - slightly darker light blue strip -->
-    <div class="relative border-t border-[#8B003A]/10 bg-[#bae6fd] py-6 z-10 font-sans text-xs">
-      <div class="mx-auto max-w-[1400px] px-6 text-center text-slate-700 font-semibold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5">
-        <span>© Copy Right 2026 All Rights Reserved.</span>
-        <div class="flex items-center gap-1">
-          <span>❤️ Designed & Managed by</span>
-          <a href="#" class="text-[#8B003A] font-black tracking-wide relative group py-0.5" data-portfolio-trigger>
-            N LATHIESH
-            <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
-          </a>
-        </div>
       </div>
     </div>
+
+    <!-- Bottom Copyright Bar - slightly darker light blue strip -->
+    <div class="relative border-t border-[#8B003A]/10 bg-[#bae6fd] py-6 z-10 font-sans text-xs">
+      <div class="mx-auto max-w-[1400px] px-6 text-center text-slate-700 font-semibold flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-1.5 animate-fade-in">
+        <span>© Copy Right 2026 All Rights Reserved. ❤️ Designed & Managed by</span>
+        <a href="#" class="text-[#8B003A] font-black tracking-wide relative group py-0.5" data-portfolio-trigger>
+          N LATHIESH
+          <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-[#8B003A] transition-all duration-300 group-hover:w-full"></span>
+        </a>
+      </div>
+    </div>
+
   </footer>
 
   <!-- Portfolio Popup Glassmorphic Modal Card -->
