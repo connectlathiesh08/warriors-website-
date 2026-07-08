@@ -397,6 +397,10 @@ def init_db():
         )
     """)
 
+    # Check if this is a fresh DB by checking if settings table already exists
+    c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='settings'")
+    settings_existed = c.fetchone() is not None
+
     # Create settings table
     c.execute("""
         CREATE TABLE IF NOT EXISTS settings (
@@ -407,6 +411,12 @@ def init_db():
 
     # Insert default settings if missing
     c.execute("INSERT OR IGNORE INTO settings (key, value) VALUES ('google_calendar_id', '')")
+    
+    # If the settings table already existed, mark tables as initialized to prevent default rows injection
+    if settings_existed:
+        c.execute("INSERT OR IGNORE INTO settings (key, value) VALUES ('events_initialized', 'true')")
+        c.execute("INSERT OR IGNORE INTO settings (key, value) VALUES ('gallery_initialized', 'true')")
+        c.execute("INSERT OR IGNORE INTO settings (key, value) VALUES ('members_initialized', 'true')")
 
     # Create finances table
     c.execute("""
@@ -435,8 +445,9 @@ def init_db():
     pass
 
     # Insert default events if empty
-    c.execute("SELECT COUNT(*) FROM events")
+    c.execute("SELECT COUNT(*) FROM settings WHERE key='events_initialized'")
     if c.fetchone()[0] == 0:
+        c.execute("INSERT INTO settings (key, value) VALUES ('events_initialized', 'true')")
         default_events = [
             ('EVT-201', 'Installation Ceremony', '2026-07-01', '18:00', 'Ritz Carlton Ballroom', 150, 45000, 'Completed', 92, 'meeting', 'Welcome ceremony'),
             ('EVT-202', 'Core Committee Meeting', '2026-07-10', '19:00', 'Club House', 15, 500, 'Upcoming', 0, 'meeting', 'Regular agenda discussion'),
@@ -454,8 +465,9 @@ def init_db():
     """)
     
     # Insert default gallery placeholders if empty
-    c.execute("SELECT COUNT(*) FROM gallery")
+    c.execute("SELECT COUNT(*) FROM settings WHERE key='gallery_initialized'")
     if c.fetchone()[0] == 0:
+        c.execute("INSERT INTO settings (key, value) VALUES ('gallery_initialized', 'true')")
         default_gallery = []
         for s in range(11):
             img_id = f"IMG-{s + 301}"
@@ -561,8 +573,9 @@ def init_db():
             isSecretaryAdmin INTEGER DEFAULT 0
         )
     """)
-    c.execute("SELECT COUNT(*) FROM members")
+    c.execute("SELECT COUNT(*) FROM settings WHERE key='members_initialized'")
     if c.fetchone()[0] == 0:
+        c.execute("INSERT INTO settings (key, value) VALUES ('members_initialized', 'true')")
         default_members = [
             ('WR-001', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150', 'Lathiesh Kumar', 'Racwarriors2023@gmail.com', '9876543210', 'Super Admin', 'Secretary', 'Active', 'Paid', 1),
             ('WR-002', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150', 'Anil Gupta', 'anil.gupta@gmail.com', '9876543211', 'President', 'President', 'Active', 'Paid', 0),
@@ -686,7 +699,7 @@ def handle_file_upload(file_obj, project_name, subfolder):
                 except Exception as pe:
                     print(f"Warning setting file permissions: {pe}")
                     
-                view_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+                view_url = f"/api/project-image/{file_id}"
                 upload_time = datetime.datetime.now().isoformat()
                 
                 # Delete temp file
@@ -787,7 +800,7 @@ def handle_base64_upload(base64_str, project_name, subfolder):
                     except Exception as pe:
                         print(f"Warning setting file permissions: {pe}")
                         
-                    view_url = f"https://drive.google.com/uc?export=download&id={file_id}"
+                    view_url = f"/api/project-image/{file_id}"
                     upload_time = datetime.datetime.now().isoformat()
                     
                     if os.path.exists(temp_path):
@@ -1744,13 +1757,23 @@ def get_or_create_finance_sheet():
                 
         try:
             finance_folder_id = _get_or_create_folder("Finance", parent_folder_id)
-            body = {
-                'name': 'Rotaract Warriors Finance Ledger',
-                'mimeType': 'application/vnd.google-apps.spreadsheet',
-                'parents': [finance_folder_id]
-            }
-            file = drive_service.files().create(body=body, fields='id').execute()
-            spreadsheet_id = file.get('id')
+            
+            # Prevent sheet duplication: check if a ledger already exists in the folder
+            q_search = f"name = 'Rotaract Warriors Finance Ledger' and mimeType = 'application/vnd.google-apps.spreadsheet' and '{finance_folder_id}' in parents and trashed = false"
+            search_res = drive_service.files().list(q=q_search, fields="files(id)").execute()
+            existing_files = search_res.get('files', [])
+            
+            if existing_files:
+                spreadsheet_id = existing_files[0]['id']
+                print(f"Reusing existing Finance spreadsheet found on Google Drive: {spreadsheet_id}")
+            else:
+                body = {
+                    'name': 'Rotaract Warriors Finance Ledger',
+                    'mimeType': 'application/vnd.google-apps.spreadsheet',
+                    'parents': [finance_folder_id]
+                }
+                file = drive_service.files().create(body=body, fields='id').execute()
+                spreadsheet_id = file.get('id')
             
             c.execute("INSERT OR REPLACE INTO settings (key, value) VALUES ('google_finance_spreadsheet_id', ?)", (spreadsheet_id,))
             conn.commit()
@@ -2105,10 +2128,11 @@ def handle_invoice_upload(base64_str):
                 return folder.get('id')
                 
         finance_folder_id = _get_or_create_folder("Finance", parent_folder_id)
+        invoices_folder_id = _get_or_create_folder("Invoices", finance_folder_id)
         
         file_metadata = {
             'name': filename,
-            'parents': [finance_folder_id]
+            'parents': [invoices_folder_id]
         }
         
         import io

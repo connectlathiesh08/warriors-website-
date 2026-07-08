@@ -817,43 +817,55 @@ function mount() {
   }
 
   var apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname.startsWith('192.168.') || window.location.hostname.startsWith('10.') || window.location.hostname.startsWith('172.')) && window.location.port !== '5000' ? (window.location.protocol === 'file:' ? 'http://localhost:5000' : window.location.protocol + '//' + window.location.hostname + ':5000') : '';
-  console.log('Homepage fetch URL:', apiBase + '/api/projects?status=published');
-  fetch(apiBase + '/api/projects?status=published')
-    .then(function (res) {
-      console.log('Homepage fetch response:', res.status, res.statusText);
-      if (res.ok) return res.json();
-      throw new Error('API offline');
-    })
-    .then(function (data) {
-      console.log('Homepage fetch data count:', data.length, data);
-      localProjects = data.map(function (p) {
+  
+  console.log('Homepage live data loading started...');
+  Promise.all([
+    fetch(apiBase + '/api/projects?status=published').then(function(r) { return r.ok ? r.json() : []; }).catch(function() { return []; }),
+    fetch(apiBase + '/api/gallery').then(function(r) { return r.ok ? r.json() : []; }).catch(function() { return []; })
+  ])
+  .then(function(results) {
+    var projectsData = results[0];
+    var galleryData = results[1];
+    
+    console.log('Fetched projects:', projectsData.length, 'gallery:', galleryData.length);
+    
+    localProjects = projectsData.map(function (p) {
+      return {
+        image: p.cover_image || p.image || 'assets/projects/proj-0.png',
+        title: p.title || p.name || 'Untitled Project',
+        id: p.id || '',
+        year: ''
+      };
+    });
+    
+    if (galleryData && galleryData.length) {
+      localGallery = galleryData.map(function(g) {
         return {
-          image: p.cover_image || p.image || 'assets/projects/proj-0.png',
-          title: p.title || p.name || 'Untitled Project',
-          id: p.id || '',
-          year: ''
+          src: g.src.startsWith('/') ? apiBase + g.src : g.src,
+          alt: g.alt || ''
         };
       });
-      runLoadingChain();
-    })
-    .catch(function (err) {
-      console.error('Homepage fetch failed:', err);
-      try {
-        var localStr = localStorage.getItem('warriors_projects');
-        if (localStr) {
-          var parsed = JSON.parse(localStr);
-          localProjects = parsed.filter(function (p) { return p.status === 'Published' || p.isPublished !== false; }).map(function (p) {
-            return {
-              image: p.image || p.cover_image || 'assets/projects/proj-0.png',
-              title: p.name || p.title || 'Untitled Project',
-              id: p.id || '',
-              year: ''
-            };
-          });
-        }
-      } catch (e) {}
-      runLoadingChain();
-    });
+    }
+    runLoadingChain();
+  })
+  .catch(function(err) {
+    console.error('Homepage live fetch failed:', err);
+    try {
+      var localStr = localStorage.getItem('warriors_projects');
+      if (localStr) {
+        var parsed = JSON.parse(localStr);
+        localProjects = parsed.filter(function (p) { return p.status === 'Published' || p.isPublished !== false; }).map(function (p) {
+          return {
+            image: p.image || p.cover_image || 'assets/projects/proj-0.png',
+            title: p.name || p.title || 'Untitled Project',
+            id: p.id || '',
+            year: ''
+          };
+        });
+      }
+    } catch (e) {}
+    runLoadingChain();
+  });
 
   function runLoadingChain() {
     loadLiveProjects(14)

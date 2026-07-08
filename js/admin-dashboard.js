@@ -4434,7 +4434,8 @@ function MoMRecords({ onEdit, onTabChange }) {
       </div>
 
       <div class="bg-white border border-slate-200/60 rounded-2xl shadow-premium overflow-hidden">
-        <table class="w-full border-collapse text-left text-sm">
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-left text-sm min-w-[800px]">
           <thead class="bg-slate-50/70 border-b border-slate-200">
             <tr>
               <th class="p-4 font-bold text-slate-700">Ref ID</th>
@@ -4507,6 +4508,7 @@ function MoMRecords({ onEdit, onTabChange }) {
             `}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   `;
@@ -4595,7 +4597,8 @@ function ActionItemsTracker({ members = [] }) {
       </div>
 
       <div class="bg-white border border-slate-200/60 rounded-2xl shadow-premium overflow-hidden">
-        <table class="w-full border-collapse text-left text-sm">
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-left text-sm min-w-[800px]">
           <thead class="bg-slate-50/70 border-b border-slate-200">
             <tr>
               <th class="p-4 font-bold text-slate-700 w-12 text-center">Status</th>
@@ -4632,6 +4635,7 @@ function ActionItemsTracker({ members = [] }) {
             `}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   `;
@@ -4704,7 +4708,8 @@ function ApprovalsPanel({ onEdit }) {
       </div>
 
       <div class="bg-white border border-slate-200/60 rounded-2xl shadow-premium overflow-hidden">
-        <table class="w-full border-collapse text-left text-sm">
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-left text-sm min-w-[800px]">
           <thead class="bg-slate-50/70 border-b border-slate-200">
             <tr>
               <th class="p-4 font-bold text-slate-700">Meeting Info</th>
@@ -4744,6 +4749,7 @@ function ApprovalsPanel({ onEdit }) {
             `}
           </tbody>
         </table>
+        </div>
       </div>
     </div>
   `;
