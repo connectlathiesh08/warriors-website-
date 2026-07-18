@@ -244,7 +244,7 @@ def restore_db_from_google_drive(force=False):
         return
     import time
     current_time = time.time()
-    if not force and (current_time - LAST_RESTORE_TIME < 5):
+    if not force and (current_time - LAST_RESTORE_TIME < 60):
         return
         
     try:
@@ -279,6 +279,7 @@ def restore_db_from_google_drive(force=False):
             print("No projects.db found on Google Drive. Using local database.")
     except Exception as e:
         print(f"Error restoring database from Google Drive: {e}")
+        LAST_RESTORE_TIME = time.time()
 
 @app.after_request
 def after_request_handler(response):
@@ -572,9 +573,18 @@ init_db()
 
 @app.before_request
 def before_request_handler():
+    import sys
+    sys.stderr.write(f"[DEBUG] Request path: {request.path}\n")
+    sys.stderr.flush()
     if request.path.startswith('/api/'):
-        if not '/api/project-image/' in request.path:
+        # Bypass for image proxy and gallery to ensure instant loading
+        if not '/api/project-image/' in request.path and not '/api/gallery' in request.path:
+            sys.stderr.write(f"[DEBUG] RESTORE DB triggered for: {request.path}\n")
+            sys.stderr.flush()
             restore_db_from_google_drive()
+        else:
+            sys.stderr.write(f"[DEBUG] Bypassed restore DB for: {request.path}\n")
+            sys.stderr.flush()
 
 # Clean up Trash older than 30 days
 def cleanup_trash():
@@ -822,16 +832,49 @@ def handle_base64_upload(base64_str, project_name, subfolder):
 def serve_uploads(filename):
     return send_from_directory(UPLOADS_DIR, filename)
 
-# Proxy route to stream images/files from Google Drive
+# Proxy route to stream images/files from Google Drive with local disk caching
+CACHE_DIR = os.path.join(os.path.dirname(__file__), "uploads", "cache")
+os.makedirs(CACHE_DIR, exist_ok=True)
+
 @app.route('/api/project-image/<file_id>', methods=['GET'])
 def get_project_image(file_id):
+    # Read width query parameter, default to 1000
+    width = request.args.get('w', '1000')
+    
+    # Local cache file path
+    cache_filename = f"{file_id}_{width}.jpg"
+    cache_filepath = os.path.join(CACHE_DIR, cache_filename)
+    
+    # 1. If cached locally, return it instantly!
+    if os.path.exists(cache_filepath):
+        from flask import send_file
+        return send_file(cache_filepath, mimetype='image/jpeg', as_attachment=False)
+        
+    # 2. Try fetching public thumbnail using requests.get with verify=False
+    try:
+        import requests
+        import urllib3
+        urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+        
+        url = f"https://drive.google.com/thumbnail?id={file_id}&sz=w{width}"
+        resp = requests.get(url, verify=False, timeout=8)
+        
+        if resp.status_code == 200:
+            with open(cache_filepath, 'wb') as f:
+                f.write(resp.content)
+            from flask import send_file
+            return send_file(cache_filepath, mimetype='image/jpeg', as_attachment=False)
+    except Exception as e:
+        print(f"Fast proxy failed for {file_id}: {e}. Falling back to Drive API...")
+
+    # 3. Fallback to standard Drive API downloader
     try:
         service = get_drive_service()
         if not service:
             return jsonify({"error": "Google Drive client not initialized"}), 500
             
-        # Get file metadata to read content type and name
-        meta = service.files().get(fileId=file_id, fields="mimeType,name").execute()
+        # Get file metadata to read content type
+        meta = service.files().get(fileId=file_id, fields="mimeType").execute()
         mime_type = meta.get('mimeType', 'application/octet-stream')
         
         # Download media
@@ -845,14 +888,13 @@ def get_project_image(file_id):
         while done is False:
             status, done = downloader.next_chunk()
             
-        fh.seek(0)
+        data = fh.getvalue()
+        # Save to local cache folder
+        with open(cache_filepath, 'wb') as f:
+            f.write(data)
+            
         from flask import send_file
-        return send_file(
-            fh,
-            mimetype=mime_type,
-            as_attachment=False,
-            download_name=meta.get('name', 'file')
-        )
+        return send_file(cache_filepath, mimetype=mime_type, as_attachment=False)
     except Exception as e:
         print(f"Error proxying Google Drive file {file_id}: {e}")
         return jsonify({"error": f"Failed to retrieve file: {str(e)}"}), 500
@@ -2156,33 +2198,103 @@ def handle_invoice_upload(base64_str):
         print(f"Error uploading invoice photo to Drive: {e}")
         return None
 
-# GET /api/gallery
+# GET /api/gallery (Background Thread Synchronized & Instantly Cached)
+import threading
+import json
+import time
+
+GALLERY_CACHE_FILE = os.path.join(os.path.dirname(__file__), "gallery_cache.json")
+GALLERY_IN_MEMORY_CACHE = []
+
+# Load initial cache from disk if available
+if os.path.exists(GALLERY_CACHE_FILE):
+    try:
+        with open(GALLERY_CACHE_FILE, 'r', encoding='utf-8') as f:
+            GALLERY_IN_MEMORY_CACHE = json.load(f)
+        print(f"Loaded {len(GALLERY_IN_MEMORY_CACHE)} gallery items from local cache file.")
+    except Exception as e:
+        print(f"Error loading initial gallery cache: {e}")
+
+def background_gallery_sync():
+    global GALLERY_IN_MEMORY_CACHE
+    # Sleep 15 seconds on startup to let Flask start up cleanly without GIL blocking
+    time.sleep(15)
+    while True:
+        try:
+            service = get_drive_service()
+            if service:
+                parent_id = "1hb6LSvl2oBPJuAjPe29iyybp0lc5PgWt"
+                
+                # 1. Query for subfolders inside the parent folder
+                q_folders = f"'{parent_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
+                folder_results = service.files().list(q=q_folders, fields="files(id, name)").execute()
+                folders = folder_results.get('files', [])
+                
+                # Collect parent folder ID + all subfolder IDs
+                folder_ids = [parent_id] + [f['id'] for f in folders]
+                
+                # 2. Query for all images in these folders
+                parent_queries = " or ".join([f"'{fid}' in parents" for fid in folder_ids])
+                q_images = f"({parent_queries}) and mimeType contains 'image/' and trashed = false"
+                
+                image_results = service.files().list(
+                    q=q_images, 
+                    fields="files(id, name, createdTime)",
+                    orderBy="createdTime desc",
+                    pageSize=1000
+                ).execute()
+                
+                files = image_results.get('files', [])
+                
+                new_gallery = []
+                for index, f in enumerate(files):
+                    file_id = f['id']
+                    created_time = f.get('createdTime', '')
+                    date_str = created_time.split('T')[0] if 'T' in created_time else ''
+                    
+                    # Remove extension from name
+                    clean_name = f.get('name', 'Warrior Moment')
+                    if '.' in clean_name:
+                        clean_name = clean_name.rsplit('.', 1)[0]
+                        
+                    new_gallery.append({
+                        "id": f"IMG-{index}",
+                        "src": f"/api/project-image/{file_id}",
+                        "drive_file_id": file_id,
+                        "alt": clean_name,
+                        "date": date_str
+                    })
+                
+                if new_gallery:
+                    GALLERY_IN_MEMORY_CACHE = new_gallery
+                    with open(GALLERY_CACHE_FILE, 'w', encoding='utf-8') as f:
+                        json.dump(new_gallery, f, indent=2)
+                    # print("Gallery cache successfully synchronized with Google Drive.")
+        except Exception as e:
+            print(f"Background gallery sync error: {e}")
+            
+        # Poll Drive for changes every 60 seconds in the background
+        time.sleep(60)
+
+# Start background sync thread on startup
+sync_thread = threading.Thread(target=background_gallery_sync, daemon=True)
+sync_thread.start()
+
 @app.route('/api/gallery', methods=['GET'])
 def get_gallery():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    c = conn.cursor()
-    c.execute("SELECT id, google_drive_id, description, date FROM gallery ORDER BY date DESC, id DESC")
-    rows = c.fetchall()
-    conn.close()
-    
-    gallery_list = []
-    for r in rows:
-        file_id = r["google_drive_id"]
-        # If it is a full local path or Unsplash URL or starts with uploads/
-        if file_id.startswith("http") or file_id.startswith("assets/") or file_id.startswith("/uploads/"):
-            src = file_id
-        else:
-            src = f"/api/project-image/{file_id}"
-            
-        gallery_list.append({
-            "id": r["id"],
-            "src": src,
-            "drive_file_id": file_id,
-            "alt": r["description"],
-            "date": r["date"]
-        })
-    return jsonify(gallery_list)
+    # If the in-memory cache is empty, return a quick offline fallback array so the gallery is never empty
+    if not GALLERY_IN_MEMORY_CACHE:
+        fallback = []
+        for s in range(11):
+            fallback.append({
+                "id": f"IMG-{s}",
+                "src": f"assets/projects/proj-{s}.png",
+                "drive_file_id": "",
+                "alt": "Warrior Moment",
+                "date": ""
+            })
+        return jsonify(fallback)
+    return jsonify(GALLERY_IN_MEMORY_CACHE)
 
 # POST /api/gallery
 @app.route('/api/gallery', methods=['POST'])

@@ -508,18 +508,31 @@ function initGalleries(projects, gallery) {
   }
   var dome = document.querySelector('.photo-gallery');
   if (dome) {
-    // Reset container heights and classes to support natural grid height
     dome.style.height = 'auto';
     dome.className = 'photo-gallery relative mt-8 w-full';
 
     var galleryPhotos = [];
     var sourceList = (gallery && gallery.length) ? gallery : [];
     
+    // Fallback images if list is empty
+    if (!sourceList.length) {
+      for (var s = 0; s < 11; s++) {
+        sourceList.push({ src: 'assets/projects/proj-' + s + '.png', alt: 'Moment' });
+      }
+    }
+
+    var apiBase = (window.location.protocol === 'file:' || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port !== '5000' ? 'http://localhost:5000' : '';
+
     for (var k = 0; k < sourceList.length; k++) {
       var item = sourceList[k];
+      var imageSrc = item.src || 'assets/projects/proj-0.png';
+      if (imageSrc.startsWith('/') && !imageSrc.startsWith('/uploads')) {
+        imageSrc = apiBase + imageSrc;
+      }
       galleryPhotos.push({
-        src: item.src || 'assets/projects/proj-0.png',
-        alt: item.alt || 'Warrior Moment'
+        src: imageSrc,
+        alt: item.alt || 'Warrior Moment',
+        globalIndex: k
       });
     }
 
@@ -531,25 +544,206 @@ function initGalleries(projects, gallery) {
     // Expose lightbox helper globally
     window.triggerGalleryLightbox = function(idx) {
       if (typeof openLightbox === 'function') {
-        openLightbox(idx, galleryPhotos);
+        var highResPhotos = galleryPhotos.map(function(p) {
+          return {
+            src: p.src + '?w=1200',
+            alt: p.alt
+          };
+        });
+        openLightbox(idx, highResPhotos);
       } else {
         console.warn('openLightbox is not defined');
       }
     };
 
-    var gridHtml = '<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 w-full">';
-    for (var i = 0; i < galleryPhotos.length; i++) {
-      var photo = galleryPhotos[i];
-      gridHtml += '<div class="relative overflow-hidden rounded-2xl aspect-square bg-slate-100 shadow-sm border border-slate-200/50 group cursor-pointer hover:shadow-md transition-all duration-300" onclick="window.triggerGalleryLightbox(' + i + ')">';
-      gridHtml += '  <img src="' + photo.src + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" alt="' + (photo.alt || 'Gallery Image') + '" />';
-      gridHtml += '  <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">';
-      gridHtml += '    <svg class="w-8 h-8 text-white scale-90 group-hover:scale-100 transition-transform duration-300" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"></path></svg>';
-      gridHtml += '  </div>';
-      gridHtml += '</div>';
+    // Inject styles dynamically if not present
+    var styleId = 'marquee-gallery-styles';
+    if (!document.getElementById(styleId)) {
+      var styleEl = document.createElement('style');
+      styleEl.id = styleId;
+      styleEl.innerHTML = '\
+        .photo-gallery {\
+          display: block !important;\
+          width: 100% !important;\
+          height: auto !important;\
+          overflow: visible !important;\
+        }\
+        .marquee-gallery-container {\
+          display: flex;\
+          flex-direction: column;\
+          gap: 1.5rem;\
+          width: 100%;\
+          overflow: hidden;\
+          padding: 2rem 0;\
+        }\
+        .marquee-row {\
+          display: flex;\
+          width: 100%;\
+          overflow: hidden;\
+          position: relative;\
+        }\
+        .marquee-track {\
+          display: flex;\
+          gap: 1.5rem;\
+          width: max-content;\
+          will-change: transform;\
+        }\
+        .marquee-row-left .marquee-track {\
+          animation: marqueeLeft linear infinite;\
+        }\
+        .marquee-row-right .marquee-track {\
+          animation: marqueeRight linear infinite;\
+        }\
+        @keyframes marqueeLeft {\
+          0% { transform: translateX(0); }\
+          100% { transform: translateX(-50%); }\
+        }\
+        @keyframes marqueeRight {\
+          0% { transform: translateX(-50%); }\
+          100% { transform: translateX(0); }\
+        }\
+        .marquee-row:hover .marquee-track {\
+          animation-play-state: paused;\
+        }\
+        .marquee-card {\
+          width: 180px;\
+          height: 135px;\
+          background: #ffffff;\
+          border: 4px solid #ffffff;\
+          border-radius: 1rem;\
+          box-shadow: 0 10px 25px -10px rgba(139, 0, 58, 0.08), 0 8px 20px -8px rgba(0, 0, 0, 0.06);\
+          overflow: hidden;\
+          cursor: pointer;\
+          transition: transform 0.3s ease, box-shadow 0.3s ease;\
+          flex-shrink: 0;\
+          position: relative;\
+        }\
+        @media (max-width: 639px) {\
+          .marquee-card {\
+            width: 130px;\
+            height: 98px;\
+            border-width: 3px;\
+            border-radius: 0.75rem;\
+          }\
+          .marquee-gallery-container {\
+            gap: 1rem;\
+          }\
+          .marquee-track {\
+            gap: 1rem;\
+          }\
+        }\
+        .marquee-card:hover {\
+          transform: scale(1.06) translateY(-6px);\
+          box-shadow: 0 20px 35px -5px rgba(139, 0, 58, 0.18), 0 12px 24px -10px rgba(0, 0, 0, 0.08);\
+          z-index: 50;\
+        }\
+        .marquee-img {\
+          width: 100%;\
+          height: 100%;\
+          object-fit: cover;\
+          border-radius: 0.75rem;\
+        }\
+        @media (max-width: 639px) {\
+          .marquee-img {\
+            border-radius: 0.5rem;\
+          }\
+        }\
+        .marquee-overlay {\
+          position: absolute;\
+          inset: 0;\
+          background: rgba(139, 0, 58, 0.15);\
+          backdrop-filter: blur(1.5px);\
+          opacity: 0;\
+          transition: opacity 0.3s ease;\
+          display: flex;\
+          align-items: center;\
+          justify-content: center;\
+          border-radius: 0.75rem;\
+        }\
+        @media (max-width: 639px) {\
+          .marquee-overlay {\
+            border-radius: 0.5rem;\
+          }\
+        }\
+        .marquee-card:hover .marquee-overlay {\
+          opacity: 1;\
+        }\
+      ';
+      document.head.appendChild(styleEl);
     }
-    gridHtml += '</div>';
+
+    // Separate photos into 3 rows
+    var row1 = [];
+    var row2 = [];
+    var row3 = [];
+    for (var i = 0; i < galleryPhotos.length; i++) {
+      if (i % 3 === 0) row1.push(galleryPhotos[i]);
+      else if (i % 3 === 1) row2.push(galleryPhotos[i]);
+      else row3.push(galleryPhotos[i]);
+    }
+
+        function buildRowHtml(rowPhotos) {
+      var repeated = [];
+      if (rowPhotos.length >= 10) {
+        repeated = rowPhotos.concat(rowPhotos);
+      } else if (rowPhotos.length > 0) {
+        while (repeated.length < 15) {
+          repeated = repeated.concat(rowPhotos);
+        }
+      }
+      var html = '';
+      for (var j = 0; j < repeated.length; j++) {
+        var photo = repeated[j];
+        html += '<div class="marquee-card">';
+        html += '  <img src="' + photo.src + '?w=300" loading="lazy" class="marquee-img" alt="' + (photo.alt || 'Gallery Image') + '" />';
+        html += '  <div class="marquee-overlay" onclick="window.triggerGalleryLightbox(' + photo.globalIndex + ')">';
+        html += '    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>';
+        html += '  </div>';
+        html += '</div>';
+      }
+      return {
+        html: html,
+        count: repeated.length
+      };
+    }
+
+    var r1 = buildRowHtml(row1);
+    var r2 = buildRowHtml(row2);
+    var r3 = buildRowHtml(row3);
+
+    function getDuration(count, speed) {
+      if (!count) return '30s';
+      // 204px width per card (180px + 24px gap)
+      var dist = (count * 204) / 2;
+      return Math.max(10, Math.round(dist / speed)) + 's';
+    }
+
+    var marqueeHtml = '<div class="marquee-gallery-container">';
     
-    dome.innerHTML = gridHtml;
+    // Row 1 (speed: 40px/sec - medium speed)
+    marqueeHtml += '<div class="marquee-row marquee-row-left">';
+    marqueeHtml += '  <div class="marquee-track" style="animation-duration: ' + getDuration(r1.count, 40) + ';">';
+    marqueeHtml += r1.html;
+    marqueeHtml += '  </div>';
+    marqueeHtml += '</div>';
+
+    // Row 2 (speed: 30px/sec - medium-slow speed)
+    marqueeHtml += '<div class="marquee-row marquee-row-right">';
+    marqueeHtml += '  <div class="marquee-track" style="animation-duration: ' + getDuration(r2.count, 30) + ';">';
+    marqueeHtml += r2.html;
+    marqueeHtml += '  </div>';
+    marqueeHtml += '</div>';
+
+    // Row 3 (speed: 45px/sec - medium-fast speed)
+    marqueeHtml += '<div class="marquee-row marquee-row-left">';
+    marqueeHtml += '  <div class="marquee-track" style="animation-duration: ' + getDuration(r3.count, 45) + ';">';
+    marqueeHtml += r3.html;
+    marqueeHtml += '  </div>';
+    marqueeHtml += '</div>';
+
+    marqueeHtml += '</div>';
+    
+    dome.innerHTML = marqueeHtml;
   }
 }
 
