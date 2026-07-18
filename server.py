@@ -832,8 +832,14 @@ def handle_base64_upload(base64_str, project_name, subfolder):
 def serve_uploads(filename):
     return send_from_directory(UPLOADS_DIR, filename)
 
-# Proxy route to stream images/files from Google Drive with local disk caching
-CACHE_DIR = os.path.join(os.path.dirname(__file__), "uploads", "cache")
+# Hybrid Vercel-optimized and Local server configuration for caching
+IS_VERCEL = 'VERCEL' in os.environ
+
+if IS_VERCEL:
+    CACHE_DIR = "/tmp/uploads_cache"
+else:
+    CACHE_DIR = os.path.join(os.path.dirname(__file__), "uploads", "cache")
+
 os.makedirs(CACHE_DIR, exist_ok=True)
 
 @app.route('/api/project-image/<file_id>', methods=['GET'])
@@ -2198,13 +2204,14 @@ def handle_invoice_upload(base64_str):
         print(f"Error uploading invoice photo to Drive: {e}")
         return None
 
-# GET /api/gallery (Background Thread Synchronized & Instantly Cached)
+# GET /api/gallery (Hybrid SWR background thread locally, direct caching on Vercel)
 import threading
 import json
 import time
 
 GALLERY_CACHE_FILE = os.path.join(os.path.dirname(__file__), "gallery_cache.json")
 GALLERY_IN_MEMORY_CACHE = []
+GALLERY_LAST_UPDATED = 0
 
 # Load initial cache from disk if available
 if os.path.exists(GALLERY_CACHE_FILE):
@@ -2215,74 +2222,93 @@ if os.path.exists(GALLERY_CACHE_FILE):
     except Exception as e:
         print(f"Error loading initial gallery cache: {e}")
 
+def fetch_gallery_from_drive():
+    service = get_drive_service()
+    if not service:
+        return []
+    parent_id = "1hb6LSvl2oBPJuAjPe29iyybp0lc5PgWt"
+    
+    # 1. Query for subfolders
+    q_folders = f"'{parent_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
+    folder_results = service.files().list(q=q_folders, fields="files(id, name)").execute()
+    folders = folder_results.get('files', [])
+    
+    folder_ids = [parent_id] + [f['id'] for f in folders]
+    
+    # 2. Query for all images in these folders
+    parent_queries = " or ".join([f"'{fid}' in parents" for fid in folder_ids])
+    q_images = f"({parent_queries}) and mimeType contains 'image/' and trashed = false"
+    
+    image_results = service.files().list(
+        q=q_images, 
+        fields="files(id, name, createdTime)",
+        orderBy="createdTime desc",
+        pageSize=1000
+    ).execute()
+    
+    files = image_results.get('files', [])
+    
+    new_gallery = []
+    for index, f in enumerate(files):
+        file_id = f['id']
+        created_time = f.get('createdTime', '')
+        date_str = created_time.split('T')[0] if 'T' in created_time else ''
+        
+        clean_name = f.get('name', 'Warrior Moment')
+        if '.' in clean_name:
+            clean_name = clean_name.rsplit('.', 1)[0]
+            
+        new_gallery.append({
+            "id": f"IMG-{index}",
+            "src": f"/api/project-image/{file_id}",
+            "drive_file_id": file_id,
+            "alt": clean_name,
+            "date": date_str
+        })
+    return new_gallery
+
 def background_gallery_sync():
-    global GALLERY_IN_MEMORY_CACHE
+    global GALLERY_IN_MEMORY_CACHE, GALLERY_LAST_UPDATED
     # Sleep 15 seconds on startup to let Flask start up cleanly without GIL blocking
     time.sleep(15)
     while True:
         try:
-            service = get_drive_service()
-            if service:
-                parent_id = "1hb6LSvl2oBPJuAjPe29iyybp0lc5PgWt"
-                
-                # 1. Query for subfolders inside the parent folder
-                q_folders = f"'{parent_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
-                folder_results = service.files().list(q=q_folders, fields="files(id, name)").execute()
-                folders = folder_results.get('files', [])
-                
-                # Collect parent folder ID + all subfolder IDs
-                folder_ids = [parent_id] + [f['id'] for f in folders]
-                
-                # 2. Query for all images in these folders
-                parent_queries = " or ".join([f"'{fid}' in parents" for fid in folder_ids])
-                q_images = f"({parent_queries}) and mimeType contains 'image/' and trashed = false"
-                
-                image_results = service.files().list(
-                    q=q_images, 
-                    fields="files(id, name, createdTime)",
-                    orderBy="createdTime desc",
-                    pageSize=1000
-                ).execute()
-                
-                files = image_results.get('files', [])
-                
-                new_gallery = []
-                for index, f in enumerate(files):
-                    file_id = f['id']
-                    created_time = f.get('createdTime', '')
-                    date_str = created_time.split('T')[0] if 'T' in created_time else ''
-                    
-                    # Remove extension from name
-                    clean_name = f.get('name', 'Warrior Moment')
-                    if '.' in clean_name:
-                        clean_name = clean_name.rsplit('.', 1)[0]
-                        
-                    new_gallery.append({
-                        "id": f"IMG-{index}",
-                        "src": f"/api/project-image/{file_id}",
-                        "drive_file_id": file_id,
-                        "alt": clean_name,
-                        "date": date_str
-                    })
-                
-                if new_gallery:
-                    GALLERY_IN_MEMORY_CACHE = new_gallery
+            new_gallery = fetch_gallery_from_drive()
+            if new_gallery:
+                GALLERY_IN_MEMORY_CACHE = new_gallery
+                GALLERY_LAST_UPDATED = time.time()
+                try:
                     with open(GALLERY_CACHE_FILE, 'w', encoding='utf-8') as f:
                         json.dump(new_gallery, f, indent=2)
-                    # print("Gallery cache successfully synchronized with Google Drive.")
+                except Exception as ex:
+                    print(f"Failed to write gallery_cache.json: {ex}")
         except Exception as e:
             print(f"Background gallery sync error: {e}")
-            
-        # Poll Drive for changes every 60 seconds in the background
         time.sleep(60)
 
-# Start background sync thread on startup
-sync_thread = threading.Thread(target=background_gallery_sync, daemon=True)
-sync_thread.start()
+# Start background sync thread only if NOT running on Vercel
+if not IS_VERCEL:
+    sync_thread = threading.Thread(target=background_gallery_sync, daemon=True)
+    sync_thread.start()
 
 @app.route('/api/gallery', methods=['GET'])
 def get_gallery():
-    # If the in-memory cache is empty, return a quick offline fallback array so the gallery is never empty
+    global GALLERY_IN_MEMORY_CACHE, GALLERY_LAST_UPDATED
+    
+    # On Vercel (stateless lambda), dynamically fetch every 60 seconds
+    if IS_VERCEL:
+        import sys
+        now = time.time()
+        if not GALLERY_IN_MEMORY_CACHE or (now - GALLERY_LAST_UPDATED > 60):
+            try:
+                new_gallery = fetch_gallery_from_drive()
+                if new_gallery:
+                    GALLERY_IN_MEMORY_CACHE = new_gallery
+                    GALLERY_LAST_UPDATED = now
+            except Exception as e:
+                sys.stderr.write(f"Vercel gallery fetch error: {e}\\n")
+                sys.stderr.flush()
+
     if not GALLERY_IN_MEMORY_CACHE:
         fallback = []
         for s in range(11):
