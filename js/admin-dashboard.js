@@ -106,25 +106,25 @@ function App() {
 
 // --- LOGIN CARD COMPONENT ---
 function WarriorLoginCard({ onLoginSuccess }) {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [pin, setPin] = useState('');
+  const [showPin, setShowPin] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
   const handleLoginSubmit = (e) => {
     e.preventDefault();
-    if (username === 'Racwarriors2023@gmail.com' && password === 'Lathiesh@2002') {
+    const cleanPin = (pin || '').trim();
+    if (cleanPin === '2023@2026') {
       setErrorMsg('');
       sessionStorage.setItem('warriors_admin_logged_in', 'true');
       sessionStorage.setItem('warriors_admin_role', 'Super Admin');
       onLoginSuccess('Super Admin');
-    } else if (username === 'secwarriors@2026' && password === 'Ilovewarriors') {
+    } else if (cleanPin === 'secwarriors@2026') {
       setErrorMsg('');
       sessionStorage.setItem('warriors_admin_logged_in', 'true');
       sessionStorage.setItem('warriors_admin_role', 'Secretary');
       onLoginSuccess('Secretary');
     } else {
-      setErrorMsg('Invalid email or password. Try again!');
+      setErrorMsg('Invalid PIN. Please try again!');
     }
   };
 
@@ -168,29 +168,18 @@ function WarriorLoginCard({ onLoginSuccess }) {
         <!-- Body -->
         <div class="p-8">
           <h3 class="text-2xl font-bold text-slate-800 text-center mb-1">Welcome Back, <span class="text-burgundy-500">Warrior!</span></h3>
-          <p class="text-sm text-slate-500 text-center mb-6">Sign in to continue your Rotaract journey.</p>
+          <p class="text-sm text-slate-500 text-center mb-6">Enter your Security PIN to sign in.</p>
           
           <form onSubmit=${handleLoginSubmit} class="space-y-5">
             <div>
-              <label class="block text-sm font-semibold text-slate-700 mb-1.5">Email or Mobile Number</label>
-              <div class="relative flex items-center">
-                <span class="absolute left-3.5 text-burgundy-500 text-lg">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                </span>
-                <input type="text" value=${username} onInput=${(e) => setUsername(e.target.value)} class="w-full pl-11 pr-4 py-3 border border-pink-200/80 rounded-xl bg-slate-50/30 text-slate-800 text-sm focus:outline-none focus:border-burgundy-500 focus:bg-white focus:ring-4 focus:ring-burgundy-500/10 transition-all" placeholder="Enter email or mobile number" required />
-              </div>
-              <p class="text-xs text-slate-400 mt-1">Start typing: digits for mobile, letters for email</p>
-            </div>
-
-            <div>
-              <label class="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
+              <label class="block text-sm font-semibold text-slate-700 mb-1.5">Security PIN</label>
               <div class="relative flex items-center">
                 <span class="absolute left-3.5 text-burgundy-500 text-lg">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
                 </span>
-                <input type=${showPassword ? 'text' : 'password'} value=${password} onInput=${(e) => setPassword(e.target.value)} class="w-full pl-11 pr-11 py-3 border border-pink-200/80 rounded-xl bg-slate-50/30 text-slate-800 text-sm focus:outline-none focus:border-burgundy-500 focus:bg-white focus:ring-4 focus:ring-burgundy-500/10 transition-all" placeholder="Enter your password" required />
-                <button type="button" onClick=${() => setShowPassword(!showPassword)} class="absolute right-3.5 text-slate-400 hover:text-burgundy-500 transition-colors">
-                  ${showPassword
+                <input type=${showPin ? 'text' : 'password'} value=${pin} onInput=${(e) => setPin(e.target.value)} class="w-full pl-11 pr-11 py-3.5 border border-pink-200/80 rounded-xl bg-slate-50/30 text-slate-800 text-base font-medium tracking-wider focus:outline-none focus:border-burgundy-500 focus:bg-white focus:ring-4 focus:ring-burgundy-500/10 transition-all" placeholder="Enter PIN" required />
+                <button type="button" onClick=${() => setShowPin(!showPin)} class="absolute right-3.5 text-slate-400 hover:text-burgundy-500 transition-colors" title=${showPin ? 'Hide PIN' : 'Show PIN'}>
+                  ${showPin
                     ? html`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`
                     : html`<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`
                   }
@@ -204,14 +193,7 @@ function WarriorLoginCard({ onLoginSuccess }) {
               </div>
             `}
 
-            <div class="flex justify-between items-center text-xs">
-              <label class="flex items-center gap-2 text-slate-500 cursor-pointer">
-                <input type="checkbox" checked class="accent-burgundy-500 rounded cursor-pointer w-4 h-4" /> Remember Me
-              </label>
-              <a href="#" class="text-burgundy-500 hover:underline font-semibold">Forgot Password?</a>
-            </div>
-
-            <button type="submit" class="w-full bg-burgundy-500 hover:bg-burgundy-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-[0_4px_12px_rgba(139,0,58,0.2)] hover:shadow-[0_6px_16px_rgba(139,0,58,0.3)] active:translate-y-[1px] flex items-center justify-center gap-2 text-sm">
+            <button type="submit" class="w-full bg-burgundy-500 hover:bg-burgundy-600 text-white font-bold py-3.5 rounded-xl transition-all shadow-[0_4px_12px_rgba(139,0,58,0.2)] hover:shadow-[0_6px_16px_rgba(139,0,58,0.3)] active:translate-y-[1px] flex items-center justify-center gap-2 text-sm mt-2">
               Sign In ➔
             </button>
           </form>
