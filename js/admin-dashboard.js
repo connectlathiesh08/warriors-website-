@@ -1362,14 +1362,20 @@ function MemberManagement({ members, fetchMembers }) {
                 ? html`<tr><td colspan="8" class="p-8 text-center text-slate-400 font-medium">No members found matching filters.</td></tr>`
                 : filteredMembers.map((m) => html`
                     <tr class="hover:bg-slate-50/50 transition-colors">
-                      <td class="p-4 pl-6 font-mono text-xs font-semibold text-slate-500">${m.id}</td>
+                      <td class="p-4 pl-6 font-mono text-xs font-semibold text-slate-500">
+                        ${m.id}
+                        ${m.ri_id ? html`<div class="text-[10px] text-slate-400 font-sans font-medium mt-0.5">RI: ${m.ri_id}</div>` : ''}
+                      </td>
                       <td class="p-4">
                         <img src=${m.photo} class="w-9 h-9 rounded-full border border-slate-200 object-cover" />
                       </td>
-                      <td class="p-4 font-bold text-slate-800">${m.name}</td>
+                      <td class="p-4 font-bold text-slate-800">
+                        <div>${m.name}</div>
+                        ${m.birthday ? html`<div class="text-[10px] text-slate-400 font-normal mt-0.5">🎂 ${m.birthday}</div>` : ''}
+                      </td>
                       <td class="p-4">
-                        <div class="text-xs font-medium text-slate-500">${m.email}</div>
-                        <div class="text-[10px] text-slate-400 mt-0.5">${m.phone}</div>
+                        <div class="text-xs font-medium text-slate-500">${m.email || '—'}</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5">${m.phone || '—'}</div>
                       </td>
                       <td class="p-4">
                         <div class="font-semibold text-xs text-burgundy-500">${m.role}</div>

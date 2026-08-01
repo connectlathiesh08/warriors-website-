@@ -546,24 +546,21 @@ def init_db():
             position TEXT,
             status TEXT,
             payment TEXT,
-            isSecretaryAdmin INTEGER DEFAULT 0
+            isSecretaryAdmin INTEGER DEFAULT 0,
+            ri_id TEXT,
+            birthday TEXT
         )
     """)
+    c.execute("PRAGMA table_info(members)")
+    existing_cols = [info[1] for info in c.fetchall()]
+    if "ri_id" not in existing_cols:
+        c.execute("ALTER TABLE members ADD COLUMN ri_id TEXT")
+    if "birthday" not in existing_cols:
+        c.execute("ALTER TABLE members ADD COLUMN birthday TEXT")
+
     c.execute("SELECT COUNT(*) FROM settings WHERE key='members_initialized'")
     if c.fetchone()[0] == 0:
         c.execute("INSERT INTO settings (key, value) VALUES ('members_initialized', 'true')")
-        default_members = [
-            ('WR-001', 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150', 'Lathiesh Kumar', 'Racwarriors2023@gmail.com', '9876543210', 'Super Admin', 'Secretary', 'Active', 'Paid', 1),
-            ('WR-002', 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150', 'Anil Gupta', 'anil.gupta@gmail.com', '9876543211', 'President', 'President', 'Active', 'Paid', 0),
-            ('WR-003', 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150', 'Priya Sharma', 'priya.sharma@yahoo.com', '9876543212', 'Treasurer', 'Treasurer', 'Active', 'Paid', 0),
-            ('WR-004', 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150', 'Rohan Das', 'rohan.das@outlook.com', '9876543213', 'Director', 'Community Service Director', 'Active', 'Paid', 0),
-            ('WR-005', 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150', 'Sneha Roy', 'sneha.roy@gmail.com', '9876543214', 'Member', 'Public Relations Chair', 'Active', 'Paid', 0),
-            ('WR-006', 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150', 'Vikram Singh', 'vikram.singh@gmail.com', '9876543215', 'Member', 'General Member', 'Inactive', 'Unpaid', 0)
-        ]
-        c.executemany("""
-            INSERT INTO members (id, photo, name, email, phone, role, position, status, payment, isSecretaryAdmin)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, default_members)
 
     conn.commit()
     conn.close()
@@ -2554,6 +2551,7 @@ def get_members():
     
     members_list = []
     for r in rows:
+        keys = r.keys()
         members_list.append({
             "id": r["id"],
             "photo": r["photo"],
@@ -2564,7 +2562,9 @@ def get_members():
             "position": r["position"],
             "status": r["status"],
             "payment": r["payment"],
-            "isSecretaryAdmin": bool(r["isSecretaryAdmin"])
+            "isSecretaryAdmin": bool(r["isSecretaryAdmin"]),
+            "ri_id": r["ri_id"] if "ri_id" in keys else "",
+            "birthday": r["birthday"] if "birthday" in keys else ""
         })
     return jsonify(members_list)
 
@@ -2601,11 +2601,13 @@ def create_member():
     status = data.get('status', 'Active')
     payment = data.get('payment', 'Paid')
     is_sec = 1 if data.get('isSecretaryAdmin', False) else 0
+    ri_id = data.get('ri_id', '')
+    birthday = data.get('birthday', '')
     
     c.execute("""
-        INSERT INTO members (id, photo, name, email, phone, role, position, status, payment, isSecretaryAdmin)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    """, (member_id, photo, name, email, phone, role, position, status, payment, is_sec))
+        INSERT INTO members (id, photo, name, email, phone, role, position, status, payment, isSecretaryAdmin, ri_id, birthday)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    """, (member_id, photo, name, email, phone, role, position, status, payment, is_sec, ri_id, birthday))
     conn.commit()
     conn.close()
     
@@ -2628,12 +2630,14 @@ def update_member(member_id):
     status = data.get('status')
     payment = data.get('payment')
     is_sec = 1 if data.get('isSecretaryAdmin', False) else 0
+    ri_id = data.get('ri_id', '')
+    birthday = data.get('birthday', '')
     
     c.execute("""
         UPDATE members
-        SET photo=?, name=?, email=?, phone=?, role=?, position=?, status=?, payment=?, isSecretaryAdmin=?
+        SET photo=?, name=?, email=?, phone=?, role=?, position=?, status=?, payment=?, isSecretaryAdmin=?, ri_id=?, birthday=?
         WHERE id=?
-    """, (photo, name, email, phone, role, position, status, payment, is_sec, member_id))
+    """, (photo, name, email, phone, role, position, status, payment, is_sec, ri_id, birthday, member_id))
     conn.commit()
     conn.close()
     
