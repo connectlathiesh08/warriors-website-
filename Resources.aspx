@@ -1,0 +1,339 @@
+<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Resources.aspx.cs" Inherits="RotaractWarriors.Resources" %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script src="js/udaya-celebration.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources & Downloads - Rotaract Club of Bangalore Warriors (District 3192)</title>
+  
+  <meta name="description" content="Official club resources, Rotary District 3192 guidelines, reporting templates, brand assets, bylaws, and project toolkits for Rotaract Club of Bangalore Warriors.">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              burgundy: '#8B003A',
+              gold: '#F5A623',
+              dark: '#5C0022',
+            }
+          },
+          fontFamily: {
+            sans: ['Outfit', 'sans-serif'],
+            display: ['Poppins', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; color: #334155; }
+    .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); border: 1px solid rgba(226, 232, 240, 0.8); }
+    .slot-link { transition: all 0.2s ease-in-out; }
+  </style>
+</head>
+<body data-page="resources" class="min-h-screen flex flex-col bg-slate-50 text-slate-800 antialiased selection:bg-[#8B003A] selection:text-white">
+
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-50 w-full border-b border-slate-200/80 bg-white/90 backdrop-blur-md">
+    <div class="mx-auto flex max-w-[1720px] items-center justify-between px-4 py-3 sm:px-6">
+      
+      <!-- Brand Logo -->
+      <a href="index.html" class="flex items-center gap-3">
+        <svg width="44" height="44" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" class="shrink-0 transition-transform duration-300 hover:rotate-12">
+          <circle cx="50" cy="50" r="45" fill="#8B003A" />
+          <circle cx="50" cy="50" r="38" fill="white" />
+          <circle cx="50" cy="50" r="28" stroke="#8B003A" stroke-width="2.5" fill="transparent" />
+          <path d="M50 12 L50 20 M50 80 L50 88 M12 50 L20 50 M80 50 L88 50 M23 23 L29 29 M71 71 L77 77 M71 23 L65 29 M29 71 L23 77" stroke="#8B003A" stroke-width="4.5" stroke-linecap="round" />
+          <circle cx="50" cy="50" r="16" fill="#8B003A" />
+          <circle cx="50" cy="50" r="10" fill="white" />
+          <rect x="47" y="47" width="6" height="6" fill="#8B003A" />
+        </svg>
+        <div class="text-left font-display">
+          <h1 class="font-extrabold text-[20px] md:text-[23px] text-[#8B003A] leading-tight">Rotaract</h1>
+          <p class="font-semibold text-[12px] md:text-[13px] text-[#8B003A] leading-none uppercase tracking-wide">Bangalore Warriors</p>
+          <p class="font-medium text-[10px] text-slate-400 mt-0.5 uppercase tracking-wider">District 3192</p>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="main-nav hidden min-[1440px]:flex items-center gap-1.5 font-display">
+        <a href="index.html" data-nav="home" data-label="HOME" class="slot-link px-3.5 py-1.5 text-[14px] font-bold text-slate-700 hover:text-[#8B003A]">HOME</a>
+        <a href="about.html" data-nav="about" data-label="ABOUT US" class="slot-link px-3.5 py-1.5 text-[14px] font-bold text-slate-700 hover:text-[#8B003A]">ABOUT US</a>
+        <a href="DistrictCommittee.html" data-nav="district-committee" data-label="WARRIORS COUNCIL" class="slot-link px-3.5 py-1.5 text-[14px] font-bold text-slate-700 hover:text-[#8B003A]">WARRIORS COUNCIL</a>
+        <a href="Events.html" data-nav="events" data-label="EVENTS" class="slot-link px-3.5 py-1.5 text-[14px] font-bold text-slate-700 hover:text-[#8B003A]">EVENTS</a>
+        <a href="resources.html" data-nav="resources" data-label="RESOURCES" class="slot-link px-3.5 py-1.5 text-[14px] font-bold rounded-full bg-[#8B003A] text-white">RESOURCES</a>
+        <a href="Partners.html" data-nav="partners" data-label="PARTNERS" class="slot-link px-3.5 py-1.5 text-[14px] font-bold text-slate-700 hover:text-[#8B003A]">PARTNERS</a>
+        <a href="Blog.html" data-nav="blog" data-label="BLOG" class="slot-link px-3.5 py-1.5 text-[14px] font-bold text-slate-700 hover:text-[#8B003A]">BLOG</a>
+      </nav>
+
+      <!-- Right Action Buttons -->
+      <div class="hidden min-[1440px]:flex items-center gap-3 font-display">
+        <a href="admin.html" class="flex items-center gap-1.5 rounded-full bg-[#8B003A] px-4.5 py-2 text-[13.5px] font-bold text-white shadow-sm hover:bg-[#78002E]">ADMIN PORTAL</a>
+        <a href="https://forms.gle/BVdNJdAXn4ujKXt39" target="_blank" rel="noopener" class="flex items-center gap-1.5 rounded-full bg-[#F5A623] px-4.5 py-2 text-[13.5px] font-bold text-white shadow-sm hover:bg-[#e0951b]">BECOME A WARRIOR</a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button id="mobileMenuBtn" class="min-[1440px]:hidden text-slate-800 p-2 focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobileNavDrawer" class="hidden min-[1440px]:hidden bg-white border-b border-slate-200 px-6 py-4 space-y-3 font-display font-bold">
+      <a href="index.html" class="block text-slate-700 hover:text-[#8B003A]">HOME</a>
+      <a href="about.html" class="block text-slate-700 hover:text-[#8B003A]">ABOUT US</a>
+      <a href="DistrictCommittee.html" class="block text-slate-700 hover:text-[#8B003A]">WARRIORS COUNCIL</a>
+      <a href="Events.html" class="block text-slate-700 hover:text-[#8B003A]">EVENTS</a>
+      <a href="resources.html" class="block text-[#8B003A]">RESOURCES</a>
+      <a href="Partners.html" class="block text-slate-700 hover:text-[#8B003A]">PARTNERS</a>
+      <a href="Blog.html" class="block text-slate-700 hover:text-[#8B003A]">BLOG</a>
+      <div class="pt-3 border-t border-slate-100 flex flex-col gap-2">
+        <a href="admin.html" class="block text-center py-2.5 rounded-xl bg-[#8B003A] text-white text-sm">ADMIN PORTAL</a>
+        <a href="https://forms.gle/BVdNJdAXn4ujKXt39" target="_blank" rel="noopener" class="block text-center py-2.5 rounded-xl bg-[#F5A623] text-white text-sm">BECOME A WARRIOR</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative bg-gradient-to-b from-[#8B003A] via-[#78002E] to-[#5C0022] text-white py-16 px-6 text-center overflow-hidden">
+    <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    <div class="relative max-w-4xl mx-auto space-y-4">
+      <span class="inline-block px-4 py-1.5 rounded-full bg-white/10 text-amber-300 text-xs font-bold uppercase tracking-widest border border-white/20">
+        📚 Rotaract Warriors Library
+      </span>
+      <h1 class="text-3xl md:text-5xl font-black font-display tracking-tight leading-tight">
+        Official Resources & Downloads
+      </h1>
+      <p class="text-base md:text-lg text-slate-200 max-w-2xl mx-auto font-light">
+        Access official club guidelines, reporting templates, District 3192 protocols, branding assets, and project execution toolkits.
+      </p>
+      
+      <!-- Search Input -->
+      <div class="max-w-xl mx-auto pt-4">
+        <div class="relative flex items-center">
+          <span class="absolute left-4 text-slate-400 text-lg">🔍</span>
+          <input type="text" id="searchInput" onkeyup="filterResources()" placeholder="Search documents, guidelines, templates..." class="w-full pl-12 pr-4 py-3.5 rounded-2xl bg-white text-slate-800 placeholder-slate-400 text-sm font-medium shadow-lg focus:outline-none focus:ring-4 focus:ring-amber-400/40 transition">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter Pills -->
+  <section class="max-w-7xl mx-auto px-6 pt-10">
+    <div class="flex flex-wrap items-center justify-center gap-2 md:gap-3" id="filterPills">
+      <button onclick="setFilter('all')" class="filter-btn active px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition bg-[#8B003A] text-white shadow-sm" data-category="all">All Resources</button>
+      <button onclick="setFilter('bylaws')" class="filter-btn px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" data-category="bylaws">Bylaws & Governance</button>
+      <button onclick="setFilter('templates')" class="filter-btn px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" data-category="templates">Reporting & Forms</button>
+      <button onclick="setFilter('branding')" class="filter-btn px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" data-category="branding">Branding & Media Kit</button>
+      <button onclick="setFilter('district')" class="filter-btn px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" data-category="district">District 3192 Docs</button>
+      <button onclick="setFilter('toolkits')" class="filter-btn px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition bg-white text-slate-600 border border-slate-200 hover:bg-slate-100" data-category="toolkits">Project Toolkits</button>
+    </div>
+  </section>
+
+  <!-- Resources Grid -->
+  <main class="max-w-7xl mx-auto px-6 py-12 flex-grow">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="resourcesGrid">
+      
+      <!-- Resource Card 1 -->
+      <div class="resource-card glass-card rounded-2xl p-6 flex flex-col justify-between hover:shadow-xl transition duration-300 border border-slate-200" data-category="bylaws" data-title="rotaract warriors club bylaws constitution guidelines">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">Bylaws & Governance</span>
+            <span class="text-xs font-semibold text-slate-400">PDF • 1.4 MB</span>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800 mb-2 group-hover:text-[#8B003A] transition">Rotaract Warriors Official Club Bylaws</h3>
+          <p class="text-xs text-slate-500 line-clamp-3 mb-4">Official constitution, governance policies, office bearer roles, election protocol, and code of conduct for Rotaract Club of Bangalore Warriors.</p>
+        </div>
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-[11px] font-semibold text-slate-400">Updated: 2026</span>
+          <a href="https://drive.google.com/drive/u/0/folders/1hb6LSvl2oBPJuAjPe29iyybp0lc5PgWt" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-[#8B003A] text-white text-xs font-bold hover:bg-[#78002E] transition flex items-center gap-1.5">
+            <span>Download</span> ⬇️
+          </a>
+        </div>
+      </div>
+
+      <!-- Resource Card 2 -->
+      <div class="resource-card glass-card rounded-2xl p-6 flex flex-col justify-between hover:shadow-xl transition duration-300 border border-slate-200" data-category="templates" data-title="minutes of meeting mom template report format">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">Reporting & Forms</span>
+            <span class="text-xs font-semibold text-slate-400">DOCX • 350 KB</span>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800 mb-2">Standard MOM & Meeting Report Template</h3>
+          <p class="text-xs text-slate-500 line-clamp-3 mb-4">Standardized Minutes of Meeting (MOM) template for General Body Meetings, Board Meetings, and Secretary reporting.</p>
+        </div>
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-[11px] font-semibold text-slate-400">Updated: 2026</span>
+          <a href="https://drive.google.com/drive/u/0/folders/1hb6LSvl2oBPJuAjPe29iyybp0lc5PgWt" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-[#8B003A] text-white text-xs font-bold hover:bg-[#78002E] transition flex items-center gap-1.5">
+            <span>Download</span> ⬇️
+          </a>
+        </div>
+      </div>
+
+      <!-- Resource Card 3 -->
+      <div class="resource-card glass-card rounded-2xl p-6 flex flex-col justify-between hover:shadow-xl transition duration-300 border border-slate-200" data-category="branding" data-title="rotary rotaract official logo brand identity media kit vector png svg">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-purple-50 text-purple-700 border border-purple-200">Branding & Media Kit</span>
+            <span class="text-xs font-semibold text-slate-400">ZIP • 12.8 MB</span>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800 mb-2">Official Brand Assets & Logos</h3>
+          <p class="text-xs text-slate-500 line-clamp-3 mb-4">High-resolution vector logos (PNG, SVG, EPS), Rotary wheel guidelines, typography standards, and Warriors color palettes.</p>
+        </div>
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-[11px] font-semibold text-slate-400">Updated: 2026</span>
+          <a href="https://drive.google.com/drive/u/0/folders/1hb6LSvl2oBPJuAjPe29iyybp0lc5PgWt" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-[#8B003A] text-white text-xs font-bold hover:bg-[#78002E] transition flex items-center gap-1.5">
+            <span>Download</span> ⬇️
+          </a>
+        </div>
+      </div>
+
+      <!-- Resource Card 4 -->
+      <div class="resource-card glass-card rounded-2xl p-6 flex flex-col justify-between hover:shadow-xl transition duration-300 border border-slate-200" data-category="district" data-title="rotaract district 3192 directory guidelines governor monthly letter gml">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">District 3192 Docs</span>
+            <span class="text-xs font-semibold text-slate-400">PDF • 8.2 MB</span>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800 mb-2">Rotaract District 3192 Official Guidelines</h3>
+          <p class="text-xs text-slate-500 line-clamp-3 mb-4">District 3192 citation criteria, Governor's Monthly Letter (GML), district reporting timelines, and event submission protocols.</p>
+        </div>
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-[11px] font-semibold text-slate-400">Updated: 2026</span>
+          <a href="https://drive.google.com/drive/u/0/folders/1hb6LSvl2oBPJuAjPe29iyybp0lc5PgWt" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-[#8B003A] text-white text-xs font-bold hover:bg-[#78002E] transition flex items-center gap-1.5">
+            <span>Download</span> ⬇️
+          </a>
+        </div>
+      </div>
+
+      <!-- Resource Card 5 -->
+      <div class="resource-card glass-card rounded-2xl p-6 flex flex-col justify-between hover:shadow-xl transition duration-300 border border-slate-200" data-category="toolkits" data-title="project execution checklist proposal pitch deck sponsorship template">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-[#F5A623]/20 text-amber-800 border border-amber-300">Project Toolkits</span>
+            <span class="text-xs font-semibold text-slate-400">ZIP • 4.5 MB</span>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800 mb-2">Project Execution & Sponsorship Pitch Deck</h3>
+          <p class="text-xs text-slate-500 line-clamp-3 mb-4">Turnkey sponsorship proposal pitch deck template, project planning checklist, budget calculator, and post-event reporting format.</p>
+        </div>
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-[11px] font-semibold text-slate-400">Updated: 2026</span>
+          <a href="https://drive.google.com/drive/u/0/folders/1hb6LSvl2oBPJuAjPe29iyybp0lc5PgWt" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-[#8B003A] text-white text-xs font-bold hover:bg-[#78002E] transition flex items-center gap-1.5">
+            <span>Download</span> ⬇️
+          </a>
+        </div>
+      </div>
+
+      <!-- Resource Card 6 -->
+      <div class="resource-card glass-card rounded-2xl p-6 flex flex-col justify-between hover:shadow-xl transition duration-300 border border-slate-200" data-category="templates" data-title="reimbursement claim form financial voucher bill submit">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="px-3 py-1 rounded-full text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200">Reporting & Forms</span>
+            <span class="text-xs font-semibold text-slate-400">XLSX • 180 KB</span>
+          </div>
+          <h3 class="text-lg font-bold text-slate-800 mb-2">Treasurer Financial Voucher & Claim Form</h3>
+          <p class="text-xs text-slate-500 line-clamp-3 mb-4">Official financial claim form for project chair expense reimbursements, invoice tracking, and treasurer auditing.</p>
+        </div>
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-[11px] font-semibold text-slate-400">Updated: 2026</span>
+          <a href="https://drive.google.com/drive/u/0/folders/1hb6LSvl2oBPJuAjPe29iyybp0lc5PgWt" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-[#8B003A] text-white text-xs font-bold hover:bg-[#78002E] transition flex items-center gap-1.5">
+            <span>Download</span> ⬇️
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-white pt-12 pb-6 border-t border-slate-800 mt-12">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-slate-800">
+      <div class="space-y-3">
+        <h4 class="font-bold text-[#F5A623] text-lg font-display">Rotaract Bangalore Warriors</h4>
+        <p class="text-xs text-slate-400">District 3192 | Zone PRAVAHA</p>
+        <p class="text-xs text-slate-400">Service Above Self • Fellowship Through Service</p>
+      </div>
+      <div>
+        <h5 class="font-bold text-sm text-slate-200 mb-3 font-display uppercase tracking-wider">Quick Links</h5>
+        <ul class="space-y-2 text-xs text-slate-400">
+          <li><a href="index.html" class="hover:text-white transition">Home</a></li>
+          <li><a href="about.html" class="hover:text-white transition">About Us</a></li>
+          <li><a href="DistrictCommittee.html" class="hover:text-white transition">Warriors Council</a></li>
+          <li><a href="projects.html" class="hover:text-white transition">Our Projects</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-bold text-sm text-slate-200 mb-3 font-display uppercase tracking-wider">Resources</h5>
+        <ul class="space-y-2 text-xs text-slate-400">
+          <li><a href="resources.html" class="hover:text-white transition">Club Bylaws</a></li>
+          <li><a href="resources.html" class="hover:text-white transition">Reporting Forms</a></li>
+          <li><a href="resources.html" class="hover:text-white transition">Branding Kit</a></li>
+          <li><a href="admin.html" class="hover:text-white transition">Admin Portal</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-bold text-sm text-slate-200 mb-3 font-display uppercase tracking-wider">Contact Us</h5>
+        <p class="text-xs text-slate-400">Email: racwarriors2023@gmail.com</p>
+        <p class="text-xs text-slate-400">Phone: +91 88846 69102</p>
+        <p class="text-xs text-slate-400 mt-2">GLPS Vidyasagara School, Saraipalya, Bengaluru</p>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto px-6 pt-6 text-center text-xs text-slate-500 font-medium">
+      &copy; 2026 Rotaract Club of Bangalore Warriors. All Rights Reserved.
+    </div>
+  </footer>
+
+  <!-- Script for Mobile Toggle & Filters -->
+  <script>
+    document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+      var drawer = document.getElementById('mobileNavDrawer');
+      drawer.classList.toggle('hidden');
+    });
+
+    function setFilter(cat) {
+      var btns = document.querySelectorAll('.filter-btn');
+      btns.forEach(function(b) {
+        if (b.getAttribute('data-category') === cat) {
+          b.className = "filter-btn active px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition bg-[#8B003A] text-white shadow-sm";
+        } else {
+          b.className = "filter-btn px-4 py-2 rounded-xl text-xs md:text-sm font-bold transition bg-white text-slate-600 border border-slate-200 hover:bg-slate-100";
+        }
+      });
+
+      var cards = document.querySelectorAll('.resource-card');
+      cards.forEach(function(card) {
+        if (cat === 'all' || card.getAttribute('data-category') === cat) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    function filterResources() {
+      var q = document.getElementById('searchInput').value.toLowerCase();
+      var cards = document.querySelectorAll('.resource-card');
+      cards.forEach(function(card) {
+        var text = (card.getAttribute('data-title') || '') + ' ' + card.innerText.toLowerCase();
+        if (text.includes(q)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

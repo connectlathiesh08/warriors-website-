@@ -843,7 +843,7 @@ html.lenis body {
         <a href="Events.html" data-nav="events" data-label="EVENTS" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
           <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
         </a>
-        <a href="calendar.html" data-nav="calendar" data-label="CALENDAR" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
+        <a href="resources.html" data-nav="resources" data-label="RESOURCES" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
           <span class="absolute bottom-0 left-3.5 right-3.5 h-[2px] bg-[#8B003A] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200"></span>
         </a>
         <a href="Partners.aspx" data-nav="partners" data-label="PARTNERS" class="slot-link relative px-3.5 py-1.5 text-[14px] font-bold tracking-wide transition-colors hover:text-[#8B003A] group font-display">
@@ -881,8 +881,7 @@ html.lenis body {
         <li><a href="about.html" data-label="ABOUT US" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
         <li><a href="DistrictCommittee.html" data-label="WARRIORS COUNCIL" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
         <li><a href="Events.html" data-label="EVENTS" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
-        <li></li>
-        <li></li>
+        <li><a href="resources.html" data-nav="resources" data-label="RESOURCES" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
         <li><a href="Partners.html" data-label="PARTNERS" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
         <li><a href="Blog.html" data-label="BLOG" class="slot-link block w-fit text-[17px] hover:text-[#8B003A]"></a></li>
         <li></li>
@@ -2118,6 +2117,7 @@ html.lenis body {
     if (file.indexOf('districtcommittee') === 0 || file.indexOf('director') === 0) return 'district-committee';
     if (file.indexOf('clubservice') === 0) return 'club-service';
     if (file.indexOf('clubfinder') === 0 || file.indexOf('club') === 0) return 'club-finder';
+    if (file.indexOf('resources') === 0) return 'resources';
     if (file.indexOf('calendar') === 0) return 'calendar';
     if (file.indexOf('projects') === 0) return 'club-projects';
     if (file.indexOf('newsletters') === 0) return 'newsletters';
