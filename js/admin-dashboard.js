@@ -299,6 +299,7 @@ function AdminDashboard({ role, onLogout }) {
       const res = await fetch(apiBase + '/api/members');
       if (res.ok) {
         const data = await res.json();
+        window.globalMembers = data;
         setMembers(data);
       }
     } catch (err) {
@@ -4115,10 +4116,28 @@ function MinutesOfMeetingGenerator({ members = [], momId = null, clearEditMomId 
 
 // HTML Generator helper for exporting saved MoM records to PDF or Word
 function getMomDocumentHtml(mom) {
+  const membersList = (window.globalMembers && window.globalMembers.length) ? window.globalMembers : [];
+
   const presentCount = mom.attendance?.present_ids?.length || 0;
   const absentCount = mom.attendance?.absent_ids?.length || 0;
-  const presentNames = mom.attendance?.present_names || mom.attendance?.present_ids || [];
-  const absentNames = mom.attendance?.absent_names || mom.attendance?.absent_ids || [];
+
+  let rawPresent = (mom.attendance?.present_names && mom.attendance.present_names.length) 
+    ? mom.attendance.present_names 
+    : (mom.attendance?.present_ids || []);
+    
+  let presentNames = rawPresent.map(item => {
+    const m = membersList.find(mem => mem.id === item || mem.name === item);
+    return m ? m.name : item;
+  });
+
+  let rawAbsent = (mom.attendance?.absent_names && mom.attendance.absent_names.length)
+    ? mom.attendance.absent_names
+    : (mom.attendance?.absent_ids || []);
+    
+  let absentNames = rawAbsent.map(item => {
+    const m = membersList.find(mem => mem.id === item || mem.name === item);
+    return m ? m.name : item;
+  });
   const guestsList = mom.attendance?.guests || [];
   const moneyObj = mom.money_involved || { has_money: false, amount: 0, description: '', type: 'Expense' };
   const excludedIndices = moneyObj.excluded_agenda_indices || [];
