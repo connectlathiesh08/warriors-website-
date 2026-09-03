@@ -3132,6 +3132,16 @@ function MinutesOfMeetingGenerator({ members = [], momId = null, clearEditMomId 
   const [guests, setGuests] = useState(['Rtr. Lathiesh Kumar', 'Rtr. Rishabh Guptha']);
   const [newGuest, setNewGuest] = useState('');
   
+  const presentMembersList = presentIds.map(id => {
+    const m = members.find(mem => mem.id === id || mem.name === id);
+    return m ? m.name : id;
+  });
+
+  const absentMembersList = absentIds.map(id => {
+    const m = members.find(mem => mem.id === id || mem.name === id);
+    return m ? m.name : id;
+  });
+  
   // Action Items
   const [actionItems, setActionItems] = useState([
     { id: 'ACT-1', task: 'Send blood drive certificates', assigned_to_id: '', assigned_to_name: 'Rtr. Lathiesh Kumar', due_date: '2026-07-15', status: 'Pending' }
@@ -3353,7 +3363,9 @@ function MinutesOfMeetingGenerator({ members = [], momId = null, clearEditMomId 
       link,
       attendance: {
         present_ids: presentIds,
+        present_names: presentMembersList,
         absent_ids: absentIds,
+        absent_names: absentMembersList,
         guests
       },
       agenda,
@@ -3978,7 +3990,7 @@ function MinutesOfMeetingGenerator({ members = [], momId = null, clearEditMomId 
               </div>
 
               <!-- Attendance summary section -->
-              <div class="space-y-1.5 z-10 relative">
+              <div class="space-y-2 z-10 relative">
                 <h3 class="text-[10px] font-extrabold text-burgundy-600 uppercase border-b border-burgundy-100 pb-1 tracking-wide">${type === 'Project Report' ? 'Volunteers & Attendees Summary' : 'Attendance Summary'}</h3>
                 <div class="grid grid-cols-2 gap-2 text-[9.5px]">
                   <div>
@@ -3990,12 +4002,30 @@ function MinutesOfMeetingGenerator({ members = [], momId = null, clearEditMomId 
                     <span class="text-slate-800 font-bold">${absentIds.length}</span>
                   </div>
                 </div>
-                ${guests.length > 0 && html`
-                  <div class="text-[9.5px] mt-1">
-                    <span class="font-bold text-slate-555">Guests / Visitors: </span>
-                    <span class="text-slate-750">${guests.join(', ')}</span>
+
+                <div class="text-[9.5px] space-y-1.5 pt-0.5">
+                  <div>
+                    <span class="font-bold text-slate-600">${type === 'Project Report' ? 'Present Volunteers / Attendees: ' : 'Present Members: '}</span>
+                    ${presentMembersList.length > 0 
+                      ? html`<span class="text-slate-800 font-semibold">${presentMembersList.join(', ')}</span>`
+                      : html`<span class="text-slate-400 italic">None marked present</span>`
+                    }
                   </div>
-                `}
+
+                  ${absentMembersList.length > 0 && html`
+                    <div>
+                      <span class="font-bold text-slate-500">${type === 'Project Report' ? 'Absent Volunteers: ' : 'Absent Members: '}</span>
+                      <span class="text-slate-600 font-medium">${absentMembersList.join(', ')}</span>
+                    </div>
+                  `}
+
+                  ${guests.length > 0 && html`
+                    <div>
+                      <span class="font-bold text-slate-600">Guests / Visitors: </span>
+                      <span class="text-slate-750 font-medium">${guests.join(', ')}</span>
+                    </div>
+                  `}
+                </div>
               </div>
 
               <!-- Action items table section -->
@@ -4087,6 +4117,8 @@ function MinutesOfMeetingGenerator({ members = [], momId = null, clearEditMomId 
 function getMomDocumentHtml(mom) {
   const presentCount = mom.attendance?.present_ids?.length || 0;
   const absentCount = mom.attendance?.absent_ids?.length || 0;
+  const presentNames = mom.attendance?.present_names || mom.attendance?.present_ids || [];
+  const absentNames = mom.attendance?.absent_names || mom.attendance?.absent_ids || [];
   const guestsList = mom.attendance?.guests || [];
   const moneyObj = mom.money_involved || { has_money: false, amount: 0, description: '', type: 'Expense' };
   const excludedIndices = moneyObj.excluded_agenda_indices || [];
@@ -4245,9 +4277,15 @@ function getMomDocumentHtml(mom) {
             <td style="color: #475569; font-weight: bold;">Absent count: <span style="color: #1e293b; font-weight: 800;">${absentCount}</span></td>
           </tr>
         </table>
-        ${guestsList.length > 0 ? `
-          <div style="color: #334155;"><span style="font-weight: bold; color: #475569;">Guests / Visitors:</span> ${guestsList.join(', ')}</div>
-        ` : ''}
+        <div style="margin-top: 4px;">
+          <div style="margin-bottom: 4px;"><span style="font-weight: bold; color: #475569;">${mom.type === 'Project Report' ? 'Present Volunteers / Attendees:' : 'Present Members:'}</span> <span style="color: #1e293b; font-weight: 600;">${presentNames.length ? presentNames.join(', ') : 'None marked present'}</span></div>
+          ${absentNames.length > 0 ? `
+            <div style="margin-bottom: 4px;"><span style="font-weight: bold; color: #475569;">Absent Members:</span> <span style="color: #64748b; font-weight: 500;">${absentNames.join(', ')}</span></div>
+          ` : ''}
+          ${guestsList.length > 0 ? `
+            <div><span style="font-weight: bold; color: #475569;">Guests / Visitors:</span> <span style="color: #334155; font-weight: 500;">${guestsList.join(', ')}</span></div>
+          ` : ''}
+        </div>
       </div>
 
       <!-- Action Items Section -->
