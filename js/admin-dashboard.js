@@ -3993,15 +3993,9 @@ function MinutesOfMeetingGenerator({ members = [], momId = null, clearEditMomId 
               <!-- Attendance summary section -->
               <div class="space-y-2 z-10 relative">
                 <h3 class="text-[10px] font-extrabold text-burgundy-600 uppercase border-b border-burgundy-100 pb-1 tracking-wide">${type === 'Project Report' ? 'Volunteers & Attendees Summary' : 'Attendance Summary'}</h3>
-                <div class="grid grid-cols-2 gap-2 text-[9.5px]">
-                  <div>
-                    <span class="font-bold text-slate-500">${type === 'Project Report' ? 'Present Volunteers: ' : 'Present Members: '}</span>
-                    <span class="text-slate-800 font-bold">${presentIds.length}</span>
-                  </div>
-                  <div>
-                    <span class="font-bold text-slate-500">${type === 'Project Report' ? 'Absent Volunteers: ' : 'Absent Members: '}</span>
-                    <span class="text-slate-800 font-bold">${absentIds.length}</span>
-                  </div>
+                <div class="text-[9.5px]">
+                  <span class="font-bold text-slate-500">${type === 'Project Report' ? 'Present Volunteers: ' : 'Present Members: '}</span>
+                  <span class="text-slate-800 font-bold">${presentIds.length}</span>
                 </div>
 
                 <div class="text-[9.5px] space-y-1.5 pt-0.5">
@@ -4012,13 +4006,6 @@ function MinutesOfMeetingGenerator({ members = [], momId = null, clearEditMomId 
                       : html`<span class="text-slate-400 italic">None marked present</span>`
                     }
                   </div>
-
-                  ${absentMembersList.length > 0 && html`
-                    <div>
-                      <span class="font-bold text-slate-500">${type === 'Project Report' ? 'Absent Volunteers: ' : 'Absent Members: '}</span>
-                      <span class="text-slate-600 font-medium">${absentMembersList.join(', ')}</span>
-                    </div>
-                  `}
 
                   ${guests.length > 0 && html`
                     <div>
@@ -4290,17 +4277,11 @@ function getMomDocumentHtml(mom) {
       <!-- Attendance Section -->
       <div style="margin-bottom: 14px; font-size: 9.5px;">
         <h3 style="font-size: 10.5px; font-weight: 800; color: #8B003A; border-b: 1px solid #cbd5e1; padding-bottom: 4px; text-transform: uppercase; margin-bottom: 6px;">${mom.type === 'Project Report' ? 'Volunteers & Attendees Summary' : 'Attendance Summary'}</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-bottom: 6px;">
-          <tr>
-            <td style="color: #475569; font-weight: bold;">Present count: <span style="color: #1e293b; font-weight: 800;">${presentCount}</span></td>
-            <td style="color: #475569; font-weight: bold;">Absent count: <span style="color: #1e293b; font-weight: 800;">${absentCount}</span></td>
-          </tr>
-        </table>
+        <div style="margin-bottom: 6px; font-weight: bold; color: #475569;">
+          Present count: <span style="color: #1e293b; font-weight: 800;">${presentCount}</span>
+        </div>
         <div style="margin-top: 4px;">
           <div style="margin-bottom: 4px;"><span style="font-weight: bold; color: #475569;">${mom.type === 'Project Report' ? 'Present Volunteers / Attendees:' : 'Present Members:'}</span> <span style="color: #1e293b; font-weight: 600;">${presentNames.length ? presentNames.join(', ') : 'None marked present'}</span></div>
-          ${absentNames.length > 0 ? `
-            <div style="margin-bottom: 4px;"><span style="font-weight: bold; color: #475569;">Absent Members:</span> <span style="color: #64748b; font-weight: 500;">${absentNames.join(', ')}</span></div>
-          ` : ''}
           ${guestsList.length > 0 ? `
             <div><span style="font-weight: bold; color: #475569;">Guests / Visitors:</span> <span style="color: #334155; font-weight: 500;">${guestsList.join(', ')}</span></div>
           ` : ''}
